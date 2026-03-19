@@ -1728,7 +1728,16 @@ function submitEval() {
     rec: level.rec
   });
   saveResultados(resultados);
-  pushResultadoToSheets(resultados[resultados.length - 1]);
+  var resultado = resultados[resultados.length - 1];
+  resultado.tab_switches = tabSwitchCount;
+  resultado.question_times = JSON.stringify(questionTimes);
+  resultado.foto_inicio = photosTaken['inicio'] ? 'captured' : 'none';
+  resultado.foto_intermedia = photosTaken['intermedia'] ? 'captured' : 'none';
+  resultado.type = 'resultado';
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(resultado)
+  }).catch(function(e) { console.log('Sheets sync error:', e); });
 
   // Mark prueba as done in candidato
   const candidatos = getCandidatos();
