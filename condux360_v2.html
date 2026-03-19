@@ -1352,10 +1352,6 @@ body {
         <div class="prest-label">Vales de despensa <small>% sobre salario</small></div>
         <div><input type="number" class="prest-input" id="prestValesDespensa" placeholder="0" min="0" max="100" value="0" oninput="calcTotalAnual()"></div>
       </div>
-      <div class="prest-row">
-        <div class="prest-label">Vales de restaurante <small>% sobre salario</small></div>
-        <div><input type="number" class="prest-input" id="prestValesRest" placeholder="0" min="0" max="100" value="0" oninput="calcTotalAnual()"></div>
-      </div>
 
       <!-- Bonos -->
       <div class="prest-section-title">Bonos</div>
@@ -3219,7 +3215,6 @@ function calcTotalAnual() {
   var primaVac = parseFloat(document.getElementById('prestPrimaVac').value) || 0;
   var fondoAhorro = parseFloat(document.getElementById('prestFondoAhorro').value) || 0;
   var valesDespensa = parseFloat(document.getElementById('prestValesDespensa').value) || 0;
-  var valesRest = parseFloat(document.getElementById('prestValesRest').value) || 0;
   var autoVal = parseFloat(document.getElementById('autoVal').value) || 0;
 
   var sueldoDiario = sueldo / 30;
@@ -3229,7 +3224,6 @@ function calcTotalAnual() {
   var anualPrimaVac = sueldoDiario * diasVac * (primaVac / 100);
   var anualFondo = sueldo * 12 * (fondoAhorro / 100);
   var anualDespensa = sueldo * 12 * (valesDespensa / 100);
-  var anualRest = sueldo * 12 * (valesRest / 100);
   var anualAuto = autoVal * 12;
 
   // Bonos
@@ -3243,7 +3237,7 @@ function calcTotalAnual() {
     anualBonos += m * (mult[p] || 1);
   }
 
-  var total = anualBase + anualAguinaldo + anualPrimaVac + anualFondo + anualDespensa + anualRest + anualAuto + anualBonos;
+  var total = anualBase + anualAguinaldo + anualPrimaVac + anualFondo + anualDespensa + anualAuto + anualBonos;
 
   document.getElementById('totalAnualValue').textContent = '$' + total.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -3274,7 +3268,6 @@ function collectPrestaciones() {
     prima_vacacional_pct: document.getElementById('prestPrimaVac').value || '25',
     fondo_ahorro_pct: document.getElementById('prestFondoAhorro').value || '0',
     vales_despensa_pct: document.getElementById('prestValesDespensa').value || '0',
-    vales_restaurante_pct: document.getElementById('prestValesRest').value || '0',
     bonos: bonos,
     seguro_gmm: getSeguro('segGMM'),
     seguro_gmm_menor: getSeguro('segGMm'),
