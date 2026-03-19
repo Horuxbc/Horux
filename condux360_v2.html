@@ -1534,8 +1534,12 @@ body {
 
       <!-- TAB: CANDIDATOS -->
       <div id="tabCandidatos">
+        <div style="display:flex; gap:8px; margin-bottom:16px">
+          <button class="btn-secondary" id="toggleActivos" onclick="toggleCandView('activos')" style="font-size:13px; padding:8px 16px; border-color:var(--green); color:var(--green); background:var(--green-pale)">Activos</button>
+          <button class="btn-secondary" id="toggleArchivados" onclick="toggleCandView('archivados')" style="font-size:13px; padding:8px 16px">Archivados</button>
+        </div>
         <div class="table-wrap">
-          <div class="table-header">
+          <div class="table-header" style="grid-template-columns: 2fr 1.5fr 1fr 1.2fr 1fr 120px">
             <span>Candidato</span>
             <span>Puesto</span>
             <span>Nivel</span>
@@ -1871,7 +1875,7 @@ function candLogin() {
   if (!email) return;
 
   const candidatos = getCandidatos();
-  const cand = candidatos.find(c => c.correo.toLowerCase() === email);
+  const cand = candidatos.find(c => c.correo.toLowerCase() === email && c.status !== 'archivado');
 
   if (!cand) {
     document.getElementById('candLoginError').classList.add('visible');
@@ -2321,51 +2325,134 @@ async function loadAdminData() {
   loadResultadosTable();
 }
 
+var adminCandView = 'activos';
+
+function toggleCandView(view) {
+  adminCandView = view;
+  document.getElementById('toggleActivos').style.borderColor = view === 'activos' ? 'var(--green)' : 'var(--border)';
+  document.getElementById('toggleActivos').style.color = view === 'activos' ? 'var(--green)' : 'var(--text-mid)';
+  document.getElementById('toggleActivos').style.background = view === 'activos' ? 'var(--green-pale)' : 'var(--white)';
+  document.getElementById('toggleArchivados').style.borderColor = view === 'archivados' ? 'var(--green)' : 'var(--border)';
+  document.getElementById('toggleArchivados').style.color = view === 'archivados' ? 'var(--green)' : 'var(--text-mid)';
+  document.getElementById('toggleArchivados').style.background = view === 'archivados' ? 'var(--green-pale)' : 'var(--white)';
+  loadCandidatosTable();
+}
+
 function loadCandidatosTable() {
   const candidatos = getCandidatos();
   const resultados = getResultados();
   const body = document.getElementById('candidatosTableBody');
+  const isArchived = adminCandView === 'archivados';
 
-  if (candidatos.length === 0) {
-    body.innerHTML = '<div class="empty-state">No hay candidatos registrados. Crea el primero.</div>';
+  const filtered = candidatos.filter(function(c) {
+    var archived = c.status === 'archivado';
+    return isArchived ? archived : !archived;
+  });
+
+  if (filtered.length === 0) {
+    body.innerHTML = '<div class="empty-state">' + (isArchived ? 'No hay candidatos archivados.' : 'No hay candidatos registrados. Crea el primero.') + '</div>';
     return;
   }
 
-  body.innerHTML = candidatos.map((c, i) => {
-    const misRes = resultados.filter(r => r.correo === c.correo);
-    const completadas = misRes.length;
-    const total = c.pruebas.length;
-    const estado = completadas === total ? 'Completado' : completadas > 0 ? 'En progreso' : 'Pendiente';
-    const estadoCls = completadas === total ? 'badge-done' : completadas > 0 ? 'badge-adecuado' : 'badge-pending';
+  body.innerHTML = filtered.map(function(c) {
+    var origIdx = candidatos.indexOf(c);
+    var misRes = resultados.filter(function(r) { return r.correo === c.correo; });
+    var completadas = misRes.length;
+    var total = c.pruebas ? c.pruebas.length : 0;
+    var estado = completadas === total && total > 0 ? 'Completado' : completadas > 0 ? 'En progreso' : 'Pendiente';
+    var estadoCls = completadas === total && total > 0 ? 'badge-done' : completadas > 0 ? 'badge-adecuado' : 'badge-pending';
 
-    return `
-      <div class="table-row">
-        <div>
-          <div class="cell-name">${c.nombre}</div>
-          <div class="cell-sub">${c.correo}</div>
-        </div>
-        <div class="cell-text">${c.puesto}</div>
-        <div class="cell-text">${formatNivel(c.nivel)}</div>
-        <div class="cell-text">${completadas}/${total} pruebas</div>
-        <div><span class="badge ${estadoCls}">${estado}</span></div>
-        <div>
-          <button class="btn-link" onclick="deleteCandidato(${i})" style="color:var(--danger)">Eliminar</button>
-        </div>
-      </div>
-    `;
+    // Show actual prueba names
+    var pruebasDisplay = (c.pruebas || []).map(function(key) {
+      return PRUEBAS[key] ? PRUEBAS[key].nombre : key;
+    }).join(', ');
+    var pruebasSummary = completadas + '/' + total + ' — ' + pruebasDisplay;
+
+    var actions = '';
+    if (isArchived) {
+      actions = '<button class="btn-link" onclick="restoreCandidato(' + origIdx + ')" style="color:var(--green);font-size:12px">Restaurar</button>';
+    } else {
+      actions =
+        '<button class="btn-link" onclick="reiniciarCandidato(' + origIdx + ')" style="color:var(--warning);font-size:12px">Reiniciar</button>' +
+        ' <button class="btn-link" onclick="archivarCandidato(' + origIdx + ')" style="color:var(--danger);font-size:12px;margin-left:4px">Archivar</button>';
+    }
+
+    return '<div class="table-row" style="grid-template-columns: 2fr 1.5fr 1fr 1.2fr 1fr 120px">' +
+      '<div><div class="cell-name">' + c.nombre + '</div><div class="cell-sub">' + c.correo + '</div></div>' +
+      '<div class="cell-text">' + c.puesto + '</div>' +
+      '<div class="cell-text">' + formatNivel(c.nivel) + '</div>' +
+      '<div class="cell-text" style="font-size:12px">' + pruebasSummary + '</div>' +
+      '<div><span class="badge ' + estadoCls + '">' + estado + '</span></div>' +
+      '<div>' + actions + '</div>' +
+    '</div>';
   }).join('');
 }
 
-function deleteCandidato(i) {
-  if (!confirm('¿Eliminar este candidato? También se eliminarán sus resultados.')) return;
-  const candidatos = getCandidatos();
-  const correo = candidatos[i].correo;
-  candidatos.splice(i, 1);
+function archivarCandidato(i) {
+  if (!confirm('¿Archivar este candidato? Sus datos se conservarán y podrás restaurarlo después.')) return;
+  var candidatos = getCandidatos();
+  candidatos[i].status = 'archivado';
+  candidatos[i].fechaArchivado = new Date().toLocaleDateString('es-MX');
   saveCandidatos(candidatos);
 
-  const resultados = getResultados().filter(r => r.correo !== correo);
+  // Sync status to Sheets
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'actualizar_candidato',
+      correo: candidatos[i].correo,
+      status: 'archivado',
+      fechaArchivado: candidatos[i].fechaArchivado
+    })
+  }).catch(function(e) { console.log('Sheets sync error:', e); });
+
+  loadCandidatosTable();
+}
+
+function restoreCandidato(i) {
+  if (!confirm('¿Restaurar este candidato a la vista activa?')) return;
+  var candidatos = getCandidatos();
+  candidatos[i].status = 'activo';
+  delete candidatos[i].fechaArchivado;
+  saveCandidatos(candidatos);
+
+  // Sync to Sheets
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'actualizar_candidato',
+      correo: candidatos[i].correo,
+      status: 'activo'
+    })
+  }).catch(function(e) { console.log('Sheets sync error:', e); });
+
+  loadCandidatosTable();
+}
+
+function reiniciarCandidato(i) {
+  if (!confirm('¿Reiniciar evaluación de este candidato? Se eliminarán sus resultados y progreso de pruebas, pero se conservarán sus datos personales y referencias.')) return;
+  var candidatos = getCandidatos();
+  var correo = candidatos[i].correo;
+
+  // Clear completadas
+  candidatos[i].completadas = [];
+  saveCandidatos(candidatos);
+
+  // Remove only test results, keep evaluaciones (referencias/prestaciones)
+  var resultados = getResultados().filter(function(r) { return r.correo !== correo; });
   saveResultados(resultados);
-  loadAdminData();
+
+  // Sync to Sheets
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'reiniciar_candidato',
+      correo: correo
+    })
+  }).catch(function(e) { console.log('Sheets sync error:', e); });
+
+  loadCandidatosTable();
+  loadResultadosTable();
 }
 
 function loadResultadosTable() {
