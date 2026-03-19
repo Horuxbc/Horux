@@ -971,6 +971,197 @@ body {
   margin-bottom: 20px;
 }
 
+/* REFERENCIAS & PRESTACIONES SECTIONS */
+.section-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.section-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-card-num {
+  width: 32px;
+  height: 32px;
+  background: var(--green-pale);
+  color: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.section-card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+  color: var(--green);
+  margin-left: 12px;
+  flex: 1;
+}
+
+.section-card .form-group { margin-bottom: 14px; }
+.section-card .form-row { gap: 12px; }
+.section-card .form-input, .section-card .form-select { padding: 10px 12px; font-size: 14px; }
+
+.section-step-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.2s;
+}
+
+.step-dot.active { background: var(--green); transform: scale(1.2); }
+.step-dot.done { background: var(--success); }
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+}
+
+.step-line.done { background: var(--success); }
+
+.prest-row {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.prest-row:last-child { border-bottom: none; }
+
+.prest-label {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.prest-label small {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.prest-input {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.prest-input:focus { border-color: var(--green); }
+
+.prest-section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px;
+  color: var(--green);
+  padding: 16px 0 8px;
+  border-bottom: 2px solid var(--green-pale);
+  margin-bottom: 4px;
+}
+
+.prest-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.prest-toggle-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-mid);
+}
+
+.prest-toggle-btn.active {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+
+.prest-total-bar {
+  background: var(--green);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prest-total-label {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+}
+
+.prest-total-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: white;
+}
+
+.bono-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 140px;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.seguro-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 140px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.validation-msg {
+  background: var(--danger-pale);
+  color: var(--danger);
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.validation-msg.visible { display: block; }
+
 @media (max-width: 680px) {
   .main, .main-wide { padding: 32px 20px; }
   .topbar { padding: 0 20px; }
@@ -982,6 +1173,9 @@ body {
   .table-row > *:nth-child(4) { display: none; }
   .info-grid { grid-template-columns: 1fr; }
   .likert-option { max-width: 58px; }
+  .prest-row { grid-template-columns: 1fr; gap: 8px; }
+  .bono-row { grid-template-columns: 1fr; }
+  .seguro-row { grid-template-columns: 1fr; }
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1090,6 +1284,192 @@ body {
           Siguiente
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFERENCIAS LABORALES -->
+  <div class="screen" id="screenReferencias">
+    <div class="main-wide">
+      <p class="eyebrow">Paso 2 de 3</p>
+      <h1 class="page-title">Referencias Laborales</h1>
+      <p class="page-subtitle">Completa la información de tus últimos 4 empleadores. Todos los campos son obligatorios.</p>
+
+      <div class="section-step-bar">
+        <div class="step-dot done"></div>
+        <div class="step-line done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <div class="validation-msg" id="refValidation">Por favor completa todos los campos obligatorios de cada referencia.</div>
+
+      <div id="referenciasContainer"></div>
+
+      <div style="display:flex; gap:12px; margin-top:28px; justify-content:flex-end">
+        <button class="btn-primary" onclick="submitReferencias()">Continuar →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUADRO DE PRESTACIONES -->
+  <div class="screen" id="screenPrestaciones">
+    <div class="main-wide">
+      <p class="eyebrow">Paso 3 de 3</p>
+      <h1 class="page-title">Cuadro de Prestaciones</h1>
+      <p class="page-subtitle">Indica las prestaciones y compensación de tu empleo más reciente (o actual).</p>
+
+      <div class="section-step-bar">
+        <div class="step-dot done"></div>
+        <div class="step-line done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-line done"></div>
+        <div class="step-dot active"></div>
+      </div>
+
+      <div class="validation-msg" id="prestValidation">Por favor ingresa al menos el sueldo base mensual.</div>
+
+      <!-- Sueldo Base -->
+      <div class="prest-section-title">Compensación fija</div>
+      <div class="prest-row">
+        <div class="prest-label">Sueldo base mensual (bruto) <small>MXN</small></div>
+        <div><input type="number" class="prest-input" id="prestSueldo" placeholder="$0.00" min="0" oninput="calcTotalAnual()"></div>
+      </div>
+      <div class="prest-row">
+        <div class="prest-label">Aguinaldo <small>Días por año</small></div>
+        <div><input type="number" class="prest-input" id="prestAguinaldo" placeholder="15" min="0" value="15" oninput="calcTotalAnual()"></div>
+      </div>
+      <div class="prest-row">
+        <div class="prest-label">Prima vacacional <small>% sobre salario</small></div>
+        <div><input type="number" class="prest-input" id="prestPrimaVac" placeholder="25" min="0" max="100" value="25" oninput="calcTotalAnual()"></div>
+      </div>
+      <div class="prest-row">
+        <div class="prest-label">Fondo de ahorro <small>% aportación empresa</small></div>
+        <div><input type="number" class="prest-input" id="prestFondoAhorro" placeholder="0" min="0" max="100" value="0" oninput="calcTotalAnual()"></div>
+      </div>
+      <div class="prest-row">
+        <div class="prest-label">Vales de despensa <small>% sobre salario</small></div>
+        <div><input type="number" class="prest-input" id="prestValesDespensa" placeholder="0" min="0" max="100" value="0" oninput="calcTotalAnual()"></div>
+      </div>
+      <div class="prest-row">
+        <div class="prest-label">Vales de restaurante <small>% sobre salario</small></div>
+        <div><input type="number" class="prest-input" id="prestValesRest" placeholder="0" min="0" max="100" value="0" oninput="calcTotalAnual()"></div>
+      </div>
+
+      <!-- Bonos -->
+      <div class="prest-section-title">Bonos</div>
+      <div id="bonosContainer">
+        <div class="bono-row">
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Concepto</label>
+            <input type="text" class="prest-input bono-concepto" placeholder="Ej. Bono de desempeño">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Monto (MXN)</label>
+            <input type="number" class="prest-input bono-monto" placeholder="$0" min="0" oninput="calcTotalAnual()">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Periodicidad</label>
+            <select class="form-select prest-input bono-periodo" onchange="calcTotalAnual()">
+              <option value="mensual">Mensual</option>
+              <option value="trimestral">Trimestral</option>
+              <option value="semestral">Semestral</option>
+              <option value="anual" selected>Anual</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button class="btn-secondary" onclick="addBonoRow()" style="margin-top:4px; font-size:13px" id="addBonoBtn">+ Agregar bono</button>
+
+      <!-- Seguros -->
+      <div class="prest-section-title">Seguros</div>
+      <div class="seguro-row">
+        <div class="prest-label">Gastos médicos mayores</div>
+        <div class="prest-toggle">
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segGMM')" data-val="no">No</button>
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segGMM')" data-val="si">Sí</button>
+        </div>
+        <select class="form-select prest-input" id="segGMM_tipo" disabled>
+          <option value="">—</option>
+          <option value="individual">Individual</option>
+          <option value="familiar">Familiar</option>
+        </select>
+      </div>
+      <div class="seguro-row">
+        <div class="prest-label">Gastos médicos menores</div>
+        <div class="prest-toggle">
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segGMm')" data-val="no">No</button>
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segGMm')" data-val="si">Sí</button>
+        </div>
+        <select class="form-select prest-input" id="segGMm_tipo" disabled>
+          <option value="">—</option>
+          <option value="individual">Individual</option>
+          <option value="familiar">Familiar</option>
+        </select>
+      </div>
+      <div class="seguro-row">
+        <div class="prest-label">Seguro dental</div>
+        <div class="prest-toggle">
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segDental')" data-val="no">No</button>
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segDental')" data-val="si">Sí</button>
+        </div>
+        <select class="form-select prest-input" id="segDental_tipo" disabled>
+          <option value="">—</option>
+          <option value="individual">Individual</option>
+          <option value="familiar">Familiar</option>
+        </select>
+      </div>
+      <div class="seguro-row">
+        <div class="prest-label">Seguro de vida</div>
+        <div class="prest-toggle">
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segVida')" data-val="no">No</button>
+          <button class="prest-toggle-btn" onclick="toggleSeguro(this,'segVida')" data-val="si">Sí</button>
+        </div>
+        <select class="form-select prest-input" id="segVida_tipo" disabled>
+          <option value="">—</option>
+          <option value="individual">Individual</option>
+          <option value="familiar">Familiar</option>
+        </select>
+      </div>
+
+      <!-- Otros beneficios -->
+      <div class="prest-section-title">Otros beneficios</div>
+      <div class="prest-row">
+        <div class="prest-label">Auto ejecutivo</div>
+        <div class="prest-toggle" id="toggleAuto">
+          <button class="prest-toggle-btn" onclick="toggleBeneficio(this,'autoVal')" data-val="no">No</button>
+          <button class="prest-toggle-btn" onclick="toggleBeneficio(this,'autoVal')" data-val="si">Sí</button>
+        </div>
+      </div>
+      <div class="prest-row" id="autoValRow" style="display:none">
+        <div class="prest-label">Valor mensual estimado del auto <small>MXN</small></div>
+        <div><input type="number" class="prest-input" id="autoVal" placeholder="$0" min="0" oninput="calcTotalAnual()"></div>
+      </div>
+      <div class="prest-row">
+        <div class="prest-label">Celular corporativo</div>
+        <div class="prest-toggle" id="toggleCelular">
+          <button class="prest-toggle-btn" onclick="toggleSimple(this)" data-val="no">No</button>
+          <button class="prest-toggle-btn" onclick="toggleSimple(this)" data-val="si">Sí</button>
+        </div>
+      </div>
+      <div class="prest-row">
+        <div class="prest-label">Club / Gimnasio</div>
+        <div class="prest-toggle" id="toggleGym">
+          <button class="prest-toggle-btn" onclick="toggleSimple(this)" data-val="no">No</button>
+          <button class="prest-toggle-btn" onclick="toggleSimple(this)" data-val="si">Sí</button>
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="prest-total-bar">
+        <div class="prest-total-label">Total anual integrado (estimado)</div>
+        <div class="prest-total-value" id="totalAnualValue">$0.00</div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:28px; justify-content:flex-end">
+        <button class="btn-secondary" onclick="showScreen('screenReferencias')">← Regresar</button>
+        <button class="btn-primary" onclick="submitPrestaciones()">Finalizar →</button>
       </div>
     </div>
   </div>
@@ -1756,7 +2136,8 @@ function submitEval() {
     currentCand = candidatos[idx];
   }
 
-  showScreen('screenThanks');
+  showScreen('screenReferencias');
+  buildReferenciasForm();
 }
 
 // ============================================================
@@ -2659,61 +3040,292 @@ function formatNivel(n) {
   return { operativo: 'Operativo', mando_medio: 'Mando Medio', gerencia: 'Gerencia' }[n] || n;
 }
 
-async function saveToSheets(scores, level, fecha, timerData) {
-  var folio = 'CDX-' + Date.now().toString().slice(-6);
+// saveToSheets removed — result submission now handled inline in submitEval()
+
+// ============================================================
+// REFERENCIAS LABORALES
+// ============================================================
+function buildReferenciasForm() {
+  var container = document.getElementById('referenciasContainer');
+  container.innerHTML = '';
+  for (var i = 0; i < 4; i++) {
+    var num = i + 1;
+    var card = document.createElement('div');
+    card.className = 'section-card';
+    card.innerHTML =
+      '<div class="section-card-header">' +
+        '<div class="section-card-num">' + num + '</div>' +
+        '<div class="section-card-title">Empleador ' + num + (num <= 2 ? ' <span style="color:var(--danger);font-size:12px;font-family:DM Sans,sans-serif">(obligatorio)</span>' : ' <span style="color:var(--text-muted);font-size:12px;font-family:DM Sans,sans-serif">(si aplica)</span>') + '</div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label">Empresa</label><input class="form-input ref-empresa" data-ref="' + i + '" placeholder="Nombre de la empresa"></div>' +
+        '<div class="form-group"><label class="form-label">Puesto desempeñado</label><input class="form-input ref-puesto" data-ref="' + i + '" placeholder="Tu puesto"></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label">Nombre del jefe directo</label><input class="form-input ref-jefe" data-ref="' + i + '" placeholder="Nombre completo"></div>' +
+        '<div class="form-group"><label class="form-label">Puesto / Área del jefe</label><input class="form-input ref-jefe-puesto" data-ref="' + i + '" placeholder="Ej. Director de Operaciones"></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label">Tipo de referencia</label>' +
+          '<select class="form-select ref-tipo" data-ref="' + i + '">' +
+            '<option value="">Seleccionar...</option>' +
+            '<option value="jefe_directo">Jefe directo</option>' +
+            '<option value="rh">Recursos Humanos</option>' +
+            '<option value="personal">Referencia personal</option>' +
+          '</select>' +
+        '</div>' +
+        '<div class="form-group"><label class="form-label">Motivo de salida</label>' +
+          '<select class="form-select ref-motivo" data-ref="' + i + '">' +
+            '<option value="">Seleccionar...</option>' +
+            '<option value="crecimiento">Crecimiento profesional</option>' +
+            '<option value="restructura">Reestructura</option>' +
+            '<option value="terminacion">Terminación laboral</option>' +
+            '<option value="renuncia">Renuncia voluntaria</option>' +
+            '<option value="fin_contrato">Fin de contrato</option>' +
+            '<option value="otro">Otro</option>' +
+          '</select>' +
+        '</div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label">Teléfono de contacto</label><input class="form-input ref-tel" data-ref="' + i + '" placeholder="10 dígitos" type="tel"></div>' +
+        '<div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input ref-email" data-ref="' + i + '" placeholder="correo@empresa.com" type="email"></div>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Notas (horario para llamar, indicaciones, etc.)</label><textarea class="form-input ref-notas" data-ref="' + i + '" rows="2" placeholder="Opcional" style="resize:vertical"></textarea></div>';
+    container.appendChild(card);
+  }
+}
+
+function collectReferencias() {
+  var refs = [];
+  for (var i = 0; i < 4; i++) {
+    var card = {
+      empresa: getRefVal('ref-empresa', i),
+      puesto: getRefVal('ref-puesto', i),
+      jefe: getRefVal('ref-jefe', i),
+      jefe_puesto: getRefVal('ref-jefe-puesto', i),
+      tipo: getRefVal('ref-tipo', i),
+      motivo: getRefVal('ref-motivo', i),
+      telefono: getRefVal('ref-tel', i),
+      email: getRefVal('ref-email', i),
+      notas: getRefVal('ref-notas', i)
+    };
+    refs.push(card);
+  }
+  return refs;
+}
+
+function getRefVal(cls, idx) {
+  var el = document.querySelector('.' + cls + '[data-ref="' + idx + '"]');
+  return el ? el.value.trim() : '';
+}
+
+function validateReferencias(refs) {
+  // First 2 are mandatory
+  for (var i = 0; i < 2; i++) {
+    var r = refs[i];
+    if (!r.empresa || !r.puesto || !r.jefe || !r.jefe_puesto || !r.tipo || !r.motivo || !r.telefono || !r.email) {
+      return false;
+    }
+  }
+  // Refs 3 & 4: if any field is filled, validate all required fields
+  for (var i = 2; i < 4; i++) {
+    var r = refs[i];
+    var hasAny = r.empresa || r.puesto || r.jefe || r.telefono || r.email;
+    if (hasAny) {
+      if (!r.empresa || !r.puesto || !r.jefe || !r.tipo || !r.motivo || !r.telefono || !r.email) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function submitReferencias() {
+  var refs = collectReferencias();
+  if (!validateReferencias(refs)) {
+    document.getElementById('refValidation').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  document.getElementById('refValidation').classList.remove('visible');
+
+  // Store temporarily for final submission
+  window._refData = refs;
+
+  showScreen('screenPrestaciones');
+  calcTotalAnual();
+}
+
+// ============================================================
+// CUADRO DE PRESTACIONES
+// ============================================================
+var bonoCount = 1;
+
+function addBonoRow() {
+  if (bonoCount >= 3) return;
+  bonoCount++;
+  var container = document.getElementById('bonosContainer');
+  var row = document.createElement('div');
+  row.className = 'bono-row';
+  row.innerHTML =
+    '<div class="form-group" style="margin:0"><label class="form-label">Concepto</label><input type="text" class="prest-input bono-concepto" placeholder="Ej. Bono de productividad"></div>' +
+    '<div class="form-group" style="margin:0"><label class="form-label">Monto (MXN)</label><input type="number" class="prest-input bono-monto" placeholder="$0" min="0" oninput="calcTotalAnual()"></div>' +
+    '<div class="form-group" style="margin:0"><label class="form-label">Periodicidad</label><select class="form-select prest-input bono-periodo" onchange="calcTotalAnual()"><option value="mensual">Mensual</option><option value="trimestral">Trimestral</option><option value="semestral">Semestral</option><option value="anual" selected>Anual</option></select></div>';
+  container.appendChild(row);
+  if (bonoCount >= 3) document.getElementById('addBonoBtn').style.display = 'none';
+}
+
+function toggleSeguro(btn, id) {
+  var parent = btn.parentElement;
+  parent.querySelectorAll('.prest-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var tipoSelect = document.getElementById(id + '_tipo');
+  if (btn.dataset.val === 'si') {
+    tipoSelect.disabled = false;
+  } else {
+    tipoSelect.disabled = true;
+    tipoSelect.value = '';
+  }
+}
+
+function toggleBeneficio(btn, inputId) {
+  var parent = btn.parentElement;
+  parent.querySelectorAll('.prest-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var row = document.getElementById(inputId + 'Row');
+  if (row) {
+    row.style.display = btn.dataset.val === 'si' ? '' : 'none';
+    if (btn.dataset.val === 'no') {
+      var inp = document.getElementById(inputId);
+      if (inp) { inp.value = ''; calcTotalAnual(); }
+    }
+  }
+}
+
+function toggleSimple(btn) {
+  var parent = btn.parentElement;
+  parent.querySelectorAll('.prest-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+function getToggleVal(containerId) {
+  var active = document.querySelector('#' + containerId + ' .prest-toggle-btn.active');
+  return active ? active.dataset.val : 'no';
+}
+
+function calcTotalAnual() {
+  var sueldo = parseFloat(document.getElementById('prestSueldo').value) || 0;
+  var aguinaldo = parseFloat(document.getElementById('prestAguinaldo').value) || 0;
+  var primaVac = parseFloat(document.getElementById('prestPrimaVac').value) || 0;
+  var fondoAhorro = parseFloat(document.getElementById('prestFondoAhorro').value) || 0;
+  var valesDespensa = parseFloat(document.getElementById('prestValesDespensa').value) || 0;
+  var valesRest = parseFloat(document.getElementById('prestValesRest').value) || 0;
+  var autoVal = parseFloat(document.getElementById('autoVal').value) || 0;
+
+  var sueldoDiario = sueldo / 30;
+  var anualBase = sueldo * 12;
+  var anualAguinaldo = sueldoDiario * aguinaldo;
+  var diasVac = 12; // minimum by law
+  var anualPrimaVac = sueldoDiario * diasVac * (primaVac / 100);
+  var anualFondo = sueldo * 12 * (fondoAhorro / 100);
+  var anualDespensa = sueldo * 12 * (valesDespensa / 100);
+  var anualRest = sueldo * 12 * (valesRest / 100);
+  var anualAuto = autoVal * 12;
+
+  // Bonos
+  var anualBonos = 0;
+  var montos = document.querySelectorAll('.bono-monto');
+  var periodos = document.querySelectorAll('.bono-periodo');
+  for (var i = 0; i < montos.length; i++) {
+    var m = parseFloat(montos[i].value) || 0;
+    var p = periodos[i] ? periodos[i].value : 'anual';
+    var mult = { mensual: 12, trimestral: 4, semestral: 2, anual: 1 };
+    anualBonos += m * (mult[p] || 1);
+  }
+
+  var total = anualBase + anualAguinaldo + anualPrimaVac + anualFondo + anualDespensa + anualRest + anualAuto + anualBonos;
+
+  document.getElementById('totalAnualValue').textContent = '$' + total.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function collectPrestaciones() {
+  var bonos = [];
+  var conceptos = document.querySelectorAll('.bono-concepto');
+  var montos = document.querySelectorAll('.bono-monto');
+  var periodos = document.querySelectorAll('.bono-periodo');
+  for (var i = 0; i < conceptos.length; i++) {
+    var c = conceptos[i].value.trim();
+    var m = montos[i] ? montos[i].value : '';
+    var p = periodos[i] ? periodos[i].value : '';
+    if (c || m) bonos.push({ concepto: c, monto: m, periodicidad: p });
+  }
+
+  function getSeguro(id) {
+    var active = document.querySelector('#' + id + '_tipo')
+    var toggleParent = active ? active.closest('.seguro-row') : null;
+    var toggleBtn = toggleParent ? toggleParent.querySelector('.prest-toggle-btn.active') : null;
+    var tiene = toggleBtn ? toggleBtn.dataset.val : 'no';
+    return { tiene: tiene, tipo: (tiene === 'si' && active) ? active.value : '' };
+  }
+
+  return {
+    sueldo_base: document.getElementById('prestSueldo').value || '0',
+    aguinaldo_dias: document.getElementById('prestAguinaldo').value || '15',
+    prima_vacacional_pct: document.getElementById('prestPrimaVac').value || '25',
+    fondo_ahorro_pct: document.getElementById('prestFondoAhorro').value || '0',
+    vales_despensa_pct: document.getElementById('prestValesDespensa').value || '0',
+    vales_restaurante_pct: document.getElementById('prestValesRest').value || '0',
+    bonos: bonos,
+    seguro_gmm: getSeguro('segGMM'),
+    seguro_gmm_menor: getSeguro('segGMm'),
+    seguro_dental: getSeguro('segDental'),
+    seguro_vida: getSeguro('segVida'),
+    auto_ejecutivo: getToggleVal('toggleAuto'),
+    auto_valor: document.getElementById('autoVal').value || '0',
+    celular_corporativo: getToggleVal('toggleCelular'),
+    club_gimnasio: getToggleVal('toggleGym'),
+    total_anual: document.getElementById('totalAnualValue').textContent
+  };
+}
+
+function submitPrestaciones() {
+  var sueldo = parseFloat(document.getElementById('prestSueldo').value);
+  if (!sueldo || sueldo <= 0) {
+    document.getElementById('prestValidation').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  document.getElementById('prestValidation').classList.remove('visible');
+
+  var prestaciones = collectPrestaciones();
+  var referencias = window._refData || [];
+
+  // Build payload for Evaluaciones tab
   var payload = {
-    type: 'resultado',
-    folio: folio,
+    type: 'evaluacion',
+    tab: 'Evaluaciones',
+    fecha: new Date().toLocaleDateString('es-MX'),
     correo: currentCand.correo,
     nombre: currentCand.nombre,
     puesto: currentCand.puesto,
     nivel: currentCand.nivel,
-    prueba: currentPrueba,
-    fecha: fecha,
-    total: scores.total,
-    nivel_resultado: level.l,
-    nivel_cls: level.cls,
-    likert: scores.likertScore,
-    situaciones: scores.sitScore,
-    dims: scores.dimScores,
-    tiempo: timerData.formatted,
-    tiempo_extendido: timerData.extended,
-    rec: level.rec,
-    tab_switches: tabSwitchCount,
-    question_times: JSON.stringify(questionTimes),
-    foto_inicio: photosTaken['inicio'] ? 'captured' : 'none',
-    foto_intermedia: photosTaken['intermedia'] ? 'captured' : 'none'
+    referencias: JSON.stringify(referencias),
+    prestaciones: JSON.stringify(prestaciones)
   };
 
-  // Save to Google Sheets via Apps Script
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    });
-  } catch(e) {
-    console.log('Sheets error:', e);
-  }
+  // Send to Google Sheets
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  }).catch(function(e) { console.log('Sheets sync error:', e); });
 
-  // Also save to localStorage as backup
-  var existing = JSON.parse(localStorage.getItem('condux_resultados') || '[]');
-  existing.push(payload);
-  localStorage.setItem('condux_resultados', JSON.stringify(existing));
+  // Save locally as backup
+  var localEvals = JSON.parse(localStorage.getItem('condux_evaluaciones') || '[]');
+  localEvals.push(payload);
+  localStorage.setItem('condux_evaluaciones', JSON.stringify(localEvals));
 
-  // Mark prueba as completed
-  var candidatos = getCandidatosLocal();
-  var idx = candidatos.findIndex(function(c) { return c.correo === currentCand.correo; });
-  if (idx >= 0) {
-    if (!candidatos[idx].completadas) candidatos[idx].completadas = [];
-    if (candidatos[idx].completadas.indexOf(currentPrueba) === -1) {
-      candidatos[idx].completadas.push(currentPrueba);
-    }
-    saveCandidatosLocal(candidatos);
-    currentCand = candidatos[idx];
-  }
+  showScreen('screenThanks');
 }
-
-
 
 </script>
 </body>
