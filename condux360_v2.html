@@ -1568,8 +1568,13 @@ function startPrueba(pruebaKey) {
 
   document.getElementById('timerAlert').classList.remove('visible');
   
-  // Take initial photo before starting
+  // Take initial photo before starting - photo is mandatory
   openCamera('inicio', function(photo) {
+    if (!photo) {
+      // Photo is required, reopen camera
+      openCamera('inicio', arguments.callee);
+      return;
+    }
     showScreen('screenEval');
     startTimer();
     startQuestionTimer();
@@ -2595,9 +2600,17 @@ function openCamera(type, callback) {
     })
     .catch(function(err) {
       console.log('Camera error:', err);
-      // If camera not available, skip photo and continue
-      modal.classList.remove('visible');
-      if (photoCallback) photoCallback(null);
+      // Camera is mandatory - show error and retry button
+      document.getElementById('cameraPreview').style.display = 'none';
+      document.getElementById('captureBtn').style.display = 'none';
+      sub.innerHTML = '<strong style="color:var(--red)">No se pudo acceder a la cámara.</strong><br>La foto es obligatoria para continuar. Por favor permite el acceso a la cámara en tu navegador e intenta de nuevo.';
+      document.getElementById('retakeBtn').style.display = 'inline-flex';
+      document.getElementById('retakeBtn').textContent = 'Reintentar';
+      document.getElementById('retakeBtn').onclick = function() {
+        document.getElementById('retakeBtn').textContent = 'Repetir';
+        document.getElementById('retakeBtn').onclick = retakePhoto;
+        openCamera(currentPhotoType, photoCallback);
+      };
     });
 }
 
