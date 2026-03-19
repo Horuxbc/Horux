@@ -1,0 +1,2698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condux 360</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #003834;
+  --green-light: #004f49;
+  --green-pale: #e8f0ef;
+  --tan: #9e8075;
+  --tan-light: #c4a99f;
+  --tan-pale: #f5efed;
+  --cream: #faf8f6;
+  --white: #ffffff;
+  --border: #e2dbd8;
+  --border-dark: #c8bfbb;
+  --text: #1a1a1a;
+  --text-mid: #4a4a4a;
+  --text-muted: #8a8480;
+  --text-dim: #b5b0ac;
+  --danger: #c0392b;
+  --danger-pale: #fdf0ef;
+  --warning: #b07d2a;
+  --warning-pale: #fdf6e8;
+  --success: #2d6a4f;
+  --success-pale: #eaf4ee;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--white);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+}
+
+/* LAYOUT */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOPBAR */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.logo-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  color: var(--green);
+  letter-spacing: -0.3px;
+}
+
+.logo-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--tan);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.timer-pill {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 5px 14px;
+  font-size: 13px;
+  color: var(--text-mid);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-pill.visible { display: flex; }
+.timer-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+.timer-dot.extended { background: var(--warning); }
+.timer-value { font-weight: 500; }
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.btn-admin {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-admin:hover { border-color: var(--green); color: var(--green); }
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 48px 32px;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.main-wide {
+  flex: 1;
+  padding: 40px 32px;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeUp 0.35s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* TYPOGRAPHY */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--tan);
+  margin-bottom: 12px;
+}
+
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--green);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.page-subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* FORM ELEMENTS */
+.form-group { margin-bottom: 18px; }
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+}
+
+.form-input:focus, .form-select:focus { border-color: var(--green); }
+.form-select option { background: white; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green);
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-primary:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,56,52,0.2); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--text-mid);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-secondary:hover { border-color: var(--text-mid); color: var(--text); }
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--danger);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(192,57,43,0.2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-danger:hover { background: var(--danger-pale); }
+
+.btn-link {
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+
+.btn-link:hover { color: var(--green); }
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.card-cream {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.info-card {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.info-card-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.info-card-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ALERT */
+.alert-error {
+  background: var(--danger-pale);
+  border: 1px solid rgba(192,57,43,0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--danger);
+  margin-bottom: 16px;
+  display: none;
+}
+
+.alert-error.visible { display: block; }
+
+.alert-soft {
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 24px;
+  display: none;
+  line-height: 1.5;
+}
+
+.alert-soft.visible { display: block; }
+
+/* PROGRESS */
+.progress-wrap {
+  margin-bottom: 32px;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* QUESTION */
+.section-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--tan);
+  background: var(--tan-pale);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.question-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(20px, 3vw, 26px);
+  color: var(--green);
+  line-height: 1.35;
+  margin-bottom: 32px;
+  letter-spacing: -0.2px;
+}
+
+/* LIKERT */
+.likert-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.likert-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  max-width: 80px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.likert-options {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.likert-option {
+  flex: 1;
+  aspect-ratio: 1;
+  max-width: 72px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.likert-option:hover { border-color: var(--green); color: var(--green); background: var(--green-pale); }
+.likert-option.selected { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
+
+/* SITUATION OPTIONS */
+.situation-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.situation-option {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.situation-option:hover { border-color: var(--tan-light); background: var(--tan-pale); }
+.situation-option.selected { border-color: var(--green); background: var(--green-pale); }
+
+.option-letter {
+  min-width: 26px;
+  height: 26px;
+  background: var(--cream);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.situation-option.selected .option-letter { background: var(--green); color: white; }
+.option-text { font-size: 14px; line-height: 1.5; color: var(--text-mid); }
+.situation-option.selected .option-text { color: var(--text); }
+
+/* NAV BUTTONS */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 48px;
+  margin-top: 8px;
+}
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.badge-superior { background: var(--success-pale); color: var(--success); }
+.badge-adecuado { background: var(--green-pale); color: var(--green); }
+.badge-moderado { background: var(--warning-pale); color: var(--warning); }
+.badge-alto { background: var(--danger-pale); color: var(--danger); }
+.badge-extended { background: var(--warning-pale); color: var(--warning); }
+.badge-pending { background: var(--cream); color: var(--text-muted); border: 1px solid var(--border); }
+.badge-done { background: var(--green-pale); color: var(--green); }
+
+/* PRUEBA CARD (candidato) */
+.prueba-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all 0.15s;
+}
+
+.prueba-card.pendiente:hover { border-color: var(--green); }
+.prueba-card.completada { background: var(--cream); }
+
+.prueba-info { flex: 1; }
+.prueba-nombre { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.prueba-meta { font-size: 12px; color: var(--text-muted); }
+
+/* ADMIN TABLE */
+.table-wrap {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 80px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: var(--cream);
+  gap: 12px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 80px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  gap: 12px;
+  transition: background 0.1s;
+}
+
+.table-row:last-child { border-bottom: none; }
+.table-row:hover { background: var(--cream); }
+
+.cell-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.cell-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.cell-text { font-size: 13px; color: var(--text-mid); }
+.cell-score { font-size: 14px; font-weight: 600; color: var(--green); }
+
+/* RESULT DETAIL */
+.score-hero {
+  text-align: center;
+  padding: 40px 0 32px;
+}
+
+.score-ring {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.score-ring svg { transform: rotate(-90deg); }
+
+.score-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px;
+  line-height: 1;
+  color: var(--green);
+}
+
+.score-max { font-size: 12px; color: var(--text-dim); }
+
+.result-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  color: var(--green);
+  margin: 8px 0 4px;
+}
+
+.result-puesto { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+.result-rec { font-size: 14px; color: var(--text-mid); line-height: 1.6; max-width: 400px; margin: 0 auto; }
+
+.breakdown-table {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.breakdown-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: var(--cream);
+}
+
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-label { font-size: 14px; color: var(--text-mid); }
+.breakdown-score { font-size: 14px; font-weight: 600; color: var(--text); }
+
+.dim-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 14px;
+}
+
+.dim-row:last-child { border-bottom: none; }
+.dim-name { font-size: 13px; color: var(--text-mid); flex: 1; }
+
+.dim-bar-wrap {
+  width: 100px;
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dim-bar-fill { height: 100%; border-radius: 3px; }
+.dim-score { font-size: 12px; font-weight: 600; color: var(--text); width: 32px; text-align: right; }
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  width: fit-content;
+  margin-bottom: 28px;
+}
+
+.tab {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+
+.tab.active { background: var(--white); color: var(--green); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* THANK YOU */
+.thankyou-icon {
+  width: 72px;
+  height: 72px;
+  background: var(--green-pale);
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 28px;
+  color: var(--green);
+}
+
+/* FOOTER BRAND */
+.brand-footer {
+  position: fixed;
+  bottom: 16px;
+  right: 20px;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+/* ADMIN CREATE FORM */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.checkbox-item:hover { border-color: var(--green); background: var(--green-pale); }
+.checkbox-item.checked { border-color: var(--green); background: var(--green-pale); }
+
+.checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.checkbox-label { font-size: 14px; color: var(--text); }
+.checkbox-sub { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+/* REPORT MODAL */
+.report-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.report-modal.visible { display: flex; }
+
+.report-modal-box {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: fadeUp 0.25s ease;
+}
+
+.report-modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+
+.report-modal-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.report-preview {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.report-preview-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.report-preview-row:last-child { border-bottom: none; }
+.report-preview-label { color: var(--text-muted); }
+.report-preview-value { font-weight: 500; color: var(--text); }
+
+.obs-textarea {
+  width: 100%;
+  min-height: 100px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+
+.obs-textarea:focus { border-color: var(--green); }
+
+/* SECURITY - CAMERA */
+.camera-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,56,52,0.95);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.camera-modal-overlay.visible { display: flex; }
+
+.camera-box {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.camera-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+
+.camera-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+#cameraPreview {
+  width: 100%;
+  max-width: 320px;
+  height: 240px;
+  border-radius: 10px;
+  background: #000;
+  margin: 0 auto 16px;
+  display: block;
+  object-fit: cover;
+}
+
+#capturedPhoto {
+  width: 100%;
+  max-width: 320px;
+  height: 240px;
+  border-radius: 10px;
+  margin: 0 auto 16px;
+  display: none;
+  object-fit: cover;
+  border: 2px solid var(--green);
+}
+
+.tab-switch-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--warning);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 400;
+  display: none;
+}
+
+.tab-switch-warning.visible { display: block; }
+
+.security-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  margin-top: 8px;
+}
+
+/* MODAL */
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal-overlay.visible { display: flex; }
+
+.modal {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  animation: fadeUp 0.25s ease;
+}
+
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--green);
+  margin-bottom: 20px;
+}
+
+@media (max-width: 680px) {
+  .main, .main-wide { padding: 32px 20px; }
+  .topbar { padding: 0 20px; }
+  .form-row { grid-template-columns: 1fr; }
+  .table-header, .table-row { grid-template-columns: 2fr 1fr 1fr 60px; }
+  .table-header > *:nth-child(3),
+  .table-header > *:nth-child(4),
+  .table-row > *:nth-child(3),
+  .table-row > *:nth-child(4) { display: none; }
+  .info-grid { grid-template-columns: 1fr; }
+  .likert-option { max-width: 58px; }
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo">
+      <span class="logo-text">Condux</span>
+      <span class="logo-badge">360</span>
+    </div>
+    <div class="topbar-right">
+      <div class="timer-pill" id="timerPill">
+        <div class="timer-dot" id="timerDot"></div>
+        <span class="timer-value" id="timerValue">00:00</span>
+      </div>
+      <button class="btn-admin" onclick="goAdmin()" id="adminBtn">Panel Admin</button>
+    </div>
+  </div>
+
+  <!-- ===================== CANDIDATO SCREENS ===================== -->
+
+  <!-- LOGIN CANDIDATO -->
+  <div class="screen active" id="screenCandLogin">
+    <div class="main">
+      <p class="eyebrow">Evaluación de candidatos</p>
+      <h1 class="page-title">Bienvenido a<br>Condux 360</h1>
+      <p class="page-subtitle">Ingresa tu correo electrónico para acceder a tus evaluaciones pendientes.</p>
+
+      <div class="alert-error" id="candLoginError">No encontramos evaluaciones asignadas a ese correo.</div>
+
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input class="form-input" type="email" id="candEmail" placeholder="tu@correo.com" onkeydown="if(event.key==='Enter') candLogin()">
+      </div>
+
+      <div style="margin-top:24px; display:flex; gap:12px; align-items:center">
+        <button class="btn-primary" onclick="candLogin()">
+          Ingresar
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD CANDIDATO -->
+  <div class="screen" id="screenCandDash">
+    <div class="main">
+      <p class="eyebrow">Mis evaluaciones</p>
+      <h1 class="page-title" id="candWelcomeName">Hola</h1>
+      <p class="page-subtitle" id="candWelcomeSub">A continuación encontrarás tus evaluaciones asignadas. Puedes completarlas en el orden que prefieras.</p>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Duración estimada</div>
+          <div class="info-card-value">15–20 min por prueba</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Recomendación</div>
+          <div class="info-card-value">Responde con honestidad</div>
+        </div>
+      </div>
+
+      <div id="pruebasListCand"></div>
+
+      <div class="divider"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center">
+        <button class="btn-link" onclick="candLogout()">← Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVALUACIÓN EN CURSO -->
+  <div class="screen" id="screenEval">
+    <div class="main">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="progressSection">Sección 1</span>
+          <span id="progressCount">0 / 26</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <button class="btn-link" onclick="confirmExit()">← Salir de la evaluación</button>
+      </div>
+
+      <div class="alert-soft" id="timerAlert">
+        ⏱ Llevas más de 20 minutos en esta evaluación. Recuerda que las respuestas más honestas suelen ser las primeras que vienen a la mente.
+      </div>
+
+      <div class="section-tag" id="sectionTag">Sección 1 — Escala de acuerdo</div>
+      <p class="question-text" id="questionText"></p>
+      <div id="answerArea"></div>
+
+      <div class="nav-buttons">
+        <button class="btn-secondary" onclick="prevQ()" id="btnPrev">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12L3 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Anterior
+        </button>
+        <button class="btn-primary" onclick="nextQ()" id="btnNext">
+          Siguiente
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRACIAS -->
+  <div class="screen" id="screenThanks">
+    <div class="main" style="text-align:center; padding-top:80px">
+      <div class="thankyou-icon">✓</div>
+      <h2 style="font-family:'DM Serif Display',serif; font-size:28px; color:var(--green); margin-bottom:12px">Evaluación completada</h2>
+      <p style="color:var(--text-muted); font-size:15px; line-height:1.7; max-width:400px; margin:0 auto 32px">
+        Tus respuestas han sido registradas. El equipo de Horux se pondrá en contacto contigo próximamente.
+      </p>
+      <button class="btn-primary" onclick="refreshAndShowDash()">Ver mis evaluaciones</button>
+    </div>
+  </div>
+
+  <!-- ===================== ADMIN SCREENS ===================== -->
+
+  <!-- LOGIN ADMIN -->
+  <div class="screen" id="screenAdminLogin">
+    <div class="main" style="max-width:420px">
+      <p class="eyebrow">Acceso restringido</p>
+      <h1 class="page-title">Panel de administración</h1>
+      <p class="page-subtitle">Ingresa tus credenciales para continuar.</p>
+
+      <div class="alert-error" id="adminLoginError">Correo o contraseña incorrectos.</div>
+
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input class="form-input" type="email" id="adminEmail" placeholder="talento@horux.mx" onkeydown="if(event.key==='Enter') adminLogin()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input class="form-input" type="password" id="adminPass" placeholder="••••••••••" onkeydown="if(event.key==='Enter') adminLogin()">
+      </div>
+
+      <div style="margin-top:24px; display:flex; gap:12px; align-items:center">
+        <button class="btn-primary" onclick="adminLogin()">Ingresar</button>
+        <button class="btn-secondary" onclick="showScreen('screenCandLogin')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div class="screen" id="screenAdmin">
+    <div class="main-wide">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:28px; flex-wrap:wrap; gap:16px">
+        <div>
+          <p class="eyebrow">Panel de administración</p>
+          <h1 class="page-title" style="font-size:28px; margin-bottom:0">Condux 360</h1>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center">
+          <button class="btn-primary" onclick="showModal('modalCreateCand')">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Nuevo candidato
+          </button>
+          <button class="btn-danger" onclick="adminLogout()">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="adminTab('candidatos')" id="tabBtnCand">Candidatos</button>
+        <button class="tab" onclick="adminTab('resultados')" id="tabBtnRes">Resultados</button>
+        <button class="tab" onclick="adminTab('detalle')" id="tabBtnDet" style="display:none">Detalle</button>
+      </div>
+
+      <!-- TAB: CANDIDATOS -->
+      <div id="tabCandidatos">
+        <div class="table-wrap">
+          <div class="table-header">
+            <span>Candidato</span>
+            <span>Puesto</span>
+            <span>Nivel</span>
+            <span>Pruebas</span>
+            <span>Estado</span>
+            <span></span>
+          </div>
+          <div id="candidatosTableBody">
+            <div class="loading-state">Cargando candidatos...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: RESULTADOS -->
+      <div id="tabResultados" style="display:none">
+        <div class="table-wrap">
+          <div class="table-header">
+            <span>Candidato</span>
+            <span>Prueba</span>
+            <span>Puntaje</span>
+            <span>Resultado</span>
+            <span>Tiempo</span>
+            <span></span>
+          </div>
+          <div id="resultadosTableBody">
+            <div class="loading-state">Cargando resultados...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: DETALLE -->
+      <div id="tabDetalle" style="display:none">
+        <div id="detalleContainer"></div>
+        <button class="btn-secondary" onclick="adminTab('resultados')" style="margin-top:8px">← Volver</button>
+      </div>
+
+      <div class="divider"></div>
+      <button class="btn-link" onclick="showScreen('screenCandLogin')">← Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CREAR CANDIDATO -->
+<div class="modal-overlay" id="modalCreateCand">
+  <div class="modal">
+    <h3 class="modal-title">Nuevo candidato</h3>
+
+    <div class="alert-error" id="createError">Por favor completa todos los campos.</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Nombre completo</label>
+        <input class="form-input" type="text" id="newNombre" placeholder="Nombre Apellido">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input class="form-input" type="email" id="newCorreo" placeholder="candidato@correo.com">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Puesto</label>
+        <input class="form-input" type="text" id="newPuesto" placeholder="Ej. Gerente de Operaciones">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nivel</label>
+        <select class="form-select" id="newNivel">
+          <option value="">Seleccionar</option>
+          <option value="operativo">Operativo</option>
+          <option value="mando_medio">Mando Medio</option>
+          <option value="gerencia">Gerencia / Dirección</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" style="margin-bottom:10px">Pruebas asignadas</label>
+      <div class="checkbox-group" id="pruebasCheckboxes">
+        <label class="checkbox-item" onclick="toggleCheck(this)">
+          <input type="checkbox" value="valores" checked>
+          <span class="checkbox-label">Evaluación de Valores y Conducta</span>
+          <span class="checkbox-sub">~18 min</span>
+        </label>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:24px">
+      <button class="btn-primary" onclick="createCandidato()">Crear candidato</button>
+      <button class="btn-secondary" onclick="closeModal('modalCreateCand')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="report-modal" id="reportModal">
+  <div class="report-modal-box">
+    <h3 class="report-modal-title">Generar reporte</h3>
+    <p class="report-modal-sub" id="reportModalSub">Reporte individual — Evaluación de Valores y Conducta</p>
+
+    <div class="report-preview" id="reportPreview"></div>
+
+    <div class="form-group">
+      <label class="form-label">Observaciones del consultor <span style="color:var(--text-dim); font-weight:400">(opcional)</span></label>
+      <textarea class="obs-textarea" id="obsTexarea" placeholder="Agrega aquí tus observaciones profesionales sobre el candidato. Este texto aparecerá en el reporte como criterio consultivo de Horux..."></textarea>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap">
+      <button class="btn-primary" onclick="generatePDF()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13h10M8 3v7M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Descargar PDF
+      </button>
+      <button class="btn-secondary" onclick="closeReportModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAMERA MODAL -->
+<div class="camera-modal-overlay" id="cameraModal">
+  <div class="camera-box">
+    <h3 class="camera-title" id="cameraTitle">Verificación de identidad</h3>
+    <p class="camera-sub" id="cameraSub">Antes de comenzar necesitamos tomar una foto para verificar tu identidad. Al continuar aceptas que esta imagen será utilizada únicamente para validar tu sesión.</p>
+    <video id="cameraPreview" autoplay playsinline></video>
+    <canvas id="cameraCanvas" style="display:none"></canvas>
+    <img id="capturedPhoto" alt="Foto capturada">
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+      <button class="btn-primary" id="captureBtn" onclick="capturePhoto()">
+        📷 Tomar foto
+      </button>
+      <button class="btn-primary" id="continueBtn" onclick="continueAfterPhoto()" style="display:none">
+        Continuar →
+      </button>
+      <button class="btn-secondary" id="retakeBtn" onclick="retakePhoto()" style="display:none">
+        Repetir
+      </button>
+    </div>
+    <p style="font-size:11px; color:var(--text-dim); margin-top:12px">🔒 Tus datos están protegidos conforme a la LFPDPPP</p>
+  </div>
+</div>
+
+<!-- TAB SWITCH WARNING -->
+<div class="tab-switch-warning" id="tabSwitchWarning">
+  ⚠ Se detectó que saliste de la evaluación. Este evento ha sido registrado.
+</div>
+
+<!-- BRAND FOOTER -->
+<div class="brand-footer">by Horux Business Consulting</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const SHEET_ID = '1jtQOz0MDuZvZrtSUyO9byBC7zi6u0tZGABokuGPPQdk';
+const API_KEY = 'AIzaSyBgsKO-Yzi7Zj5He3gaFE5xur3Kd0XOPjI';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfO3qHdd6NneZmn5AZtz695hWFt6chGre1wefb_eu1Bx_CxaIcrwj3268aQlogSxIZ/exec';
+const ADMIN_EMAIL = 'talento@horux.mx';
+const ADMIN_PASS = 'Talento2026#';
+
+// ============================================================
+// STATE
+// ============================================================
+var adminAuth = false;
+var currentCand = null;
+var activeRole = null;
+var tabSwitchCount = 0;
+var questionTimes = {};
+var questionStartTime = null;
+var photosTaken = {};
+let currentQ = 0;
+let answers = {};
+let currentPrueba = null;
+let timerInterval = null;
+let timerSeconds = 0;
+let alertShown = false;
+
+// ============================================================
+// PRUEBAS CATALOG
+// ============================================================
+const PRUEBAS = {
+  valores: {
+    nombre: 'Evaluación de Valores y Conducta',
+    duracion: '~18 min',
+    preguntas: 26
+  }
+};
+
+// ============================================================
+// INIT SECURITY ON LOAD
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  initSecurity();
+});
+
+// ============================================================
+// QUESTIONS DATA
+// ============================================================
+const likertQuestions = [
+  { id: 1, dim: 'Honestidad', text: 'Prefiero decir la verdad aunque las consecuencias sean difíciles para mí.' },
+  { id: 2, dim: 'Honestidad', text: 'Si cometo un error en el trabajo, lo reconozco aunque nadie lo haya notado.' },
+  { id: 3, dim: 'Honestidad', text: 'Evito exagerar mis logros o experiencia al hablar con superiores o clientes.' },
+  { id: 4, dim: 'Lealtad', text: 'Protejo la información confidencial de mi organización incluso fuera del horario laboral.' },
+  { id: 5, dim: 'Lealtad', text: 'Evito hablar negativamente de mi empresa con personas externas a ella.' },
+  { id: 6, dim: 'Lealtad', text: 'Me identifico con los objetivos de la organización para la que trabajo.' },
+  { id: 7, dim: 'Congruencia', text: 'Actúo de la misma manera cuando me observan que cuando estoy solo.' },
+  { id: 8, dim: 'Congruencia', text: 'Cumplo los compromisos que adquiero aunque me resulte inconveniente.' },
+  { id: 9, dim: 'Congruencia', text: 'Mis acciones en el trabajo reflejan los valores que declaro tener.' },
+  { id: 10, dim: 'Activos', text: 'Utilizo los recursos de la empresa únicamente para fines laborales.' },
+  { id: 11, dim: 'Activos', text: 'Reporto cualquier irregularidad en el uso de materiales o equipos de la empresa.' },
+  { id: 12, dim: 'Activos', text: 'Considero que usar tiempo o recursos de trabajo para asuntos personales es inaceptable.' },
+  { id: 13, dim: 'Confidencialidad', text: 'Manejo con discreción la información sensible a la que tengo acceso en mi trabajo.' },
+  { id: 14, dim: 'Confidencialidad', text: 'No compartiría información estratégica de mi empresa con personas externas, aunque me lo pidieran.' },
+  { id: 15, dim: 'Confidencialidad', text: 'Entiendo que la información que manejo en mi trabajo pertenece a la organización, no a mí.' },
+  { id: 16, dim: 'Rendición', text: 'Informo oportunamente a mis superiores cuando algo no va según lo planeado.' },
+  { id: 17, dim: 'Rendición', text: 'Prefiero enfrentar una situación difícil a tiempo que dejar que se complique por no reportarla.' },
+  { id: 18, dim: 'Rendición', text: 'Asumo la responsabilidad de mis decisiones aunque los resultados no sean los esperados.' },
+];
+
+const situationQuestions = [
+  { id: 19, text: 'Descubres que un compañero utiliza regularmente materiales de la empresa para proyectos personales. Nadie más parece haberlo notado. ¿Qué harías?',
+    options: [{l:'A',t:'Lo ignoro, no es mi responsabilidad y no quiero problemas.'},{l:'B',t:'Le digo directamente a él que lo que hace está mal y que debe parar.'},{l:'C',t:'Lo reporto al área correspondiente siguiendo los canales establecidos.'},{l:'D',t:'Espero a ver si alguien más lo nota antes de tomar alguna acción.'}],
+    scores: {A:0,B:3,C:5,D:1} },
+  { id: 20, text: 'Un proveedor con el que trabajas frecuentemente te ofrece un regalo personal de alto valor como "muestra de agradecimiento". ¿Qué harías?',
+    options: [{l:'A',t:'Lo acepto, es una cortesía normal en los negocios.'},{l:'B',t:'Lo rechazo y le explico que no es una práctica que me parezca correcta.'},{l:'C',t:'Lo acepto pero no lo menciono a nadie en mi empresa.'},{l:'D',t:'Consulto con mi superior antes de tomar una decisión.'}],
+    scores: {A:0,B:5,C:0,D:3} },
+  { id: 21, text: 'Cometiste un error en un proceso que podría tener consecuencias para tu área, pero existe la posibilidad de que nadie lo descubra. ¿Qué harías?',
+    options: [{l:'A',t:'No digo nada y espero que no tenga consecuencias mayores.'},{l:'B',t:'Lo reporto inmediatamente aunque eso implique consecuencias para mí.'},{l:'C',t:'Primero intento corregirlo por mi cuenta y si no puedo, entonces lo reporto.'},{l:'D',t:'Se lo comento solo a un colega de confianza para ver qué me aconseja.'}],
+    scores: {A:0,B:5,C:3,D:1} },
+  { id: 22, text: 'Tu jefe te pide que presentes información de una manera que sabes que no es del todo precisa, argumentando que "así se hace siempre aquí". ¿Qué harías?',
+    options: [{l:'A',t:'Lo hago sin cuestionarlo, es una instrucción de mi superior.'},{l:'B',t:'Me niego directamente y le explico mis razones.'},{l:'C',t:'Busco una manera de presentar la información que sea precisa sin confrontar abiertamente a mi jefe.'},{l:'D',t:'Lo hago esta vez pero busco la manera de no repetirlo en el futuro.'}],
+    scores: {A:0,B:3,C:5,D:1} },
+  { id: 23, text: 'Un conocido que trabaja en una empresa competidora te pregunta sobre procesos internos de tu organización de manera informal. ¿Qué harías?',
+    options: [{l:'A',t:'Le comparto información general, no creo que sea algo grave.'},{l:'B',t:'Evito el tema con una respuesta vaga y cambio la conversación.'},{l:'C',t:'Le digo claramente que no puedo compartir información de mi empresa.'},{l:'D',t:'Depende de qué tan cercano sea y qué tan sensible sea la información.'}],
+    scores: {A:0,B:3,C:5,D:1} },
+  { id: 24, text: 'Te enteras de que un compañero falsificó información en un reporte para cubrir un error. Él te pide que no digas nada. ¿Qué harías?',
+    options: [{l:'A',t:'Lo cubro, es mi compañero y no quiero afectarlo.'},{l:'B',t:'Le digo que no puedo cubrirlo y que debe reportarlo él mismo.'},{l:'C',t:'Lo reporto directamente sin decirle nada a él.'},{l:'D',t:'Le doy un plazo para que lo reporte él, y si no lo hace, lo reporto yo.'}],
+    scores: {A:0,B:5,C:1,D:3} },
+  { id: 25, text: 'Tienes una tarde con poca carga de trabajo y nadie está supervisando tu actividad. ¿Qué harías?',
+    options: [{l:'A',t:'Aprovecho para hacer asuntos personales, total no hay nada urgente.'},{l:'B',t:'Busco activamente tareas pendientes o formas de ser útil a mi equipo.'},{l:'C',t:'Descanso un poco, después recupero el tiempo.'},{l:'D',t:'Le pregunto a mi superior si hay algo en lo que pueda apoyar.'}],
+    scores: {A:0,B:3,C:1,D:5} },
+  { id: 26, text: 'Estás en un proceso de selección y el entrevistador te pregunta sobre debilidades internas de tu empresa actual. ¿Qué harías?',
+    options: [{l:'A',t:'Comparto lo que me preguntan, ya estoy buscando salir de ahí.'},{l:'B',t:'Hablo de áreas de oportunidad de manera general sin revelar información sensible.'},{l:'C',t:'Me niego a hablar de mi empresa actual en esos términos.'},{l:'D',t:'Depende de qué tan avanzado esté en el proceso de selección.'}],
+    scores: {A:0,B:3,C:5,D:1} },
+];
+
+const allQuestions = [...likertQuestions, ...situationQuestions];
+
+const dimNames = {
+  'Honestidad': 'Honestidad',
+  'Lealtad': 'Lealtad organizacional',
+  'Congruencia': 'Congruencia',
+  'Activos': 'Manejo ético de activos',
+  'Confidencialidad': 'Confidencialidad',
+  'Rendición': 'Rendición de cuentas'
+};
+
+// ============================================================
+// SCREEN NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function showModal(id) {
+  document.getElementById(id).classList.add('visible');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('visible');
+}
+
+function toggleCheck(label) {
+  label.classList.toggle('checked');
+}
+
+// ============================================================
+// ADMIN AUTH
+// ============================================================
+function goAdmin() {
+  // If a candidate is actively logged in, block admin access
+  if (activeRole === 'candidato') {
+    alert('Debes cerrar sesión como candidato antes de acceder al panel de administración.');
+    return;
+  }
+  if (adminAuth) {
+    showScreen('screenAdmin');
+    loadAdminData();
+  } else {
+    showScreen('screenAdminLogin');
+    setTimeout(() => document.getElementById('adminEmail').focus(), 300);
+  }
+}
+
+function adminLogin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPass').value;
+  if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+    adminAuth = true;
+    document.getElementById('adminLoginError').classList.remove('visible');
+    showScreen('screenAdmin');
+    loadAdminData();
+  } else {
+    document.getElementById('adminLoginError').classList.add('visible');
+    document.getElementById('adminPass').value = '';
+  }
+}
+
+function candLogout() {
+  currentCand = null;
+  activeRole = null;
+  document.getElementById('adminBtn').style.display = 'flex';
+  document.getElementById('candEmail').value = '';
+  showScreen('screenCandLogin');
+}
+
+function adminLogout() {
+  adminAuth = false;
+  activeRole = null;
+  currentCand = null;
+  document.getElementById('adminBtn').style.display = 'flex';
+  showScreen('screenCandLogin');
+}
+
+// ============================================================
+// CANDIDATO AUTH
+// ============================================================
+function candLogin() {
+  const email = document.getElementById('candEmail').value.trim().toLowerCase();
+  if (!email) return;
+
+  const candidatos = getCandidatos();
+  const cand = candidatos.find(c => c.correo.toLowerCase() === email);
+
+  if (!cand) {
+    document.getElementById('candLoginError').classList.add('visible');
+    return;
+  }
+
+  document.getElementById('candLoginError').classList.remove('visible');
+  currentCand = cand;
+  activeRole = 'candidato';
+  adminAuth = false;
+  document.getElementById('adminBtn').style.display = 'none';
+  // Show dashboard immediately, sync in background
+  showCandDash();
+  syncFromSheets().then(function() {
+    var updated = getCandidatos().find(function(c) { return c.correo === currentCand.correo; });
+    if (updated) {
+      currentCand = updated;
+      // Refresh dashboard silently if still on it
+      if (document.getElementById('screenCandDash').classList.contains('active')) {
+        showCandDash();
+      }
+    }
+  }).catch(function() {
+    console.log('Background sync failed, using local data');
+  });
+}
+
+function showCandDash() {
+  const c = currentCand;
+  document.getElementById('candWelcomeName').textContent = `Hola, ${c.nombre.split(' ')[0]}`;
+  document.getElementById('candWelcomeSub').textContent = `A continuación encontrarás tus evaluaciones asignadas para el puesto de ${c.puesto}.`;
+
+  const container = document.getElementById('pruebasListCand');
+  const resultados = getResultados();
+  const misResultados = resultados.filter(r => r.correo === c.correo);
+  const completadasArr = c.completadas || [];
+
+  container.innerHTML = c.pruebas.map(p => {
+    const prueba = PRUEBAS[p];
+    const completada = misResultados.find(r => r.prueba === p) || (completadasArr.includes(p) ? {fecha: 'Recientemente'} : null);
+    return `
+      <div class="prueba-card ${completada ? 'completada' : 'pendiente'}">
+        <div class="prueba-info">
+          <div class="prueba-nombre">${prueba ? prueba.nombre : p}</div>
+          <div class="prueba-meta">${prueba ? prueba.duracion : ''} · ${completada ? 'Completada el ' + completada.fecha : 'Pendiente'}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px">
+          <span class="badge ${completada ? 'badge-done' : 'badge-pending'}">${completada ? 'Completada' : 'Pendiente'}</span>
+          ${!completada ? `<button class="btn-primary" onclick="startPrueba('${p}')" style="padding:9px 16px; font-size:13px">Iniciar</button>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  showScreen('screenCandDash');
+}
+
+// ============================================================
+// EVALUACIÓN
+// ============================================================
+function startPrueba(pruebaKey) {
+  currentPrueba = pruebaKey;
+  currentQ = 0;
+  answers = {};
+  timerSeconds = 0;
+  alertShown = false;
+  tabSwitchCount = 0;
+  questionTimes = {};
+  photosTaken = {};
+
+  document.getElementById('timerAlert').classList.remove('visible');
+  
+  // Take initial photo before starting
+  openCamera('inicio', function(photo) {
+    showScreen('screenEval');
+    startTimer();
+    startQuestionTimer();
+    renderQuestion();
+  });
+}
+
+function renderQuestion() {
+  const q = allQuestions[currentQ];
+  const isLikert = currentQ < 18;
+  const total = allQuestions.length;
+  const answered = Object.keys(answers).length;
+
+  // Progress
+  document.getElementById('progressCount').textContent = `${answered} / ${total}`;
+  document.getElementById('progressSection').textContent = isLikert ? 'Sección 1 — Escala de acuerdo' : 'Sección 2 — Situaciones';
+  document.getElementById('progressFill').style.width = `${(answered / total) * 100}%`;
+  document.getElementById('sectionTag').textContent = isLikert ? 'Sección 1 — Escala de acuerdo' : 'Sección 2 — Situaciones';
+  document.getElementById('questionText').textContent = q.text;
+  document.getElementById('btnPrev').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+
+  const isLast = currentQ === total - 1;
+  document.getElementById('btnNext').innerHTML = isLast
+    ? 'Enviar evaluación <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : 'Siguiente <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const area = document.getElementById('answerArea');
+
+  if (isLikert) {
+    area.innerHTML = `
+      <div>
+        <div class="likert-labels">
+          <span class="likert-label">Totalmente en desacuerdo</span>
+          <span class="likert-label" style="text-align:center">Neutral</span>
+          <span class="likert-label" style="text-align:right">Totalmente de acuerdo</span>
+        </div>
+        <div class="likert-options">
+          ${[1,2,3,4,5].map(v => `
+            <div class="likert-option ${answers[q.id] === v ? 'selected' : ''}" onclick="selectLikert(${v})">${v}</div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    area.innerHTML = `
+      <div class="situation-options">
+        ${q.options.map(opt => `
+          <div class="situation-option ${answers[q.id] === opt.l ? 'selected' : ''}" onclick="selectOption('${opt.l}')">
+            <div class="option-letter">${opt.l}</div>
+            <div class="option-text">${opt.t}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+}
+
+function selectLikert(val) {
+  answers[allQuestions[currentQ].id] = val;
+  renderQuestion();
+}
+
+function selectOption(letter) {
+  answers[allQuestions[currentQ].id] = letter;
+  renderQuestion();
+}
+
+function nextQ() {
+  if (!answers[allQuestions[currentQ].id]) {
+    alert('Por favor selecciona una respuesta antes de continuar.');
+    return;
+  }
+  if (currentQ === allQuestions.length - 1) {
+    submitEval();
+    return;
+  }
+  currentQ++;
+  renderQuestion();
+  window.scrollTo(0, 0);
+}
+
+function prevQ() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); window.scrollTo(0, 0); }
+}
+
+// ============================================================
+// SCORING
+// ============================================================
+function calculateScore() {
+  let likertRaw = 0;
+  likertQuestions.forEach(q => { likertRaw += (answers[q.id] || 0); });
+  const likertScore = Math.round((likertRaw / (18 * 5)) * 60);
+
+  let sitRaw = 0;
+  situationQuestions.forEach(q => {
+    const ans = answers[q.id];
+    if (ans) sitRaw += q.scores[ans];
+  });
+  const sitScore = Math.round((sitRaw / (8 * 5)) * 40);
+  const total = likertScore + sitScore;
+
+  const dims = {};
+  likertQuestions.forEach(q => {
+    if (!dims[q.dim]) dims[q.dim] = { sum: 0, count: 0 };
+    dims[q.dim].sum += (answers[q.id] || 0);
+    dims[q.dim].count++;
+  });
+
+  const dimScores = {};
+  Object.keys(dims).forEach(d => {
+    dimScores[d] = Math.round((dims[d].sum / (dims[d].count * 5)) * 100);
+  });
+
+  return { total, likertScore, sitScore, dimScores };
+}
+
+function getLevel(score, nivel) {
+  const thresholds = {
+    operativo: [{min:85,l:'Superior',cls:'badge-superior',rec:'Perfil de alto valor. Proceder con confianza.'},{min:65,l:'Adecuado',cls:'badge-adecuado',rec:'Perfil confiable. Apto para nivel operativo.'},{min:45,l:'Riesgo moderado',cls:'badge-moderado',rec:'Requiere entrevista profunda antes de avanzar.'},{min:0,l:'Riesgo alto',cls:'badge-alto',rec:'Se recomienda no avanzar sin análisis adicional.'}],
+    mando_medio: [{min:85,l:'Superior',cls:'badge-superior',rec:'Perfil de alto valor. Proceder con confianza.'},{min:70,l:'Adecuado',cls:'badge-adecuado',rec:'Perfil confiable para mando medio.'},{min:50,l:'Riesgo moderado',cls:'badge-moderado',rec:'Requiere entrevista profunda antes de avanzar.'},{min:0,l:'Riesgo alto',cls:'badge-alto',rec:'Se recomienda no avanzar sin análisis adicional.'}],
+    gerencia: [{min:85,l:'Superior',cls:'badge-superior',rec:'Perfil de alto valor. Apto para posición de liderazgo.'},{min:75,l:'Adecuado',cls:'badge-adecuado',rec:'Perfil aceptable. Validar en entrevista ejecutiva.'},{min:55,l:'Riesgo moderado',cls:'badge-moderado',rec:'Requiere entrevista profunda antes de avanzar.'},{min:0,l:'Riesgo alto',cls:'badge-alto',rec:'No recomendado para posición de gerencia.'}]
+  };
+  const t = thresholds[nivel] || thresholds['operativo'];
+  return t.find(x => score >= x.min);
+}
+
+// ============================================================
+// SUBMIT
+// ============================================================
+function submitEval() {
+  var scores = calculateScore();
+  var nivel = currentCand.nivel;
+  var level = getLevel(scores.total, nivel);
+  var timerData = stopTimer();
+  var fecha = new Date().toLocaleDateString('es-MX');
+
+  // Save result
+  var resultados = getResultados();
+  var folio = 'CDX-' + Date.now().toString().slice(-6);
+  resultados.push({
+    folio,
+    correo: currentCand.correo,
+    nombre: currentCand.nombre,
+    puesto: currentCand.puesto,
+    nivel: nivel,
+    prueba: currentPrueba,
+    fecha,
+    total: scores.total,
+    nivel_resultado: level.l,
+    nivel_cls: level.cls,
+    likert: scores.likertScore,
+    situaciones: scores.sitScore,
+    dims: scores.dimScores,
+    tiempo: timerData.formatted,
+    tiempo_extendido: timerData.extended,
+    rec: level.rec
+  });
+  saveResultados(resultados);
+  pushResultadoToSheets(resultados[resultados.length - 1]);
+
+  // Mark prueba as done in candidato
+  const candidatos = getCandidatos();
+  const idx = candidatos.findIndex(c => c.correo === currentCand.correo);
+  if (idx >= 0) {
+    if (!candidatos[idx].completadas) candidatos[idx].completadas = [];
+    if (!candidatos[idx].completadas.includes(currentPrueba)) {
+      candidatos[idx].completadas.push(currentPrueba);
+    }
+    saveCandidatos(candidatos);
+    currentCand = candidatos[idx];
+  }
+
+  showScreen('screenThanks');
+}
+
+// ============================================================
+// NAVIGATION HELPERS
+// ============================================================
+function refreshAndShowDash() {
+  // Reload currentCand from storage to get updated completadas
+  const candidatos = getCandidatos();
+  const updated = candidatos.find(c => c.correo === currentCand.correo);
+  if (updated) currentCand = updated;
+  showCandDash();
+}
+
+function confirmExit() {
+  if (confirm('¿Seguro que quieres salir? Tu progreso en esta prueba se perderá.')) {
+    stopTimer();
+    currentQ = 0;
+    answers = {};
+    showCandDash();
+  }
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer() {
+  // Clear any existing timer first to prevent duplicates
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  timerSeconds = 0;
+  alertShown = false;
+  document.getElementById('timerPill').classList.add('visible');
+  document.getElementById('timerDot').classList.remove('extended');
+
+  timerInterval = setInterval(function() {
+    timerSeconds++;
+    var mm = String(Math.floor(timerSeconds / 60)).padStart('0', 2);
+    var ss = String(timerSeconds % 60).padStart('0', 2);
+    // Use manual padding for compatibility
+    mm = timerSeconds >= 600 ? String(Math.floor(timerSeconds / 60)) : '0' + String(Math.floor(timerSeconds / 60));
+    ss = (timerSeconds % 60) < 10 ? '0' + String(timerSeconds % 60) : String(timerSeconds % 60);
+    document.getElementById('timerValue').textContent = mm + ':' + ss;
+
+    if (timerSeconds === 1200 && !alertShown) {
+      alertShown = true;
+      document.getElementById('timerAlert').classList.add('visible');
+      document.getElementById('timerDot').classList.add('extended');
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  document.getElementById('timerPill').classList.remove('visible');
+  const extended = timerSeconds > 1200;
+  const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+  const s = String(timerSeconds % 60).padStart(2, '0');
+  return { formatted: `${m}:${s}`, extended, seconds: timerSeconds };
+}
+
+// ============================================================
+// ADMIN DATA
+// ============================================================
+function getCandidatosLocal() {
+  return JSON.parse(localStorage.getItem('condux_candidatos') || '[]');
+}
+
+function saveCandidatosLocal(data) {
+  localStorage.setItem('condux_candidatos', JSON.stringify(data));
+}
+
+function getCandidatos() {
+  return getCandidatosLocal();
+}
+
+function saveCandidatos(data) {
+  saveCandidatosLocal(data);
+}
+
+function getResultados() {
+  return JSON.parse(localStorage.getItem('condux_resultados') || '[]');
+}
+
+function saveResultados(data) {
+  localStorage.setItem('condux_resultados', JSON.stringify(data));
+}
+
+async function syncFromSheets() {
+  try {
+    // Sync candidatos
+    var candRes = await fetch(APPS_SCRIPT_URL + '?type=candidatos');
+    var candData = await candRes.json();
+    if (candData && candData.length > 0) {
+      // Merge with local - remote takes priority
+      var local = getCandidatosLocal();
+      var merged = candData.map(function(remote) {
+        var localCand = local.find(function(l) { return l.correo === remote.correo; });
+        if (localCand) {
+          remote.completadas = localCand.completadas || [];
+        }
+        return remote;
+      });
+      // Add any local-only candidatos not in remote
+      local.forEach(function(l) {
+        var exists = merged.find(function(m) { return m.correo === l.correo; });
+        if (!exists) merged.push(l);
+      });
+      saveCandidatosLocal(merged);
+    }
+
+    // Sync resultados
+    var resRes = await fetch(APPS_SCRIPT_URL + '?type=resultados');
+    var resData = await resRes.json();
+    if (resData && resData.length > 0) {
+      var localRes = getResultados();
+      var mergedRes = resData.slice();
+      localRes.forEach(function(l) {
+        var exists = mergedRes.find(function(m) { return m.folio === l.folio; });
+        if (!exists) mergedRes.push(l);
+      });
+      saveResultados(mergedRes);
+
+      // Update completadas based on resultados
+      var cands = getCandidatosLocal();
+      resData.forEach(function(r) {
+        var idx = cands.findIndex(function(c) { return c.correo === r.correo; });
+        if (idx >= 0) {
+          if (!cands[idx].completadas) cands[idx].completadas = [];
+          if (cands[idx].completadas.indexOf(r.prueba) === -1) {
+            cands[idx].completadas.push(r.prueba);
+          }
+        }
+      });
+      saveCandidatosLocal(cands);
+    }
+  } catch(e) {
+    console.log('Sync error:', e);
+  }
+}
+
+function createCandidato() {
+  const nombre = document.getElementById('newNombre').value.trim();
+  const correo = document.getElementById('newCorreo').value.trim().toLowerCase();
+  const puesto = document.getElementById('newPuesto').value.trim();
+  const nivel = document.getElementById('newNivel').value;
+
+  const checks = document.querySelectorAll('#pruebasCheckboxes input[type="checkbox"]');
+  const pruebas = Array.from(checks).filter(c => c.checked).map(c => c.value);
+
+  if (!nombre || !correo || !puesto || !nivel || pruebas.length === 0) {
+    document.getElementById('createError').classList.add('visible');
+    return;
+  }
+
+  document.getElementById('createError').classList.remove('visible');
+
+  var candidatos = getCandidatos();
+  var newCand = { nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, pruebas: pruebas, completadas: [], fechaCreacion: new Date().toLocaleDateString('es-MX') };
+  candidatos.push(newCand);
+  saveCandidatos(candidatos);
+
+  // Save to Sheets
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({ type: 'candidato', nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, pruebas: pruebas, fechaCreacion: newCand.fechaCreacion })
+  }).catch(function(e) { console.log('Sheets sync error:', e); });
+
+  // Reset form
+  document.getElementById('newNombre').value = '';
+  document.getElementById('newCorreo').value = '';
+  document.getElementById('newPuesto').value = '';
+  document.getElementById('newNivel').value = '';
+
+  closeModal('modalCreateCand');
+  loadAdminData();
+}
+
+async function loadAdminData() {
+  var body = document.getElementById('candidatosTableBody');
+  if (body) body.innerHTML = '<div class="loading-state">Sincronizando datos...</div>';
+  await syncFromSheets();
+  loadCandidatosTable();
+  loadResultadosTable();
+}
+
+function loadCandidatosTable() {
+  const candidatos = getCandidatos();
+  const resultados = getResultados();
+  const body = document.getElementById('candidatosTableBody');
+
+  if (candidatos.length === 0) {
+    body.innerHTML = '<div class="empty-state">No hay candidatos registrados. Crea el primero.</div>';
+    return;
+  }
+
+  body.innerHTML = candidatos.map((c, i) => {
+    const misRes = resultados.filter(r => r.correo === c.correo);
+    const completadas = misRes.length;
+    const total = c.pruebas.length;
+    const estado = completadas === total ? 'Completado' : completadas > 0 ? 'En progreso' : 'Pendiente';
+    const estadoCls = completadas === total ? 'badge-done' : completadas > 0 ? 'badge-adecuado' : 'badge-pending';
+
+    return `
+      <div class="table-row">
+        <div>
+          <div class="cell-name">${c.nombre}</div>
+          <div class="cell-sub">${c.correo}</div>
+        </div>
+        <div class="cell-text">${c.puesto}</div>
+        <div class="cell-text">${formatNivel(c.nivel)}</div>
+        <div class="cell-text">${completadas}/${total} pruebas</div>
+        <div><span class="badge ${estadoCls}">${estado}</span></div>
+        <div>
+          <button class="btn-link" onclick="deleteCandidato(${i})" style="color:var(--danger)">Eliminar</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function deleteCandidato(i) {
+  if (!confirm('¿Eliminar este candidato? También se eliminarán sus resultados.')) return;
+  const candidatos = getCandidatos();
+  const correo = candidatos[i].correo;
+  candidatos.splice(i, 1);
+  saveCandidatos(candidatos);
+
+  const resultados = getResultados().filter(r => r.correo !== correo);
+  saveResultados(resultados);
+  loadAdminData();
+}
+
+function loadResultadosTable() {
+  const resultados = getResultados();
+  const body = document.getElementById('resultadosTableBody');
+
+  if (resultados.length === 0) {
+    body.innerHTML = '<div class="empty-state">No hay resultados registrados aún.</div>';
+    return;
+  }
+
+  body.innerHTML = [...resultados].reverse().map((r, i) => `
+    <div class="table-row">
+      <div>
+        <div class="cell-name">${r.nombre}</div>
+        <div class="cell-sub">${r.fecha}</div>
+      </div>
+      <div class="cell-text">${PRUEBAS[r.prueba] ? PRUEBAS[r.prueba].nombre : r.prueba}</div>
+      <div class="cell-score">${r.total}<span style="color:var(--text-dim);font-size:11px">/100</span></div>
+      <div><span class="badge ${r.nivel_cls || 'badge-pending'}">${r.nivel_resultado}</span></div>
+      <div>
+        <span class="cell-text">${r.tiempo || '--'}</span>
+        ${r.tiempo_extendido ? '<span class="badge badge-extended" style="margin-left:6px">Ext.</span>' : ''}
+      </div>
+      <div><button class="btn-link" onclick="showDetalle(${resultados.length - 1 - i})">Ver →</button></div>
+    </div>
+  `).join('');
+}
+
+function showDetalle(idx) {
+  const resultados = getResultados();
+  const r = resultados[idx];
+  if (!r) return;
+
+  const pct = r.total;
+  const circumference = 2 * Math.PI * 52;
+  const dashOffset = circumference - (pct / 100) * circumference;
+
+  const container = document.getElementById('detalleContainer');
+  container.innerHTML = `
+    <div class="score-hero">
+      <div class="score-ring">
+        <svg width="140" height="140" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="7"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--green)" stroke-width="7"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}" stroke-linecap="round"/>
+        </svg>
+        <div class="score-text">
+          <span class="score-num">${r.total}</span>
+          <span class="score-max">/ 100</span>
+        </div>
+      </div>
+      <span class="badge ${r.nivel_cls}" style="font-size:11px; padding:4px 12px; border-radius:20px">${r.nivel_resultado}</span>
+      <h2 class="result-name">${r.nombre}</h2>
+      <p class="result-puesto">${r.puesto} · ${formatNivel(r.nivel)}</p>
+      <p class="result-rec">${r.rec || ''}</p>
+    </div>
+
+    <div class="breakdown-table">
+      <div class="breakdown-header">Desglose de puntaje</div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Sección 1 — Escala de acuerdo (18 preguntas)</span>
+        <span class="breakdown-score">${r.likert}<span style="color:var(--text-dim);font-size:12px">/60</span></span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Sección 2 — Situaciones (8 preguntas)</span>
+        <span class="breakdown-score">${r.situaciones}<span style="color:var(--text-dim);font-size:12px">/40</span></span>
+      </div>
+      <div class="breakdown-row" style="background:var(--green-pale)">
+        <span class="breakdown-label" style="font-weight:600; color:var(--green)">Puntaje total</span>
+        <span class="breakdown-score" style="color:var(--green)">${r.total}<span style="color:var(--text-dim);font-size:12px">/100</span></span>
+      </div>
+    </div>
+
+    <div class="breakdown-table">
+      <div class="breakdown-header">Resultados por dimensión</div>
+      ${Object.keys(dimNames).map(key => {
+        const score = r.dims ? (r.dims[key] || 0) : 0;
+        const color = score >= 70 ? 'var(--green)' : score >= 50 ? 'var(--warning)' : 'var(--danger)';
+        return `
+          <div class="dim-row">
+            <span class="dim-name">${dimNames[key]}</span>
+            <div class="dim-bar-wrap">
+              <div class="dim-bar-fill" style="width:${score}%; background:${color}"></div>
+            </div>
+            <span class="dim-score">${score}%</span>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div style="display:flex; align-items:center; gap:16px; margin-top:4px; flex-wrap:wrap">
+      <p style="font-size:12px; color:var(--text-dim)">Fecha: ${r.fecha}</p>
+      <p style="font-size:12px; color:var(--text-dim)">Tiempo: ${r.tiempo || '--'}</p>
+      ${r.tiempo_extendido ? '<span class="badge badge-extended">Tiempo extendido</span>' : ''}
+    </div>
+    <div style="margin-top:20px; display:flex; gap:10px">
+      <button class="btn-primary" onclick="openReportModal(${idx})">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13h10M8 3v7M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Generar reporte individual
+      </button>
+    </div>
+  `;
+
+  adminTab('detalle');
+}
+
+// ============================================================
+// ADMIN TABS
+// ============================================================
+function adminTab(tab) {
+  ['candidatos','resultados','detalle'].forEach(t => {
+    document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`).style.display = t === tab ? 'block' : 'none';
+    const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase()+t.slice(1).slice(0,2).toUpperCase()+t.slice(3)}`);
+  });
+
+  document.getElementById('tabBtnCand').classList.toggle('active', tab === 'candidatos');
+  document.getElementById('tabBtnRes').classList.toggle('active', tab === 'resultados');
+  document.getElementById('tabBtnDet').classList.toggle('active', tab === 'detalle');
+
+  document.getElementById('tabCandidatos').style.display = tab === 'candidatos' ? 'block' : 'none';
+  document.getElementById('tabResultados').style.display = tab === 'resultados' ? 'block' : 'none';
+  document.getElementById('tabDetalle').style.display = tab === 'detalle' ? 'block' : 'none';
+
+  if (tab === 'detalle') document.getElementById('tabBtnDet').style.display = 'inline-block';
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+// ============================================================
+// REPORT GENERATION
+// ============================================================
+let currentReportIdx = null;
+
+function openReportModal(idx) {
+  currentReportIdx = idx;
+  const resultados = getResultados();
+  const r = resultados[idx];
+  if (!r) return;
+
+  document.getElementById('reportModalSub').textContent =
+    `Reporte individual — ${PRUEBAS[r.prueba] ? PRUEBAS[r.prueba].nombre : r.prueba}`;
+
+  document.getElementById('reportPreview').innerHTML = `
+    <div class="report-preview-row">
+      <span class="report-preview-label">Candidato</span>
+      <span class="report-preview-value">${r.nombre}</span>
+    </div>
+    <div class="report-preview-row">
+      <span class="report-preview-label">Puesto</span>
+      <span class="report-preview-value">${r.puesto}</span>
+    </div>
+    <div class="report-preview-row">
+      <span class="report-preview-label">Nivel</span>
+      <span class="report-preview-value">${formatNivel(r.nivel)}</span>
+    </div>
+    <div class="report-preview-row">
+      <span class="report-preview-label">Puntaje</span>
+      <span class="report-preview-value">${r.total}/100 — ${r.nivel_resultado}</span>
+    </div>
+    <div class="report-preview-row">
+      <span class="report-preview-label">Fecha</span>
+      <span class="report-preview-value">${r.fecha}</span>
+    </div>
+    <div class="report-preview-row">
+      <span class="report-preview-label">Folio</span>
+      <span class="report-preview-value">${r.folio || 'CDX-' + idx}</span>
+    </div>
+  `;
+
+  document.getElementById('obsTexarea').value = '';
+  document.getElementById('reportModal').classList.add('visible');
+}
+
+function closeReportModal() {
+  document.getElementById('reportModal').classList.remove('visible');
+  currentReportIdx = null;
+}
+
+function generatePDF() {
+  var resultados = getResultados();
+  var r = resultados[currentReportIdx];
+  var obs = document.getElementById('obsTexarea').value.trim();
+  
+  if (typeof window.jspdf === 'undefined') {
+    alert('Error cargando jsPDF. Verifica tu conexión a internet.');
+    return;
+  }
+  
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  var W = 210;
+  var H = 297;
+  var margin = 20;
+  var contentW = W - margin * 2;
+  var y = 0;
+
+  var dimNames = {
+    'Honestidad': 'Honestidad',
+    'Lealtad': 'Lealtad organizacional',
+    'Congruencia': 'Congruencia',
+    'Activos': 'Manejo etico de activos',
+    'Confidencialidad': 'Confidencialidad',
+    'Rendicion': 'Rendicion de cuentas'
+  };
+
+  var dimDescriptions = {
+    'Honestidad': 'Mide la tendencia a actuar con verdad, reconocer errores y presentar informacion de manera precisa.',
+    'Lealtad': 'Evalua el nivel de compromiso y fidelidad hacia la organizacion y sus objetivos.',
+    'Congruencia': 'Mide la consistencia entre los valores declarados y las acciones concretas del candidato.',
+    'Activos': 'Evalua el uso etico de los recursos, materiales y tiempo de la organizacion.',
+    'Confidencialidad': 'Mide la capacidad para manejar informacion sensible con discrecion y responsabilidad.',
+    'Rendicion': 'Evalua la tendencia a reportar oportunamente y asumir responsabilidad sobre las propias decisiones.'
+  };
+
+  function addPage() {
+    doc.addPage();
+    y = margin;
+    doc.setFillColor(0, 56, 52);
+    doc.rect(0, 0, W, 12, 'F');
+    doc.setFontSize(8);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'normal');
+    doc.text('CONDUX 360 - Evaluacion de Valores y Conducta', margin, 8);
+    doc.text('Folio: ' + (r.folio || 'CDX'), W - margin, 8, { align: 'right' });
+    y = 20;
+  }
+
+  function sectionTitle(title) {
+    doc.setFillColor(0, 56, 52);
+    doc.rect(margin, y, 3, 8, 'F');
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 56, 52);
+    doc.text(title, margin + 8, y + 6);
+    y += 16;
+  }
+
+  function checkPageBreak(needed) {
+    needed = needed || 20;
+    if (y + needed > H - 20) { addPage(); }
+  }
+
+  // PORTADA
+  doc.setFillColor(0, 56, 52);
+  doc.rect(0, 0, W, 60, 'F');
+
+  doc.setFontSize(28);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Condux', margin, 28);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(158, 128, 117);
+  doc.text('360', margin + 48, 28);
+
+  doc.setFontSize(11);
+  doc.setTextColor(200, 220, 218);
+  doc.text('Evaluacion de Valores y Conducta', margin, 40);
+
+  doc.setFontSize(22);
+  doc.setTextColor(0, 56, 52);
+  doc.setFont('helvetica', 'bold');
+  doc.text(r.nombre, margin, 85);
+
+  y = 95;
+  var infoItems = [
+    ['Puesto', r.puesto],
+    ['Nivel', formatNivel(r.nivel)],
+    ['Fecha de aplicacion', r.fecha],
+    ['Folio', r.folio || 'CDX'],
+    ['Tiempo de respuesta', r.tiempo || '--']
+  ];
+
+  for (var ii = 0; ii < infoItems.length; ii++) {
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(138, 132, 128);
+    doc.text(infoItems[ii][0].toUpperCase(), margin, y);
+    doc.setFontSize(11);
+    doc.setTextColor(26, 26, 26);
+    doc.text(infoItems[ii][1], margin, y + 6);
+    y += 16;
+  }
+
+  // Score box
+  doc.setFillColor(250, 248, 246);
+  doc.roundedRect(margin, y + 4, contentW, 36, 4, 4, 'F');
+  doc.setDrawColor(226, 219, 216);
+  doc.roundedRect(margin, y + 4, contentW, 36, 4, 4, 'S');
+
+  doc.setFillColor(0, 56, 52);
+  doc.circle(margin + 24, y + 22, 14, 'F');
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+  doc.text(String(r.total), margin + 24, y + 24, { align: 'center' });
+  doc.setFontSize(8);
+  doc.text('/100', margin + 24, y + 30, { align: 'center' });
+
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 56, 52);
+  doc.text(r.nivel_resultado, margin + 46, y + 19);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(138, 132, 128);
+  if (r.rec) {
+    doc.text(r.rec, margin + 46, y + 27, { maxWidth: contentW - 50 });
+  }
+  y += 50;
+
+  if (r.tiempo_extendido) {
+    doc.setFillColor(253, 246, 232);
+    doc.roundedRect(margin, y, contentW, 12, 3, 3, 'F');
+    doc.setFontSize(9);
+    doc.setTextColor(176, 125, 42);
+    doc.text('Tiempo extendido: el candidato tardo mas de 20 minutos en completar la evaluacion.', margin + 4, y + 8);
+    y += 18;
+  }
+
+  doc.setFontSize(8);
+  doc.setTextColor(138, 132, 128);
+  doc.text('by Horux Business Consulting', W - margin, H - 10, { align: 'right' });
+
+  // PAGINA 2: RESULTADOS
+  addPage();
+
+  sectionTitle('Desglose de puntaje');
+
+  var scoreRows = [
+    ['Seccion 1 - Escala de acuerdo (18 preguntas)', r.likert, 60],
+    ['Seccion 2 - Situaciones (8 preguntas)', r.situaciones, 40],
+    ['Puntaje total', r.total, 100]
+  ];
+
+  for (var si = 0; si < scoreRows.length; si++) {
+    var sLabel = scoreRows[si][0];
+    var sScore = scoreRows[si][1];
+    var sMax = scoreRows[si][2];
+    var isTotal = (si === scoreRows.length - 1);
+    if (isTotal) {
+      doc.setFillColor(0, 56, 52);
+      doc.rect(margin, y, contentW, 12, 'F');
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text(sLabel, margin + 4, y + 8);
+      doc.text(sScore + '/' + sMax, W - margin - 4, y + 8, { align: 'right' });
+      y += 16;
+    } else {
+      if (si % 2 === 0) { doc.setFillColor(250, 248, 246); } else { doc.setFillColor(255, 255, 255); }
+      doc.rect(margin, y, contentW, 10, 'F');
+      doc.setDrawColor(226, 219, 216);
+      doc.line(margin, y + 10, margin + contentW, y + 10);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(26, 26, 26);
+      doc.text(sLabel, margin + 4, y + 7);
+      doc.setFont('helvetica', 'bold');
+      doc.text(sScore + '/' + sMax, W - margin - 4, y + 7, { align: 'right' });
+      y += 10;
+    }
+  }
+
+  y += 10;
+  checkPageBreak(60);
+  sectionTitle('Resultados por dimension');
+
+  var dimKeys = ['Honestidad', 'Lealtad', 'Congruencia', 'Activos', 'Confidencialidad', 'Rendicion'];
+
+  for (var di = 0; di < dimKeys.length; di++) {
+    var dKey = dimKeys[di];
+    checkPageBreak(30);
+    var dScore = r.dims ? (r.dims[dKey] || 0) : 0;
+    var barR, barG, barB;
+    if (dScore >= 70) { barR = 0; barG = 56; barB = 52; }
+    else if (dScore >= 50) { barR = 176; barG = 125; barB = 42; }
+    else { barR = 192; barG = 57; barB = 43; }
+
+    if (di % 2 === 0) { doc.setFillColor(250, 248, 246); } else { doc.setFillColor(255, 255, 255); }
+    doc.rect(margin, y, contentW, 22, 'F');
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 56, 52);
+    var dimLabel = dimNames[dKey] || dKey;
+    doc.text(dimLabel, margin + 4, y + 7);
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(barR, barG, barB);
+    doc.text(dScore + '%', W - margin - 4, y + 7, { align: 'right' });
+
+    var barX = margin + 4;
+    var barW = contentW - 30;
+    var barY = y + 11;
+    doc.setFillColor(226, 219, 216);
+    doc.roundedRect(barX, barY, barW, 4, 2, 2, 'F');
+    doc.setFillColor(barR, barG, barB);
+    var fillW = (barW * dScore) / 100;
+    if (fillW > 0) { doc.roundedRect(barX, barY, fillW, 4, 2, 2, 'F'); }
+
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(138, 132, 128);
+    var desc = dimDescriptions[dKey] || '';
+    doc.text(desc, margin + 4, y + 20, { maxWidth: contentW - 8 });
+
+    y += 28;
+  }
+
+  // VALIDACION
+  checkPageBreak(40);
+  y += 6;
+  sectionTitle('Validacion de consistencia');
+
+  var dimVals = [];
+  for (var dvi = 0; dvi < dimKeys.length; dvi++) {
+    dimVals.push(r.dims ? (r.dims[dimKeys[dvi]] || 0) : 0);
+  }
+  var maxVal = dimVals[0], minVal = dimVals[0];
+  for (var vi = 1; vi < dimVals.length; vi++) {
+    if (dimVals[vi] > maxVal) maxVal = dimVals[vi];
+    if (dimVals[vi] < minVal) minVal = dimVals[vi];
+  }
+  var isConsistent = (maxVal - minVal) < 40;
+
+  doc.setFillColor(250, 248, 246);
+  doc.roundedRect(margin, y, contentW, 20, 4, 4, 'F');
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  if (isConsistent) { doc.setTextColor(0, 56, 52); } else { doc.setTextColor(176, 125, 42); }
+  doc.text(isConsistent ? 'Resultados consistentes' : 'Revisar consistencia', margin + 8, y + 9);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(138, 132, 128);
+  var consMsg = isConsistent
+    ? 'Las respuestas muestran coherencia interna a lo largo de la evaluacion.'
+    : 'Se detecta variabilidad significativa. Se recomienda validar en entrevista.';
+  doc.text(consMsg, margin + 8, y + 16, { maxWidth: contentW - 12 });
+  y += 28;
+
+  // OBSERVACIONES
+  if (obs) {
+    checkPageBreak(40);
+    y += 4;
+    sectionTitle('Observaciones del consultor');
+    doc.setFillColor(250, 248, 246);
+    doc.setDrawColor(158, 128, 117);
+    doc.roundedRect(margin, y, contentW, 8, 2, 2, 'F');
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(158, 128, 117);
+    doc.text('CRITERIO CONSULTIVO - HORUX BUSINESS CONSULTING', margin + 4, y + 5.5);
+    y += 12;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(26, 26, 26);
+    var obsLines = doc.splitTextToSize(obs, contentW - 8);
+    var obsH = obsLines.length * 5 + 16;
+    checkPageBreak(obsH);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 219, 216);
+    doc.roundedRect(margin, y, contentW, obsH, 3, 3, 'F');
+    doc.roundedRect(margin, y, contentW, obsH, 3, 3, 'S');
+    doc.text(obsLines, margin + 4, y + 8);
+    y += obsH + 8;
+  }
+
+  // RECOMENDACION FINAL
+  checkPageBreak(30);
+  y += 4;
+  sectionTitle('Recomendacion final');
+
+  var recR, recG, recB;
+  if (r.nivel_resultado === 'Superior' || r.nivel_resultado === 'Adecuado') {
+    recR = 0; recG = 56; recB = 52;
+  } else if (r.nivel_resultado === 'Riesgo moderado') {
+    recR = 176; recG = 125; recB = 42;
+  } else {
+    recR = 192; recG = 57; recB = 43;
+  }
+
+  doc.setFillColor(recR, recG, recB);
+  doc.roundedRect(margin, y, contentW, 24, 4, 4, 'F');
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+  doc.text(r.nivel_resultado, margin + 8, y + 10);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  if (r.rec) {
+    doc.text(r.rec, margin + 8, y + 18, { maxWidth: contentW - 12 });
+  }
+  y += 32;
+
+  // FOOTER
+  doc.setDrawColor(226, 219, 216);
+  doc.line(margin, H - 18, W - margin, H - 18);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(138, 132, 128);
+  doc.text('Condux 360 - Reporte generado el ' + new Date().toLocaleDateString('es-MX'), margin, H - 12);
+  doc.text('by Horux Business Consulting', W - margin, H - 12, { align: 'right' });
+
+  var filename = 'Condux360_' + r.nombre.replace(/\s+/g, '_') + '_' + (r.folio || 'reporte') + '.pdf';
+  doc.save(filename);
+  closeReportModal();
+}
+
+// ============================================================
+// SECURITY FEATURES
+// ============================================================
+var cameraStream = null;
+var photoCallback = null;
+var currentPhotoType = null;
+
+function initSecurity() {
+  // Block copy/paste during evaluation
+  document.addEventListener('copy', function(e) {
+    if (activeRole === 'candidato' && document.getElementById('screenEval').classList.contains('active')) {
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('paste', function(e) {
+    if (activeRole === 'candidato' && document.getElementById('screenEval').classList.contains('active')) {
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('cut', function(e) {
+    if (activeRole === 'candidato' && document.getElementById('screenEval').classList.contains('active')) {
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('contextmenu', function(e) {
+    if (activeRole === 'candidato' && document.getElementById('screenEval').classList.contains('active')) {
+      e.preventDefault();
+    }
+  });
+
+  // Tab switch detection
+  document.addEventListener('visibilitychange', function() {
+    if (activeRole === 'candidato' && document.getElementById('screenEval').classList.contains('active')) {
+      if (document.hidden) {
+        tabSwitchCount++;
+        var warning = document.getElementById('tabSwitchWarning');
+        warning.classList.add('visible');
+        setTimeout(function() { warning.classList.remove('visible'); }, 4000);
+      }
+    }
+  });
+
+  // Track question time
+  document.addEventListener('keydown', function(e) {
+    if (activeRole === 'candidato' && document.getElementById('screenEval').classList.contains('active')) {
+      // Block keyboard shortcuts
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a')) {
+        e.preventDefault();
+      }
+    }
+  });
+}
+
+function startQuestionTimer() {
+  questionStartTime = Date.now();
+}
+
+function recordQuestionTime(questionId) {
+  if (questionStartTime) {
+    var elapsed = Math.round((Date.now() - questionStartTime) / 1000);
+    questionTimes[questionId] = elapsed;
+    questionStartTime = Date.now();
+  }
+}
+
+// CAMERA FUNCTIONS
+function openCamera(type, callback) {
+  currentPhotoType = type;
+  photoCallback = callback;
+  
+  var modal = document.getElementById('cameraModal');
+  var title = document.getElementById('cameraTitle');
+  var sub = document.getElementById('cameraSub');
+  
+  if (type === 'inicio') {
+    title.textContent = 'Verificación de identidad';
+    sub.textContent = 'Para iniciar la evaluación necesitamos verificar tu identidad. Por favor toma una foto clara de tu rostro.';
+  } else {
+    title.textContent = 'Verificación intermedia';
+    sub.textContent = 'Verificación de identidad a mitad de la evaluación.';
+  }
+
+  document.getElementById('capturedPhoto').style.display = 'none';
+  document.getElementById('cameraPreview').style.display = 'block';
+  document.getElementById('captureBtn').style.display = 'inline-flex';
+  document.getElementById('continueBtn').style.display = 'none';
+  document.getElementById('retakeBtn').style.display = 'none';
+
+  modal.classList.add('visible');
+
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+    .then(function(stream) {
+      cameraStream = stream;
+      document.getElementById('cameraPreview').srcObject = stream;
+    })
+    .catch(function(err) {
+      console.log('Camera error:', err);
+      // If camera not available, skip photo and continue
+      modal.classList.remove('visible');
+      if (photoCallback) photoCallback(null);
+    });
+}
+
+function capturePhoto() {
+  var video = document.getElementById('cameraPreview');
+  var canvas = document.getElementById('cameraCanvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = video.videoWidth || 320;
+  canvas.height = video.videoHeight || 240;
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  
+  var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+  
+  document.getElementById('capturedPhoto').src = dataUrl;
+  document.getElementById('capturedPhoto').style.display = 'block';
+  document.getElementById('cameraPreview').style.display = 'none';
+  document.getElementById('captureBtn').style.display = 'none';
+  document.getElementById('continueBtn').style.display = 'inline-flex';
+  document.getElementById('retakeBtn').style.display = 'inline-flex';
+
+  photosTaken[currentPhotoType] = dataUrl;
+}
+
+function retakePhoto() {
+  document.getElementById('capturedPhoto').style.display = 'none';
+  document.getElementById('cameraPreview').style.display = 'block';
+  document.getElementById('captureBtn').style.display = 'inline-flex';
+  document.getElementById('continueBtn').style.display = 'none';
+  document.getElementById('retakeBtn').style.display = 'none';
+}
+
+function continueAfterPhoto() {
+  stopCamera();
+  document.getElementById('cameraModal').classList.remove('visible');
+  if (photoCallback) photoCallback(photosTaken[currentPhotoType]);
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(function(track) { track.stop(); });
+    cameraStream = null;
+  }
+}
+
+function formatNivel(n) {
+  return { operativo: 'Operativo', mando_medio: 'Mando Medio', gerencia: 'Gerencia' }[n] || n;
+}
+
+async function saveToSheets(scores, level, fecha, timerData) {
+  var folio = 'CDX-' + Date.now().toString().slice(-6);
+  var payload = {
+    type: 'resultado',
+    folio: folio,
+    correo: currentCand.correo,
+    nombre: currentCand.nombre,
+    puesto: currentCand.puesto,
+    nivel: currentCand.nivel,
+    prueba: currentPrueba,
+    fecha: fecha,
+    total: scores.total,
+    nivel_resultado: level.l,
+    nivel_cls: level.cls,
+    likert: scores.likertScore,
+    situaciones: scores.sitScore,
+    dims: scores.dimScores,
+    tiempo: timerData.formatted,
+    tiempo_extendido: timerData.extended,
+    rec: level.rec,
+    tab_switches: tabSwitchCount,
+    question_times: JSON.stringify(questionTimes),
+    foto_inicio: photosTaken['inicio'] ? 'captured' : 'none',
+    foto_intermedia: photosTaken['intermedia'] ? 'captured' : 'none'
+  };
+
+  // Save to Google Sheets via Apps Script
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.log('Sheets error:', e);
+  }
+
+  // Also save to localStorage as backup
+  var existing = JSON.parse(localStorage.getItem('condux_resultados') || '[]');
+  existing.push(payload);
+  localStorage.setItem('condux_resultados', JSON.stringify(existing));
+
+  // Mark prueba as completed
+  var candidatos = getCandidatosLocal();
+  var idx = candidatos.findIndex(function(c) { return c.correo === currentCand.correo; });
+  if (idx >= 0) {
+    if (!candidatos[idx].completadas) candidatos[idx].completadas = [];
+    if (candidatos[idx].completadas.indexOf(currentPrueba) === -1) {
+      candidatos[idx].completadas.push(currentPrueba);
+    }
+    saveCandidatosLocal(candidatos);
+    currentCand = candidatos[idx];
+  }
+}
+
+
+
+</script>
+</body>
+</html>
