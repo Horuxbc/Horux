@@ -98,17 +98,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .loading-text{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.2em;}
 
 /* FINANCIAL STRIP */
-.financial-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;}
+.financial-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;}
 .fin-card{background:#fff;padding:20px 24px;position:relative;}
 .fin-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .fin-card.pipeline::after{background:#9e8075;}
 .fin-card.propuestas::after{background:var(--yellow);}
+.fin-card.iva::after{background:#8b5cf6;}
 .fin-card.facturado::after{background:var(--accent);}
 .fin-card.cobrado::after{background:var(--success);}
 .fin-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .fin-label::before{content:'';width:6px;height:6px;border-radius:50%;display:inline-block;}
 .fin-card.pipeline .fin-label::before{background:var(--tan);}
 .fin-card.propuestas .fin-label::before{background:var(--yellow);}
+.fin-card.iva .fin-label::before{background:#8b5cf6;}
 .fin-card.facturado .fin-label::before{background:var(--accent);}
 .fin-card.cobrado .fin-label::before{background:var(--success);}
 .fin-amount{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--green);letter-spacing:-0.02em;}
@@ -432,10 +434,11 @@ select option{background:#ffffff;color:#1a2422;}
       </div>
       <div class="content">
         <div class="financial-strip">
-          <div class="fin-card pipeline"><div class="fin-label">Pipeline Total</div><div class="fin-amount" id="f-pipeline">$0</div><div class="fin-sub" id="f-pipeline-sub">0 vacantes</div></div>
+          <div class="fin-card pipeline"><div class="fin-label">Pipeline Neto</div><div class="fin-amount" id="f-pipeline">$0</div><div class="fin-sub" id="f-pipeline-sub">0 vacantes</div></div>
           <div class="fin-card propuestas"><div class="fin-label">Propuestas Enviadas</div><div class="fin-amount" id="f-propuestas">$0</div><div class="fin-sub" id="f-propuestas-sub">0 propuestas</div></div>
-          <div class="fin-card facturado"><div class="fin-label">Por Cobrar</div><div class="fin-amount" id="f-porcobrar">$0</div><div class="fin-sub">facturas pendientes</div></div>
-          <div class="fin-card cobrado"><div class="fin-label">Cobrado (acum.)</div><div class="fin-amount" id="f-cobrado">$0</div><div class="fin-sub">acumulado</div></div>
+          <div class="fin-card iva"><div class="fin-label">IVA por Trasladar</div><div class="fin-amount" id="f-iva-trasladar">$0</div><div class="fin-sub" id="f-iva-sub">16% sobre pipeline</div></div>
+          <div class="fin-card facturado"><div class="fin-label">Por Cobrar (neto)</div><div class="fin-amount" id="f-porcobrar">$0</div><div class="fin-sub">facturas pendientes</div></div>
+          <div class="fin-card cobrado"><div class="fin-label">Cobrado (neto)</div><div class="fin-amount" id="f-cobrado">$0</div><div class="fin-sub">acumulado</div></div>
         </div>
         <div class="kpi-grid">
           <div class="kpi-card"><div class="kpi-label">Colocaciones · Mes</div><div class="kpi-value accent" id="k-col-mes">0</div><div class="kpi-detail" id="k-col-total">0 acumuladas</div></div>
@@ -636,7 +639,11 @@ select option{background:#ffffff;color:#1a2422;}
           <div class="form-grid-3" id="grupo-compensacion">
             <div class="form-group"><label class="form-label">Salario Mensual (MXN)</label><input class="form-input" id="f-salario" type="number" placeholder="0" oninput="calcularHonorarios()"></div>
             <div class="form-group"><label class="form-label">Bono Anual (MXN)</label><input class="form-input" id="f-bono" type="number" placeholder="0" oninput="calcularHonorarios()"></div>
-            <div class="form-group"><label class="form-label">Honorarios</label><input class="form-input" id="f-honorarios" type="number" placeholder="Auto-calculado"></div>
+            <div class="form-group"><label class="form-label">Honorarios netos (sin IVA)</label><input class="form-input" id="f-honorarios" type="number" placeholder="Auto-calculado" oninput="calcIvaFromHonorarios()"></div>
+          </div>
+          <div class="form-grid-3" style="margin-top:10px">
+            <div class="form-group"><label class="form-label">IVA (16%)</label><input class="form-input" id="f-iva-honorarios" type="number" placeholder="Auto-calculado" readonly style="background:var(--bg4);cursor:default"></div>
+            <div class="form-group"><label class="form-label">Total con IVA</label><input class="form-input" id="f-total-con-iva" type="number" placeholder="Auto-calculado" readonly style="background:var(--bg4);cursor:default"></div>
           </div>
           <div class="honorarios-calc" id="honorarios-calc">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -718,20 +725,24 @@ select option{background:#ffffff;color:#1a2422;}
         <div class="form-section">
           <div class="form-section-title">Facturación & Cobros</div>
           <div class="form-grid">
-            <div class="form-group"><label class="form-label">Factura 1 — Monto</label><input class="form-input" id="f-fac1-monto" type="number" placeholder="50% al inicio"></div>
+            <div class="form-group"><label class="form-label">Factura 1 — Monto Neto</label><input class="form-input" id="f-fac1-monto" type="number" placeholder="50% al inicio" oninput="calcFacIva(1)"></div>
             <div class="form-group"><label class="form-label">Factura 1 — Estado</label>
               <select class="form-select" id="f-fac1-estado">
                 <option value="no_emitida">No emitida</option><option value="emitida">Emitida</option><option value="cobrada">Cobrada</option>
               </select>
             </div>
+            <div class="form-group"><label class="form-label">Fac 1 — IVA (16%)</label><input class="form-input" id="f-fac1-iva" type="number" readonly style="background:var(--bg4);cursor:default"></div>
+            <div class="form-group"><label class="form-label">Fac 1 — Total con IVA</label><input class="form-input" id="f-fac1-total" type="number" readonly style="background:var(--bg4);cursor:default"></div>
             <div class="form-group"><label class="form-label">Factura 1 — Fecha</label><input class="form-input" id="f-fac1-fecha" type="date"></div>
             <div class="form-group"><label class="form-label">Fecha Cobro F1</label><input class="form-input" id="f-fac1-cobro" type="date"></div>
-            <div class="form-group"><label class="form-label">Factura 2 — Monto</label><input class="form-input" id="f-fac2-monto" type="number" placeholder="50% al cierre"></div>
+            <div class="form-group"><label class="form-label">Factura 2 — Monto Neto</label><input class="form-input" id="f-fac2-monto" type="number" placeholder="50% al cierre" oninput="calcFacIva(2)"></div>
             <div class="form-group"><label class="form-label">Factura 2 — Estado</label>
               <select class="form-select" id="f-fac2-estado">
                 <option value="no_emitida">No emitida</option><option value="emitida">Emitida</option><option value="cobrada">Cobrada</option>
               </select>
             </div>
+            <div class="form-group"><label class="form-label">Fac 2 — IVA (16%)</label><input class="form-input" id="f-fac2-iva" type="number" readonly style="background:var(--bg4);cursor:default"></div>
+            <div class="form-group"><label class="form-label">Fac 2 — Total con IVA</label><input class="form-input" id="f-fac2-total" type="number" readonly style="background:var(--bg4);cursor:default"></div>
             <div class="form-group"><label class="form-label">Factura 2 — Fecha</label><input class="form-input" id="f-fac2-fecha" type="date"></div>
             <div class="form-group"><label class="form-label">Fecha Cobro F2</label><input class="form-input" id="f-fac2-cobro" type="date"></div>
           </div>
@@ -911,17 +922,17 @@ const CLIENTES_COLS = ['id','empresa','industria','contacto','puestoContacto','t
 const CLIENTES_HEADER = ['ID','Empresa','Industria','Contacto','Puesto Contacto','Telefono','Email','Ciudad','Estatus','Canal','Referido Por','Potencial Anual','Notas','Created At'];
 // Column order in Sheet (A=0, B=1, ...)
 const COLS = ['id','cliente','puesto','industria','headhunter','estado','fechaApertura',
-  'tipo','diasConvenio','salario','bono','honorarios','contactados','entrevistados','enTerna',
+  'tipo','diasConvenio','salario','bono','honorarios','ivaHonorarios','totalConIva','contactados','entrevistados','enTerna',
   'nivelPuesto','origenVacante','razonCierre','fechaPropuesta','fechaActiva','fechaTerna','fechaColocacionEtapa','candidatoColocado','fechaIngreso','retencion','ofertaPresentada','contraofertaCandidato','motivoRechazoOferta','clienteAjusto',
-  'fac1Monto','fac1Estado','fac1Fecha','fac1Cobro',
-  'fac2Monto','fac2Estado','fac2Fecha','fac2Cobro',
+  'fac1Monto','fac1Estado','fac1Fecha','fac1Cobro','fac1Iva','fac1Total',
+  'fac2Monto','fac2Estado','fac2Fecha','fac2Cobro','fac2Iva','fac2Total',
   'notas','createdAt'];
 
 const HEADER_ROW = ['ID','Cliente','Puesto','Industria','Headhunter','Estado','Fecha Apertura',
-  'Tipo','Dias Convenio','Salario','Bono','Honorarios','Contactados','Entrevistados','En Terna',
+  'Tipo','Dias Convenio','Salario','Bono','Honorarios','IVA_Honorarios','Total_Con_IVA','Contactados','Entrevistados','En Terna',
   'Nivel Puesto','Origen Vacante','Razon Cierre','Fecha Propuesta','Fecha Activa','Fecha Terna','Fecha Colocacion Etapa','Candidato Colocado','Fecha Ingreso','Retencion','Oferta Presentada','Contraoferta Candidato','Motivo Rechazo Oferta','Cliente Ajusto',
-  'Fac1 Monto','Fac1 Estado','Fac1 Fecha','Fac1 Cobro',
-  'Fac2 Monto','Fac2 Estado','Fac2 Fecha','Fac2 Cobro',
+  'Fac1 Monto','Fac1 Estado','Fac1 Fecha','Fac1 Cobro','Fac1_IVA','Fac1_Total',
+  'Fac2 Monto','Fac2 Estado','Fac2 Fecha','Fac2 Cobro','Fac2_IVA','Fac2_Total',
   'Notas','Created At'];
 
 // ============ STATE ============
@@ -1085,6 +1096,8 @@ async function saveVacante(){
     salario:document.getElementById('f-salario').value,
     bono:document.getElementById('f-bono').value,
     honorarios:document.getElementById('f-honorarios').value,
+    ivaHonorarios:document.getElementById('f-iva-honorarios').value,
+    totalConIva:document.getElementById('f-total-con-iva').value,
     contactados:document.getElementById('f-contactados').value,
     entrevistados:document.getElementById('f-entrevistados').value,
     enTerna:document.getElementById('f-enterna').value,
@@ -1095,10 +1108,14 @@ async function saveVacante(){
     fac1Estado:document.getElementById('f-fac1-estado').value,
     fac1Fecha:document.getElementById('f-fac1-fecha').value,
     fac1Cobro:document.getElementById('f-fac1-cobro').value,
+    fac1Iva:document.getElementById('f-fac1-iva').value,
+    fac1Total:document.getElementById('f-fac1-total').value,
     fac2Monto:document.getElementById('f-fac2-monto').value,
     fac2Estado:document.getElementById('f-fac2-estado').value,
     fac2Fecha:document.getElementById('f-fac2-fecha').value,
     fac2Cobro:document.getElementById('f-fac2-cobro').value,
+    fac2Iva:document.getElementById('f-fac2-iva').value,
+    fac2Total:document.getElementById('f-fac2-total').value,
     notas:document.getElementById('f-notas').value,
   };
 
@@ -1163,6 +1180,7 @@ function calcMetrics(){
   const v=vacantes;
   const cm=currentMonth();
   const pipeline=v.filter(x=>x.estado!=='Cobro completo').reduce((s,x)=>s+(Number(x.honorarios)||0),0);
+  const ivaPorTrasladar=Math.round(pipeline*0.16);
   const propuestas=v.filter(x=>x.estado==='Propuesta enviada').reduce((s,x)=>s+(Number(x.honorarios)||0),0);
   const propuestasCount=v.filter(x=>x.estado==='Propuesta enviada').length;
   let porcobrar=0;
@@ -1235,7 +1253,7 @@ function calcMetrics(){
     });
     return{label:monthLabel(offset),val:Math.round(val)};
   });
-  return{pipeline,propuestas,propuestasCount,porcobrar,cobrado,colocacionesMes,colocacionesTotal,tiempoProm,conversion,retencion,pipelinePonderado,byStage,hhMap,cobrosPendientes,forecast,nivelMap,clientesReactivados,avgPropActiva,avgActivaTerna,avgTernaCol};
+  return{pipeline,ivaPorTrasladar,propuestas,propuestasCount,porcobrar,cobrado,colocacionesMes,colocacionesTotal,tiempoProm,conversion,retencion,pipelinePonderado,byStage,hhMap,cobrosPendientes,forecast,nivelMap,clientesReactivados,avgPropActiva,avgActivaTerna,avgTernaCol};
 }
 
 // ============ RENDER DASHBOARD ============
@@ -1245,6 +1263,8 @@ function renderDashboard(){
   document.getElementById('f-pipeline-sub').textContent=`${vacantes.filter(x=>x.estado!=='Cobro completo').length} vacantes en proceso`;
   document.getElementById('f-propuestas').textContent=fmt(m.propuestas);
   document.getElementById('f-propuestas-sub').textContent=`${m.propuestasCount} propuesta${m.propuestasCount!==1?'s':''} activa${m.propuestasCount!==1?'s':''}`;
+  document.getElementById('f-iva-trasladar').textContent=fmt(m.ivaPorTrasladar);
+  document.getElementById('f-iva-sub').textContent=`${vacantes.filter(x=>x.estado!=='Cobro completo').length} vacantes · 16%`;
   document.getElementById('f-porcobrar').textContent=fmt(m.porcobrar);
   document.getElementById('f-cobrado').textContent=fmt(m.cobrado);
   document.getElementById('k-col-mes').textContent=m.colocacionesMes;
@@ -1343,7 +1363,10 @@ function openFicha(id){
   const pagoCard=(label,monto,estado,fecha,cobro)=>{
     const sc={no_emitida:['pago-nofacturado','No emitida'],emitida:['pago-pendiente','Pendiente cobro'],cobrada:['pago-cobrado','Cobrado']};
     const[cls,lbl]=sc[estado]||sc.no_emitida;
-    return`<div class="pago-card"><div><div class="pago-label">${label} · ${fecha?fmtDate(fecha):'Sin fecha'}</div><div class="pago-amount">${monto?fmt(monto):'—'}</div>${cobro&&estado==='cobrada'?`<div style="font-size:10px;color:var(--success);margin-top:2px">Cobrado: ${fmtDate(cobro)}</div>`:''}</div><span class="pago-status-badge ${cls}">${lbl}</span></div>`;
+    const montoNum=Number(monto)||0;
+    const ivaCalc=Math.round(montoNum*0.16);
+    const totalCalc=montoNum+ivaCalc;
+    return`<div class="pago-card"><div><div class="pago-label">${label} · ${fecha?fmtDate(fecha):'Sin fecha'}</div><div class="pago-amount">${monto?fmt(monto):'—'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">neto</span></div>${monto?`<div style="font-size:10px;color:var(--text-muted);margin-top:2px">IVA: ${fmt(ivaCalc)} · Total: ${fmt(totalCalc)}</div>`:''} ${cobro&&estado==='cobrada'?`<div style="font-size:10px;color:var(--success);margin-top:2px">Cobrado: ${fmtDate(cobro)}</div>`:''}</div><span class="pago-status-badge ${cls}">${lbl}</span></div>`;
   };
   document.getElementById('ficha-content').innerHTML=`
     <button class="back-btn" onclick="showView('vacantes')">← Volver a Vacantes</button>
@@ -1379,7 +1402,9 @@ function openFicha(id){
           <div class="info-card-body">
             ${v.salario?`<div class="info-row"><span class="info-key">Salario mensual</span><span class="info-val mono">${fmt(v.salario)}</span></div>`:''}
             ${v.bono?`<div class="info-row"><span class="info-key">Bono anual</span><span class="info-val mono">${fmt(v.bono)}</span></div>`:''}
-            <div class="info-row"><span class="info-key">Honorarios HORUX</span><span class="info-val mono" style="color:var(--accent);font-size:16px">${fmt(v.honorarios)}</span></div>
+            <div class="info-row"><span class="info-key">Honorarios netos</span><span class="info-val mono" style="color:var(--accent);font-size:16px">${fmt(v.honorarios)}</span></div>
+            <div class="info-row"><span class="info-key">IVA (16%)</span><span class="info-val mono">${fmt(Number(v.ivaHonorarios)||(Number(v.honorarios||0)*0.16))}</span></div>
+            <div class="info-row"><span class="info-key">Total con IVA</span><span class="info-val mono" style="font-weight:600">${fmt(Number(v.totalConIva)||(Number(v.honorarios||0)*1.16))}</span></div>
           </div>
         </div>
         <div class="info-card">
@@ -1505,8 +1530,14 @@ function openFicha(id){
                   <option value="cobrada" ${v.fac1Estado==='cobrada'?'selected':''}>Cobrada</option>
                 </select>
               </div>
-              <div class="inline-field"><label class="inline-label">Factura 1 — Monto</label>
-                <input class="inline-input" id="ie-fac1monto" type="number" value="${v.fac1Monto||''}">
+              <div class="inline-field"><label class="inline-label">Factura 1 — Monto Neto</label>
+                <input class="inline-input" id="ie-fac1monto" type="number" value="${v.fac1Monto||''}" oninput="calcInlineFacIva(1)">
+              </div>
+              <div class="inline-field"><label class="inline-label">Fac 1 — IVA (16%)</label>
+                <input class="inline-input" id="ie-fac1iva" type="number" value="${v.fac1Iva||''}" readonly style="background:var(--bg4);cursor:default">
+              </div>
+              <div class="inline-field"><label class="inline-label">Fac 1 — Total con IVA</label>
+                <input class="inline-input" id="ie-fac1total" type="number" value="${v.fac1Total||''}" readonly style="background:var(--bg4);cursor:default">
               </div>
               <div class="inline-field"><label class="inline-label">Fecha cobro F1</label>
                 <input class="inline-input" id="ie-fac1cobro" type="date" value="${v.fac1Cobro||''}">
@@ -1518,8 +1549,14 @@ function openFicha(id){
                   <option value="cobrada" ${v.fac2Estado==='cobrada'?'selected':''}>Cobrada</option>
                 </select>
               </div>
-              <div class="inline-field"><label class="inline-label">Factura 2 — Monto</label>
-                <input class="inline-input" id="ie-fac2monto" type="number" value="${v.fac2Monto||''}">
+              <div class="inline-field"><label class="inline-label">Factura 2 — Monto Neto</label>
+                <input class="inline-input" id="ie-fac2monto" type="number" value="${v.fac2Monto||''}" oninput="calcInlineFacIva(2)">
+              </div>
+              <div class="inline-field"><label class="inline-label">Fac 2 — IVA (16%)</label>
+                <input class="inline-input" id="ie-fac2iva" type="number" value="${v.fac2Iva||''}" readonly style="background:var(--bg4);cursor:default">
+              </div>
+              <div class="inline-field"><label class="inline-label">Fac 2 — Total con IVA</label>
+                <input class="inline-input" id="ie-fac2total" type="number" value="${v.fac2Total||''}" readonly style="background:var(--bg4);cursor:default">
               </div>
               <div class="inline-field"><label class="inline-label">Fecha cobro F2</label>
                 <input class="inline-input" id="ie-fac2cobro" type="date" value="${v.fac2Cobro||''}">
@@ -1562,18 +1599,23 @@ function renderCobros(){
   const sc={no_emitida:['pago-nofacturado','No emitida'],emitida:['pago-pendiente','Emitida — pendiente'],cobrada:['pago-cobrado','Cobrada']};
   const rows=allFacs.length?allFacs.sort((a,b)=>(b._fecha||'')>(a._fecha||'')?1:-1).map(f=>{
     const[cls,lbl]=sc[f._estado]||sc.no_emitida;
-    return`<tr onclick="openFicha('${f.id}')" style="cursor:pointer"><td class="td-primary">${f.puesto}</td><td>${f.cliente}</td><td style="font-size:11px">Pago ${f._fac}</td><td class="td-mono">${fmt(f._monto)}</td><td>${fmtDate(f._fecha)}</td><td><span class="pago-status-badge ${cls}">${lbl}</span></td><td class="td-mono" style="font-size:11px">${f._cobro?fmtDate(f._cobro):'—'}</td></tr>`;
-  }).join(''):`<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px">Sin registros de facturación</td></tr>`;
+    const fIva=Math.round(Number(f._monto)*0.16);
+    const fTotal=Number(f._monto)+fIva;
+    return`<tr onclick="openFicha('${f.id}')" style="cursor:pointer"><td class="td-primary">${f.puesto}</td><td>${f.cliente}</td><td style="font-size:11px">Pago ${f._fac}</td><td class="td-mono">${fmt(f._monto)}</td><td class="td-mono" style="font-size:11px">${fmt(fIva)}</td><td class="td-mono">${fmt(fTotal)}</td><td>${fmtDate(f._fecha)}</td><td><span class="pago-status-badge ${cls}">${lbl}</span></td><td class="td-mono" style="font-size:11px">${f._cobro?fmtDate(f._cobro):'—'}</td></tr>`;
+  }).join(''):`<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:32px">Sin registros de facturación</td></tr>`;
+  const totalFacNeto=allFacs.filter(f=>f._estado!=='no_emitida').reduce((s,f)=>s+Number(f._monto||0),0);
+  const totalFacIva=Math.round(totalFacNeto*0.16);
   document.getElementById('cobros-content').innerHTML=`
-    <div class="kpi-grid" style="margin-bottom:24px">
-      <div class="kpi-card"><div class="kpi-label">Total Facturado</div><div class="kpi-value accent" style="font-size:22px">${fmt(allFacs.filter(f=>f._estado!=='no_emitida').reduce((s,f)=>s+Number(f._monto||0),0))}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado!=='no_emitida').length} facturas emitidas</div></div>
-      <div class="kpi-card"><div class="kpi-label">Por Cobrar</div><div class="kpi-value warning" style="font-size:22px">${fmt(m.porcobrar)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado==='emitida').length} facturas pendientes</div></div>
-      <div class="kpi-card"><div class="kpi-label">Cobrado</div><div class="kpi-value success" style="font-size:22px">${fmt(m.cobrado)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado==='cobrada').length} facturas cobradas</div></div>
-      <div class="kpi-card"><div class="kpi-label">Hon. Promedio</div><div class="kpi-value" style="font-size:22px">${vacantes.length>0?fmt(Math.round(vacantes.reduce((s,v)=>s+Number(v.honorarios||0),0)/vacantes.length)):'—'}</div><div class="kpi-detail">por vacante</div></div>
+    <div class="kpi-grid" style="margin-bottom:24px;grid-template-columns:repeat(5,1fr)">
+      <div class="kpi-card"><div class="kpi-label">Facturado (neto)</div><div class="kpi-value accent" style="font-size:22px">${fmt(totalFacNeto)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado!=='no_emitida').length} facturas emitidas</div></div>
+      <div class="kpi-card"><div class="kpi-label">IVA Facturado</div><div class="kpi-value" style="font-size:22px;color:#8b5cf6">${fmt(totalFacIva)}</div><div class="kpi-detail">16% sobre facturado</div></div>
+      <div class="kpi-card"><div class="kpi-label">Por Cobrar (neto)</div><div class="kpi-value warning" style="font-size:22px">${fmt(m.porcobrar)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado==='emitida').length} facturas pendientes</div></div>
+      <div class="kpi-card"><div class="kpi-label">Cobrado (neto)</div><div class="kpi-value success" style="font-size:22px">${fmt(m.cobrado)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado==='cobrada').length} facturas cobradas</div></div>
+      <div class="kpi-card"><div class="kpi-label">Hon. Promedio</div><div class="kpi-value" style="font-size:22px">${vacantes.length>0?fmt(Math.round(vacantes.reduce((s,v)=>s+Number(v.honorarios||0),0)/vacantes.length)):'—'}</div><div class="kpi-detail">neto por vacante</div></div>
     </div>
     <div class="table-wrap">
       <table class="vacantes-table">
-        <thead><tr><th>Puesto</th><th>Cliente</th><th>Tipo</th><th>Monto</th><th>Fecha Factura</th><th>Estado</th><th>Fecha Cobro</th></tr></thead>
+        <thead><tr><th>Puesto</th><th>Cliente</th><th>Tipo</th><th>Neto</th><th>IVA</th><th>Total</th><th>Fecha Factura</th><th>Estado</th><th>Fecha Cobro</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>`;
@@ -1609,7 +1651,7 @@ function openEditVacante(id){
   const fields={
     'f-cliente':'cliente','f-puesto':'puesto','f-industria':'industria',
     'f-headhunter':'headhunter','f-estado':'estado','f-fecha-apertura':'fechaApertura',
-    'f-salario':'salario','f-bono':'bono','f-honorarios':'honorarios',
+    'f-salario':'salario','f-bono':'bono','f-honorarios':'honorarios','f-iva-honorarios':'ivaHonorarios','f-total-con-iva':'totalConIva',
     'f-contactados':'contactados','f-entrevistados':'entrevistados','f-enterna':'enTerna',
     'f-candidato-colocado':'candidatoColocado','f-fecha-ingreso':'fechaIngreso',
     'f-tipo':'tipo','f-dias-convenio':'diasConvenio',
@@ -1617,8 +1659,9 @@ function openEditVacante(id){
     'f-fecha-propuesta':'fechaPropuesta','f-fecha-activa':'fechaActiva','f-fecha-terna':'fechaTerna','f-fecha-colocacion-etapa':'fechaColocacionEtapa',
     'f-oferta-presentada':'ofertaPresentada','f-contraoferta':'contraofertaCandidato','f-motivo-rechazo':'motivoRechazoOferta','f-cliente-ajusto':'clienteAjusto',
     'f-retencion':'retencion','f-fac1-monto':'fac1Monto','f-fac1-estado':'fac1Estado',
-    'f-fac1-fecha':'fac1Fecha','f-fac1-cobro':'fac1Cobro','f-fac2-monto':'fac2Monto',
-    'f-fac2-estado':'fac2Estado','f-fac2-fecha':'fac2Fecha','f-fac2-cobro':'fac2Cobro',
+    'f-fac1-fecha':'fac1Fecha','f-fac1-cobro':'fac1Cobro','f-fac1-iva':'fac1Iva','f-fac1-total':'fac1Total',
+    'f-fac2-monto':'fac2Monto','f-fac2-estado':'fac2Estado','f-fac2-fecha':'fac2Fecha','f-fac2-cobro':'fac2Cobro',
+    'f-fac2-iva':'fac2Iva','f-fac2-total':'fac2Total',
     'f-notas':'notas'
   };
   Object.entries(fields).forEach(([fid,key])=>{
@@ -1627,6 +1670,9 @@ function openEditVacante(id){
   });
   onTipoChange();
   calcularHonorarios();
+  calcIvaFromHonorarios();
+  calcFacIva(1);
+  calcFacIva(2);
   document.getElementById('modal-overlay').classList.add('open');
 }
 
@@ -1656,9 +1702,13 @@ async function saveInline(id){
     fac1Estado:document.getElementById('ie-fac1estado').value,
     fac1Monto:document.getElementById('ie-fac1monto').value,
     fac1Cobro:document.getElementById('ie-fac1cobro').value,
+    fac1Iva:document.getElementById('ie-fac1iva').value,
+    fac1Total:document.getElementById('ie-fac1total').value,
     fac2Estado:document.getElementById('ie-fac2estado').value,
     fac2Monto:document.getElementById('ie-fac2monto').value,
     fac2Cobro:document.getElementById('ie-fac2cobro').value,
+    fac2Iva:document.getElementById('ie-fac2iva').value,
+    fac2Total:document.getElementById('ie-fac2total').value,
   };
   try{
     const rowData=COLS.map(c=>updated[c]||'');
@@ -1798,9 +1848,10 @@ function closeModal(){document.getElementById('modal-overlay').classList.remove(
 
 function clearForm(){
   ['f-cliente','f-puesto','f-headhunter','f-salario','f-bono','f-honorarios',
+   'f-iva-honorarios','f-total-con-iva',
    'f-contactados','f-entrevistados','f-enterna','f-candidato-colocado',
-   'f-fecha-ingreso','f-fac1-monto','f-fac1-fecha','f-fac1-cobro',
-   'f-fac2-monto','f-fac2-fecha','f-fac2-cobro','f-notas'].forEach(id=>{
+   'f-fecha-ingreso','f-fac1-monto','f-fac1-fecha','f-fac1-cobro','f-fac1-iva','f-fac1-total',
+   'f-fac2-monto','f-fac2-fecha','f-fac2-cobro','f-fac2-iva','f-fac2-total','f-notas'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   document.getElementById('f-industria').value='';
@@ -1855,10 +1906,35 @@ function calcularHonorarios(){
     const sdi=(s*12+25+b)/365;
     const hon=Math.round(sdi*dias);
     document.getElementById('f-honorarios').value=hon;
-    document.getElementById('honorarios-formula').textContent='SDI: $'+Math.round(sdi).toLocaleString('es-MX')+' · × '+dias+' días = '+fmt(hon);
+    document.getElementById('honorarios-formula').textContent='SDI: $'+Math.round(sdi).toLocaleString('es-MX')+' · × '+dias+' días = '+fmt(hon)+' (neto)';
+    calcIvaFromHonorarios();
   } else if(tipo==='convenio'&&dias===0){
     document.getElementById('honorarios-formula').textContent='Ingresa los días de convenio acordados';
   }
+}
+
+function calcIvaFromHonorarios(){
+  const hon=Number(document.getElementById('f-honorarios').value)||0;
+  const iva=Math.round(hon*0.16);
+  const total=hon+iva;
+  document.getElementById('f-iva-honorarios').value=iva||'';
+  document.getElementById('f-total-con-iva').value=total||'';
+}
+
+function calcFacIva(n){
+  const monto=Number(document.getElementById('f-fac'+n+'-monto').value)||0;
+  const iva=Math.round(monto*0.16);
+  const total=monto+iva;
+  document.getElementById('f-fac'+n+'-iva').value=iva||'';
+  document.getElementById('f-fac'+n+'-total').value=total||'';
+}
+
+function calcInlineFacIva(n){
+  const monto=Number(document.getElementById('ie-fac'+n+'monto').value)||0;
+  const iva=Math.round(monto*0.16);
+  const total=monto+iva;
+  document.getElementById('ie-fac'+n+'iva').value=iva||'';
+  document.getElementById('ie-fac'+n+'total').value=total||'';
 }
 
 // ============ NOTIFICATIONS ============
