@@ -1616,6 +1616,13 @@ body {
       </div>
     </div>
 
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">ID de Vacante *</label>
+        <input class="form-input" type="text" id="newVacID" placeholder="Ej. VAC-2026-001">
+      </div>
+    </div>
+
     <div class="form-group">
       <label class="form-label" style="margin-bottom:10px">Pruebas asignadas</label>
       <div class="checkbox-group" id="pruebasCheckboxes">
@@ -2285,11 +2292,12 @@ function createCandidato() {
   const correo = document.getElementById('newCorreo').value.trim().toLowerCase();
   const puesto = document.getElementById('newPuesto').value.trim();
   const nivel = document.getElementById('newNivel').value;
+  const vacID = document.getElementById('newVacID').value.trim();
 
   const checks = document.querySelectorAll('#pruebasCheckboxes input[type="checkbox"]');
   const pruebas = Array.from(checks).filter(c => c.checked).map(c => c.value);
 
-  if (!nombre || !correo || !puesto || !nivel || pruebas.length === 0) {
+  if (!nombre || !correo || !puesto || !nivel || !vacID || pruebas.length === 0) {
     document.getElementById('createError').classList.add('visible');
     return;
   }
@@ -2297,14 +2305,14 @@ function createCandidato() {
   document.getElementById('createError').classList.remove('visible');
 
   var candidatos = getCandidatos();
-  var newCand = { nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, pruebas: pruebas, completadas: [], fechaCreacion: new Date().toLocaleDateString('es-MX') };
+  var newCand = { nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, vacID: vacID, pruebas: pruebas, completadas: [], fechaCreacion: new Date().toLocaleDateString('es-MX') };
   candidatos.push(newCand);
   saveCandidatos(candidatos);
 
   // Save to Sheets
   fetch(APPS_SCRIPT_URL, {
     method: 'POST',
-    body: JSON.stringify({ type: 'candidato', nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, pruebas: pruebas, fechaCreacion: newCand.fechaCreacion })
+    body: JSON.stringify({ type: 'candidato', nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, vacID: vacID, pruebas: pruebas, fechaCreacion: newCand.fechaCreacion })
   }).catch(function(e) { console.log('Sheets sync error:', e); });
 
   // Reset form
@@ -2312,6 +2320,7 @@ function createCandidato() {
   document.getElementById('newCorreo').value = '';
   document.getElementById('newPuesto').value = '';
   document.getElementById('newNivel').value = '';
+  document.getElementById('newVacID').value = '';
 
   closeModal('modalCreateCand');
   loadAdminData();
