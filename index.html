@@ -99,7 +99,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 /* FINANCIAL STRIP */
 .financial-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;}
-.fin-card{background:#fff;padding:20px 24px;position:relative;}
+.fin-card{background:#fff;padding:20px 24px;position:relative;transition:box-shadow 0.15s,transform 0.15s;}
+.fin-card.clickable{cursor:pointer;}
+.fin-card.clickable:hover{box-shadow:0 4px 16px rgba(0,56,52,0.12);transform:translateY(-1px);}
+.kpi-card.clickable{cursor:pointer;transition:box-shadow 0.15s,transform 0.15s;}
+.kpi-card.clickable:hover{box-shadow:0 4px 16px rgba(0,56,52,0.12);transform:translateY(-1px);}
 .fin-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .fin-card.pipeline::after{background:#9e8075;}
 .fin-card.propuestas::after{background:var(--yellow);}
@@ -434,14 +438,14 @@ select option{background:#ffffff;color:#1a2422;}
       </div>
       <div class="content">
         <div class="financial-strip">
-          <div class="fin-card pipeline"><div class="fin-label">Pipeline Neto</div><div class="fin-amount" id="f-pipeline">$0</div><div class="fin-sub" id="f-pipeline-sub">0 vacantes</div></div>
-          <div class="fin-card propuestas"><div class="fin-label">Propuestas Enviadas</div><div class="fin-amount" id="f-propuestas">$0</div><div class="fin-sub" id="f-propuestas-sub">0 propuestas</div></div>
+          <div class="fin-card pipeline clickable" onclick="goFilterVacantes('pipeline')"><div class="fin-label">Pipeline Neto</div><div class="fin-amount" id="f-pipeline">$0</div><div class="fin-sub" id="f-pipeline-sub">0 vacantes</div></div>
+          <div class="fin-card propuestas clickable" onclick="goFilterVacantes('Propuesta enviada')"><div class="fin-label">Propuestas Enviadas</div><div class="fin-amount" id="f-propuestas">$0</div><div class="fin-sub" id="f-propuestas-sub">0 propuestas</div></div>
           <div class="fin-card iva"><div class="fin-label">IVA por Trasladar</div><div class="fin-amount" id="f-iva-trasladar">$0</div><div class="fin-sub" id="f-iva-sub">16% sobre pipeline</div></div>
-          <div class="fin-card facturado"><div class="fin-label">Por Cobrar (neto)</div><div class="fin-amount" id="f-porcobrar">$0</div><div class="fin-sub">facturas pendientes</div></div>
-          <div class="fin-card cobrado"><div class="fin-label">Cobrado (neto)</div><div class="fin-amount" id="f-cobrado">$0</div><div class="fin-sub">acumulado</div></div>
+          <div class="fin-card facturado clickable" onclick="showView('cobros')"><div class="fin-label">Por Cobrar (neto)</div><div class="fin-amount" id="f-porcobrar">$0</div><div class="fin-sub">facturas pendientes</div></div>
+          <div class="fin-card cobrado clickable" onclick="showView('cobros')"><div class="fin-label">Cobrado (neto)</div><div class="fin-amount" id="f-cobrado">$0</div><div class="fin-sub">acumulado</div></div>
         </div>
         <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-label">Colocaciones · Mes</div><div class="kpi-value accent" id="k-col-mes">0</div><div class="kpi-detail" id="k-col-total">0 acumuladas</div></div>
+          <div class="kpi-card clickable" onclick="goFilterVacantes('colocaciones')"><div class="kpi-label">Colocaciones · Mes</div><div class="kpi-value accent" id="k-col-mes">0</div><div class="kpi-detail" id="k-col-total">0 acumuladas</div></div>
           <div class="kpi-card"><div class="kpi-label">Tiempo Cobertura</div><div class="kpi-value" id="k-tiempo">—</div><div class="kpi-detail">días promedio</div></div>
           <div class="kpi-card"><div class="kpi-label">Conversión Propuesta</div><div class="kpi-value success" id="k-conv">—</div><div class="kpi-detail">propuesta → activa</div></div>
           <div class="kpi-card"><div class="kpi-label">Retención 90 días</div><div class="kpi-value" id="k-ret">—</div><div class="kpi-detail" id="k-ret-detail">de colocaciones</div></div>
@@ -497,7 +501,7 @@ select option{background:#ffffff;color:#1a2422;}
       <div class="content">
         <div class="vacantes-toolbar">
           <input class="search-input" type="text" placeholder="Buscar por puesto, cliente..." id="search-input" oninput="renderVacantes()">
-          <select class="filter-select" id="filter-estado" onchange="renderVacantes()">
+          <select class="filter-select" id="filter-estado" onchange="specialFilter=null;renderVacantes()">
             <option value="">Todos los estados</option>
             <option>Prospección</option><option>Propuesta enviada</option>
             <option>Vacante activa</option><option>Terna presentada</option>
@@ -945,6 +949,7 @@ let currentFichaId = null;
 let editingId = null;
 let deleteTargetId = null;
 let sheetReady = false;
+let specialFilter = null; // null, 'pipeline', 'colocaciones'
 
 // ============ STAGES ============
 const STAGES = [
@@ -1280,7 +1285,7 @@ function renderDashboard(){
   document.getElementById('pipeline-stages').innerHTML=STAGES.map(s=>{
     const d=m.byStage[s.key]||{count:0,total:0};
     const pct=Math.round(d.total/maxT*100);
-    return`<div class="stage-row"><div class="stage-label" style="color:${s.color}">${s.key}</div><div class="stage-bar-wrap"><div class="stage-bar" style="width:${pct}%;background:${s.color};opacity:0.7"></div></div><div class="stage-count" style="color:${s.color}">${d.count}</div><div class="stage-amount">${fmt(d.total)}</div></div>`;
+    return`<div class="stage-row" style="cursor:pointer;border-radius:4px;padding:4px 6px;margin:-4px -6px;transition:background 0.15s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''" onclick="goFilterVacantes('${s.key}')"><div class="stage-label" style="color:${s.color}">${s.key}</div><div class="stage-bar-wrap"><div class="stage-bar" style="width:${pct}%;background:${s.color};opacity:0.7"></div></div><div class="stage-count" style="color:${s.color}">${d.count}</div><div class="stage-amount">${fmt(d.total)}</div></div>`;
   }).join('');
   const hhEntries=Object.entries(m.hhMap);
   document.getElementById('hh-cards').innerHTML=hhEntries.length===0?'<div style="color:var(--text-muted);font-size:12px">Sin headhunters registrados</div>':hhEntries.map(([name,data])=>{const tasa=data.total>0?Math.round(data.colocaciones/data.total*100):0;return`<div class="hh-card"><div class="hh-avatar">${name.split(' ').map(w=>w[0]).join('').substr(0,2).toUpperCase()}</div><div class="hh-info"><div class="hh-name">${name}</div><div class="hh-stats">${data.activas} activas · ${data.colocaciones} colocadas · ${fmt(data.honorarios)} generados</div></div><div class="hh-metric"><div class="hh-metric-val" style="color:${tasa>=60?'var(--success)':tasa>=40?'var(--yellow)':'var(--red)'}">${tasa}%</div><div class="hh-metric-label">ÉXITO</div></div></div>`;}).join('');
@@ -1328,7 +1333,10 @@ function renderVacantes(){
   hhSel.innerHTML='<option value="">Todos los HH</option>'+hhs.map(h=>`<option value="${h}"${h===cur?' selected':''}>${h}</option>`).join('');
   let filtered=vacantes.filter(v=>{
     const mq=!q||v.puesto?.toLowerCase().includes(q)||v.cliente?.toLowerCase().includes(q)||v.headhunter?.toLowerCase().includes(q);
-    return mq&&(!fe||v.estado===fe)&&(!fh||v.headhunter===fh);
+    let stateMatch=!fe||v.estado===fe;
+    if(specialFilter==='pipeline') stateMatch=v.estado!=='Cobro completo';
+    else if(specialFilter==='colocaciones') stateMatch=['Colocación','Facturado','Cobro completo'].includes(v.estado)&&v.fechaIngreso&&v.fechaIngreso.startsWith(currentMonth());
+    return mq&&stateMatch&&(!fh||v.headhunter===fh);
   }).sort((a,b)=>(b.fechaApertura||'')>(a.fechaApertura||'')?1:-1);
   const tbody=document.getElementById('vacantes-tbody');
   const empty=document.getElementById('vacantes-empty');
@@ -1635,6 +1643,24 @@ function showView(name){
   else if(name==='vacantes')renderVacantes();
   else if(name==='clientes')renderClientes();
   else if(name==='cobros')renderCobros();
+  if(name!=='vacantes') specialFilter=null;
+}
+
+function goFilterVacantes(filter){
+  specialFilter=null;
+  const sel=document.getElementById('filter-estado');
+  if(filter==='pipeline'){
+    specialFilter='pipeline';
+    sel.value='';
+    showView('vacantes');
+  } else if(filter==='colocaciones'){
+    specialFilter='colocaciones';
+    sel.value='';
+    showView('vacantes');
+  } else {
+    sel.value=filter;
+    showView('vacantes');
+  }
 }
 
 // ============ MODAL ============
