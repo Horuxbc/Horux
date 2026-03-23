@@ -922,18 +922,20 @@ const CLIENTES_COLS = ['id','empresa','industria','contacto','puestoContacto','t
 const CLIENTES_HEADER = ['ID','Empresa','Industria','Contacto','Puesto Contacto','Telefono','Email','Ciudad','Estatus','Canal','Referido Por','Potencial Anual','Notas','Created At'];
 // Column order in Sheet (A=0, B=1, ...)
 const COLS = ['id','cliente','puesto','industria','headhunter','estado','fechaApertura',
-  'tipo','diasConvenio','salario','bono','honorarios','ivaHonorarios','totalConIva','contactados','entrevistados','enTerna',
+  'tipo','diasConvenio','salario','bono','honorarios','contactados','entrevistados','enTerna',
   'nivelPuesto','origenVacante','razonCierre','fechaPropuesta','fechaActiva','fechaTerna','fechaColocacionEtapa','candidatoColocado','fechaIngreso','retencion','ofertaPresentada','contraofertaCandidato','motivoRechazoOferta','clienteAjusto',
-  'fac1Monto','fac1Estado','fac1Fecha','fac1Cobro','fac1Iva','fac1Total',
-  'fac2Monto','fac2Estado','fac2Fecha','fac2Cobro','fac2Iva','fac2Total',
-  'notas','createdAt'];
+  'fac1Monto','fac1Estado','fac1Fecha','fac1Cobro',
+  'fac2Monto','fac2Estado','fac2Fecha','fac2Cobro',
+  'notas','createdAt',
+  'ivaHonorarios','totalConIva','fac1Iva','fac1Total','fac2Iva','fac2Total'];
 
 const HEADER_ROW = ['ID','Cliente','Puesto','Industria','Headhunter','Estado','Fecha Apertura',
-  'Tipo','Dias Convenio','Salario','Bono','Honorarios','IVA_Honorarios','Total_Con_IVA','Contactados','Entrevistados','En Terna',
+  'Tipo','Dias Convenio','Salario','Bono','Honorarios','Contactados','Entrevistados','En Terna',
   'Nivel Puesto','Origen Vacante','Razon Cierre','Fecha Propuesta','Fecha Activa','Fecha Terna','Fecha Colocacion Etapa','Candidato Colocado','Fecha Ingreso','Retencion','Oferta Presentada','Contraoferta Candidato','Motivo Rechazo Oferta','Cliente Ajusto',
-  'Fac1 Monto','Fac1 Estado','Fac1 Fecha','Fac1 Cobro','Fac1_IVA','Fac1_Total',
-  'Fac2 Monto','Fac2 Estado','Fac2 Fecha','Fac2 Cobro','Fac2_IVA','Fac2_Total',
-  'Notas','Created At'];
+  'Fac1 Monto','Fac1 Estado','Fac1 Fecha','Fac1 Cobro',
+  'Fac2 Monto','Fac2 Estado','Fac2 Fecha','Fac2 Cobro',
+  'Notas','Created At',
+  'IVA_Honorarios','Total_Con_IVA','Fac1_IVA','Fac1_Total','Fac2_IVA','Fac2_Total'];
 
 // ============ STATE ============
 let vacantes = [];
@@ -1052,6 +1054,7 @@ async function loadData(){
     clientes=cRows.length<=1?[]:cRows.slice(1).filter(r=>r[0]).map(r=>{
       const obj={};CLIENTES_COLS.forEach((c,i)=>obj[c]=String(r[i]||''));return obj;
     });
+    if(vacantes.length>0) console.log('[DEBUG] Primera vacante parseada:', JSON.stringify(vacantes[0], null, 2));
     setSyncStatus('synced','Sincronizado');
     renderAll();
   }catch(e){
