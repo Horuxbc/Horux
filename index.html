@@ -926,18 +926,26 @@ const CLIENTES_COLS = ['id','empresa','industria','contacto','puestoContacto','t
 const CLIENTES_HEADER = ['ID','Empresa','Industria','Contacto','Puesto Contacto','Telefono','Email','Ciudad','Estatus','Canal','Referido Por','Potencial Anual','Notas','Created At'];
 // Column order in Sheet (A=0, B=1, ...)
 const COLS = ['id','cliente','puesto','industria','headhunter','estado','fechaApertura',
-  'tipo','diasConvenio','salario','bono','honorarios','contactados','entrevistados','enTerna',
-  'nivelPuesto','origenVacante','razonCierre','fechaPropuesta','fechaActiva','fechaTerna','fechaColocacionEtapa','candidatoColocado','fechaIngreso','retencion','ofertaPresentada','contraofertaCandidato','motivoRechazoOferta','clienteAjusto',
+  'tipo','diasConvenio','salario','bono','honorarios',
+  'nivelPuesto','origenVacante','razonCierre',
+  'fechaPropuesta','fechaActiva','fechaTerna','fechaColocacionEtapa',
+  'candidatoColocado','fechaIngreso','retencion',
+  'ofertaPresentada','contraofertaCandidato','motivoRechazoOferta','clienteAjusto',
   'fac1Monto','fac1Estado','fac1Fecha','fac1Cobro',
   'fac2Monto','fac2Estado','fac2Fecha','fac2Cobro',
+  'clasificacion','costoOCC','costoIndeed','costoEstudio',
   'notas','createdAt',
   'ivaHonorarios','totalConIva','fac1Iva','fac1Total','fac2Iva','fac2Total'];
 
 const HEADER_ROW = ['ID','Cliente','Puesto','Industria','Headhunter','Estado','Fecha Apertura',
-  'Tipo','Dias Convenio','Salario','Bono','Honorarios','Contactados','Entrevistados','En Terna',
-  'Nivel Puesto','Origen Vacante','Razon Cierre','Fecha Propuesta','Fecha Activa','Fecha Terna','Fecha Colocacion Etapa','Candidato Colocado','Fecha Ingreso','Retencion','Oferta Presentada','Contraoferta Candidato','Motivo Rechazo Oferta','Cliente Ajusto',
+  'Tipo','Dias Convenio','Salario','Bono','Honorarios',
+  'Nivel Puesto','Origen Vacante','Razon Cierre',
+  'Fecha Propuesta','Fecha Activa','Fecha Terna','Fecha Colocacion Etapa',
+  'Candidato Colocado','Fecha Ingreso','Retencion',
+  'Oferta Presentada','Contraoferta Candidato','Motivo Rechazo Oferta','Cliente Ajusto',
   'Fac1 Monto','Fac1 Estado','Fac1 Fecha','Fac1 Cobro',
   'Fac2 Monto','Fac2 Estado','Fac2 Fecha','Fac2 Cobro',
+  'Clasificacion','Costo OCC','Costo Indeed','Costo Estudio',
   'Notas','Created At',
   'IVA_Honorarios','Total_Con_IVA','Fac1_IVA','Fac1_Total','Fac2_IVA','Fac2_Total'];
 
@@ -1075,11 +1083,11 @@ async function loadData(){
     if(vRows.length>1){
       const raw=vRows[1];
       console.log('[DEBUG] Raw data row 1 length:', raw?.length);
-      console.log('[DEBUG] Raw data row 1 cols 29-36:', raw?.slice(29,37));
-      console.log('[DEBUG] Raw data row 1 col 29 (expect fac1Monto):', raw?.[29]);
-      console.log('[DEBUG] Raw data row 1 col 30 (expect fac1Estado):', raw?.[30]);
-      console.log('[DEBUG] Raw data row 1 col 33 (expect fac2Monto):', raw?.[33]);
-      console.log('[DEBUG] Raw data row 1 col 34 (expect fac2Estado):', raw?.[34]);
+      console.log('[DEBUG] Raw data row 1 cols 26-33:', raw?.slice(26,34));
+      console.log('[DEBUG] Raw data row 1 col 26 (expect fac1Monto):', raw?.[26]);
+      console.log('[DEBUG] Raw data row 1 col 27 (expect fac1Estado):', raw?.[27]);
+      console.log('[DEBUG] Raw data row 1 col 30 (expect fac2Monto):', raw?.[30]);
+      console.log('[DEBUG] Raw data row 1 col 31 (expect fac2Estado):', raw?.[31]);
     }
     vacantes.slice(0,3).forEach((v,i)=>{
       console.log(`[DEBUG] Vacante ${i}: fac1Monto="${v.fac1Monto}" fac1Estado="${v.fac1Estado}" fac2Monto="${v.fac2Monto}" fac2Estado="${v.fac2Estado}" honorarios="${v.honorarios}"`);
