@@ -1059,7 +1059,32 @@ async function loadData(){
     clientes=cRows.length<=1?[]:cRows.slice(1).filter(r=>r[0]).map(r=>{
       const obj={};CLIENTES_COLS.forEach((c,i)=>obj[c]=String(r[i]||''));return obj;
     });
-    if(vacantes.length>0) console.log('[DEBUG] Primera vacante parseada:', JSON.stringify(vacantes[0], null, 2));
+    // ── DEBUG: diagnose financial fields ──
+    console.log('[DEBUG] COLS array:', COLS);
+    console.log('[DEBUG] COLS length:', COLS.length);
+    console.log('[DEBUG] HEADER_ROW length:', HEADER_ROW.length);
+    console.log('[DEBUG] Sheet header row (row 0):', vRows[0]);
+    console.log('[DEBUG] Sheet header length:', vRows[0]?.length);
+    if(vRows[0]){
+      const sheetH=vRows[0];
+      HEADER_ROW.forEach((h,i)=>{
+        if(sheetH[i]!==h) console.warn(`[DEBUG] Header mismatch at col ${i}: sheet="${sheetH[i]}" vs expected="${h}"`);
+      });
+      if(sheetH.length!==HEADER_ROW.length) console.warn(`[DEBUG] Column count mismatch: sheet=${sheetH.length} vs HEADER_ROW=${HEADER_ROW.length}`);
+    }
+    if(vRows.length>1){
+      const raw=vRows[1];
+      console.log('[DEBUG] Raw data row 1 length:', raw?.length);
+      console.log('[DEBUG] Raw data row 1 cols 29-36:', raw?.slice(29,37));
+      console.log('[DEBUG] Raw data row 1 col 29 (expect fac1Monto):', raw?.[29]);
+      console.log('[DEBUG] Raw data row 1 col 30 (expect fac1Estado):', raw?.[30]);
+      console.log('[DEBUG] Raw data row 1 col 33 (expect fac2Monto):', raw?.[33]);
+      console.log('[DEBUG] Raw data row 1 col 34 (expect fac2Estado):', raw?.[34]);
+    }
+    vacantes.slice(0,3).forEach((v,i)=>{
+      console.log(`[DEBUG] Vacante ${i}: fac1Monto="${v.fac1Monto}" fac1Estado="${v.fac1Estado}" fac2Monto="${v.fac2Monto}" fac2Estado="${v.fac2Estado}" honorarios="${v.honorarios}"`);
+    });
+    // ── END DEBUG ──
     setSyncStatus('synced','Sincronizado');
     renderAll();
   }catch(e){
