@@ -1219,7 +1219,7 @@ function calcMetrics(){
   v.forEach(x=>{
     if(!x.headhunter)return;
     if(!hhMap[x.headhunter])hhMap[x.headhunter]={activas:0,colocaciones:0,total:0,honorarios:0};
-    if(['Vacante activa','Terna presentada'].includes(x.estado))hhMap[x.headhunter].activas++;
+    if(['Propuesta enviada','Vacante activa','Terna presentada','Colocación'].includes(x.estado))hhMap[x.headhunter].activas++;
     if(['Colocación','Facturado','Cobro completo'].includes(x.estado)){hhMap[x.headhunter].colocaciones++;hhMap[x.headhunter].honorarios+=Number(x.honorarios)||0;}
     if(!['Prospección'].includes(x.estado))hhMap[x.headhunter].total++;
   });
@@ -1287,7 +1287,7 @@ function renderDashboard(){
     const pct=Math.round(d.total/maxT*100);
     return`<div class="stage-row" style="cursor:pointer;border-radius:4px;padding:4px 6px;margin:-4px -6px;transition:background 0.15s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''" onclick="goFilterVacantes('${s.key}')"><div class="stage-label" style="color:${s.color}">${s.key}</div><div class="stage-bar-wrap"><div class="stage-bar" style="width:${pct}%;background:${s.color};opacity:0.7"></div></div><div class="stage-count" style="color:${s.color}">${d.count}</div><div class="stage-amount">${fmt(d.total)}</div></div>`;
   }).join('');
-  const hhEntries=Object.entries(m.hhMap);
+  const hhEntries=Object.entries(m.hhMap).filter(([,data])=>data.activas>0);
   document.getElementById('hh-cards').innerHTML=hhEntries.length===0?'<div style="color:var(--text-muted);font-size:12px">Sin headhunters registrados</div>':hhEntries.map(([name,data])=>{const tasa=data.total>0?Math.round(data.colocaciones/data.total*100):0;return`<div class="hh-card"><div class="hh-avatar">${name.split(' ').map(w=>w[0]).join('').substr(0,2).toUpperCase()}</div><div class="hh-info"><div class="hh-name">${name}</div><div class="hh-stats">${data.activas} activas · ${data.colocaciones} colocadas · ${fmt(data.honorarios)} generados</div></div><div class="hh-metric"><div class="hh-metric-val" style="color:${tasa>=60?'var(--success)':tasa>=40?'var(--yellow)':'var(--red)'}">${tasa}%</div><div class="hh-metric-label">ÉXITO</div></div></div>`;}).join('');
   const recents=[...vacantes].sort((a,b)=>(b.fechaApertura||'')>(a.fechaApertura||'')?1:-1).slice(0,6);
   document.getElementById('recent-tbody').innerHTML=recents.length===0?`<tr><td colspan="4" style="color:var(--text-muted);text-align:center;padding:24px">Sin vacantes</td></tr>`:recents.map(v=>`<tr onclick="openFicha('${v.id}')"><td class="td-primary">${v.puesto}</td><td>${v.cliente}</td><td><span class="badge ${getBadgeClass(v.estado)}">${v.estado}</span></td><td class="td-mono">${fmt(v.honorarios)}</td></tr>`).join('');
