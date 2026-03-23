@@ -1001,6 +1001,21 @@ const monthLabel = offset=>{
   return m[d.getMonth()]+' '+d.getFullYear();
 };
 
+// ============ NET PORTION HELPER ============
+// Fac montos should be NET (without IVA). If legacy data has IVA-inclusive
+// amounts, detect and extract the net portion by checking if m/1.16 produces
+// a clean fraction (50%, 40%, 60%, 30%, 70%, 100%) of honorarios.
+function facMontoNet(facMonto, honorarios){
+  const m=Number(facMonto)||0;
+  if(!m) return 0;
+  const h=Number(honorarios)||0;
+  if(!h) return m;
+  const netCandidate=m/1.16;
+  const ratio=netCandidate/h;
+  if([0.5,0.4,0.6,0.3,0.7,1.0].some(p=>Math.abs(ratio-p)<0.01)) return Math.round(netCandidate);
+  return m;
+}
+
 // ============ SYNC STATUS ============
 function setSyncStatus(state, label){
   const dot=document.getElementById('sync-dot');
@@ -1226,13 +1241,20 @@ function calcMetrics(){
   const propuestasCount=v.filter(x=>x.estado==='Propuesta enviada').length;
   let porcobrar=0;
   v.forEach(x=>{
-    if(x.fac1Estado==='emitida'&&x.fac1Monto)porcobrar+=Number(x.fac1Monto);
-    if(x.fac2Estado==='emitida'&&x.fac2Monto)porcobrar+=Number(x.fac2Monto);
+    const hon=Number(x.honorarios)||0;
+    if(x.estado!=='Cobro completo'&&hon>0){
+      let yaCobrado=0;
+      if(x.fac1Estado==='cobrada')yaCobrado+=facMontoNet(x.fac1Monto,hon);
+      if(x.fac2Estado==='cobrada')yaCobrado+=facMontoNet(x.fac2Monto,hon);
+      const remaining=hon-yaCobrado;
+      if(remaining>0)porcobrar+=remaining;
+    }
   });
   let cobrado=0;
   v.forEach(x=>{
-    if(x.fac1Estado==='cobrada'&&x.fac1Monto)cobrado+=Number(x.fac1Monto);
-    if(x.fac2Estado==='cobrada'&&x.fac2Monto)cobrado+=Number(x.fac2Monto);
+    const hon=Number(x.honorarios)||0;
+    if(x.fac1Estado==='cobrada'&&x.fac1Monto)cobrado+=facMontoNet(x.fac1Monto,hon);
+    if(x.fac2Estado==='cobrada'&&x.fac2Monto)cobrado+=facMontoNet(x.fac2Monto,hon);
   });
   const colocacionesMes=v.filter(x=>['Colocación','Facturado','Cobro completo'].includes(x.estado)&&x.fechaIngreso&&x.fechaIngreso.startsWith(cm)).length;
   const colocacionesTotal=v.filter(x=>['Colocación','Facturado','Cobro completo'].includes(x.estado)).length;
@@ -1284,8 +1306,8 @@ function calcMetrics(){
   const avgTernaCol=tTernaCol.length?Math.round(tTernaCol.reduce((a,b)=>a+b,0)/tTernaCol.length):null;
   const cobrosPendientes=[];
   v.forEach(x=>{
-    if(x.fac1Estado==='emitida'&&x.fac1Monto)cobrosPendientes.push({puesto:x.puesto,cliente:x.cliente,monto:Number(x.fac1Monto),fecha:x.fac1Fecha,label:'1er pago',id:x.id});
-    if(x.fac2Estado==='emitida'&&x.fac2Monto)cobrosPendientes.push({puesto:x.puesto,cliente:x.cliente,monto:Number(x.fac2Monto),fecha:x.fac2Fecha,label:'2do pago',id:x.id});
+    if(x.fac1Estado==='emitida'&&x.fac1Monto)cobrosPendientes.push({puesto:x.puesto,cliente:x.cliente,monto:facMontoNet(x.fac1Monto,Number(x.honorarios)||0),fecha:x.fac1Fecha,label:'1er pago',id:x.id});
+    if(x.fac2Estado==='emitida'&&x.fac2Monto)cobrosPendientes.push({puesto:x.puesto,cliente:x.cliente,monto:facMontoNet(x.fac2Monto,Number(x.honorarios)||0),fecha:x.fac2Fecha,label:'2do pago',id:x.id});
   });
   const forecast=[0,1,2].map(offset=>{
     let val=0;
@@ -1639,19 +1661,19 @@ function renderCobros(){
   let kpiFacEmitidas=0, kpiFacPendientes=0, kpiFacCobradas=0, kpiTotalFacNeto=0, kpiPorCobrar=0;
   vacantes.forEach(v=>{
     const f1e=v.fac1Estado||'no_emitida', f2e=v.fac2Estado||'no_emitida';
-    const f1m=Number(v.fac1Monto)||0, f2m=Number(v.fac2Monto)||0;
     const hon=Number(v.honorarios)||0;
-    if(f1e!=='no_emitida'){kpiFacEmitidas++;kpiTotalFacNeto+=f1m;}
-    if(f2e!=='no_emitida'){kpiFacEmitidas++;kpiTotalFacNeto+=f2m;}
+    const f1net=facMontoNet(v.fac1Monto,hon), f2net=facMontoNet(v.fac2Monto,hon);
+    if(f1e!=='no_emitida'){kpiFacEmitidas++;kpiTotalFacNeto+=f1net;}
+    if(f2e!=='no_emitida'){kpiFacEmitidas++;kpiTotalFacNeto+=f2net;}
     if(f1e==='emitida')kpiFacPendientes++;
     if(f2e==='emitida')kpiFacPendientes++;
     if(f1e==='cobrada')kpiFacCobradas++;
     if(f2e==='cobrada')kpiFacCobradas++;
-    // Por cobrar = remaining balance (honorarios - cobrado)
+    // Por cobrar = remaining balance (honorarios - NET cobrado)
     if(v.estado!=='Cobro completo'&&hon>0){
       let cobradoVac=0;
-      if(f1e==='cobrada')cobradoVac+=f1m;
-      if(f2e==='cobrada')cobradoVac+=f2m;
+      if(f1e==='cobrada')cobradoVac+=f1net;
+      if(f2e==='cobrada')cobradoVac+=f2net;
       const remaining=hon-cobradoVac;
       if(remaining>0)kpiPorCobrar+=remaining;
     }
@@ -1675,12 +1697,12 @@ function renderCobros(){
     return'<span class="pago-status-badge pago-nofacturado">Sin facturar</span>';
   };
   const rows=cobrosVacs.length?cobrosVacs.sort((a,b)=>(b.fechaApertura||'')>(a.fechaApertura||'')?1:-1).map(v=>{
-    const f1m=Number(v.fac1Monto)||0, f2m=Number(v.fac2Monto)||0;
     const f1e=v.fac1Estado||'no_emitida', f2e=v.fac2Estado||'no_emitida';
     const hon=Number(v.honorarios)||0;
+    const f1net=facMontoNet(v.fac1Monto,hon), f2net=facMontoNet(v.fac2Monto,hon);
     let cobradoVac=0;
-    if(f1e==='cobrada')cobradoVac+=f1m;
-    if(f2e==='cobrada')cobradoVac+=f2m;
+    if(f1e==='cobrada')cobradoVac+=f1net;
+    if(f2e==='cobrada')cobradoVac+=f2net;
     const porCobrar=Math.max(hon-cobradoVac,0);
     return`<tr onclick="openFicha('${v.id}')" style="cursor:pointer"><td class="td-primary">${v.puesto}</td><td>${v.cliente}</td><td class="td-mono">${fmt(v.honorarios)}</td><td style="vertical-align:middle">${pagoCel(v.fac1Monto,f1e)}</td><td style="vertical-align:middle">${pagoCel(v.fac2Monto,f2e)}</td><td class="td-mono" style="color:${porCobrar>0?'var(--yellow)':'var(--text-muted)'}">${porCobrar>0?fmt(porCobrar):'—'}</td><td>${estadoGeneral(v)}</td></tr>`;
   }).join(''):`<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px">Sin registros de facturación</td></tr>`;
