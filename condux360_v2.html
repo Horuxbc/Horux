@@ -1601,9 +1601,11 @@ body {
     </div>
 
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Puesto</label>
-        <input class="form-input" type="text" id="newPuesto" placeholder="Ej. Gerente de Operaciones">
+      <div class="form-group" style="flex:2">
+        <label class="form-label">Vacante *</label>
+        <select class="form-select" id="newVacante" onchange="onVacanteChange()">
+          <option value="">Cargando vacantes...</option>
+        </select>
       </div>
       <div class="form-group">
         <label class="form-label">Nivel</label>
@@ -1616,10 +1618,10 @@ body {
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" id="customPuestoRow" style="display:none">
       <div class="form-group">
-        <label class="form-label">ID de Vacante *</label>
-        <input class="form-input" type="text" id="newVacID" placeholder="Ej. VAC-2026-001">
+        <label class="form-label">Posición (texto libre)</label>
+        <input class="form-input" type="text" id="newCustomPuesto" placeholder="Ej. Gerente de Operaciones">
       </div>
     </div>
 
@@ -1816,6 +1818,64 @@ function showScreen(id) {
 // ============================================================
 function showModal(id) {
   document.getElementById(id).classList.add('visible');
+  if (id === 'modalCreateCand') fetchVacantesForDropdown();
+}
+
+var _cachedVacantes = null;
+var HH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI8RzRLdH0fhfg1gZ-0AygtIO3m0ujd545oKnRcFNV2aGeZ-nlFCVD4INfe1GMSa9M/exec';
+
+async function fetchVacantesForDropdown() {
+  var sel = document.getElementById('newVacante');
+  sel.innerHTML = '<option value="">Cargando vacantes...</option>';
+  try {
+    if (!_cachedVacantes) {
+      var res = await fetch(HH_SCRIPT_URL + '?action=read&sheet=Vacantes');
+      var data = await res.json();
+      var rows = data.values || [];
+      if (rows.length > 1) {
+        var headers = rows[0];
+        var idIdx = headers.indexOf('id');
+        var clienteIdx = headers.indexOf('cliente');
+        var puestoIdx = headers.indexOf('puesto');
+        var estadoIdx = headers.indexOf('estado');
+        _cachedVacantes = rows.slice(1).filter(function(r) {
+          var est = String(r[estadoIdx] || '');
+          return est === 'Vacante activa' || est === 'Terna presentada';
+        }).map(function(r) {
+          return { id: String(r[idIdx]||''), cliente: String(r[clienteIdx]||''), puesto: String(r[puestoIdx]||''), estado: String(r[estadoIdx]||'') };
+        });
+      } else {
+        _cachedVacantes = [];
+      }
+    }
+    sel.innerHTML = '<option value="">Seleccionar vacante</option>';
+    _cachedVacantes.forEach(function(v) {
+      var opt = document.createElement('option');
+      opt.value = v.id;
+      opt.textContent = v.cliente + ' \u2014 ' + v.puesto;
+      opt.dataset.puesto = v.puesto;
+      opt.dataset.cliente = v.cliente;
+      sel.appendChild(opt);
+    });
+    var otraOpt = document.createElement('option');
+    otraOpt.value = '__otra__';
+    otraOpt.textContent = '+ Otra posici\u00f3n';
+    sel.appendChild(otraOpt);
+  } catch(e) {
+    console.log('Error fetching vacantes:', e);
+    sel.innerHTML = '<option value="">Error al cargar</option>';
+    var otraOpt = document.createElement('option');
+    otraOpt.value = '__otra__';
+    otraOpt.textContent = '+ Otra posici\u00f3n';
+    sel.appendChild(otraOpt);
+  }
+}
+
+function onVacanteChange() {
+  var sel = document.getElementById('newVacante');
+  var customRow = document.getElementById('customPuestoRow');
+  customRow.style.display = sel.value === '__otra__' ? '' : 'none';
+  if (sel.value !== '__otra__') document.getElementById('newCustomPuesto').value = '';
 }
 
 function closeModal(id) {
@@ -2290,14 +2350,31 @@ async function syncFromSheets() {
 function createCandidato() {
   const nombre = document.getElementById('newNombre').value.trim();
   const correo = document.getElementById('newCorreo').value.trim().toLowerCase();
-  const puesto = document.getElementById('newPuesto').value.trim();
   const nivel = document.getElementById('newNivel').value;
-  const vacID = document.getElementById('newVacID').value.trim();
+
+  var vacSel = document.getElementById('newVacante');
+  var vacValue = vacSel.value;
+  var vacID, puesto, vacanteName;
+
+  if (vacValue === '__otra__') {
+    puesto = document.getElementById('newCustomPuesto').value.trim();
+    vacID = '';
+    vacanteName = puesto;
+  } else if (vacValue) {
+    var opt = vacSel.options[vacSel.selectedIndex];
+    vacID = vacValue;
+    puesto = opt.dataset.puesto;
+    vacanteName = opt.textContent;
+  } else {
+    vacID = '';
+    puesto = '';
+    vacanteName = '';
+  }
 
   const checks = document.querySelectorAll('#pruebasCheckboxes input[type="checkbox"]');
   const pruebas = Array.from(checks).filter(c => c.checked).map(c => c.value);
 
-  if (!nombre || !correo || !puesto || !nivel || !vacID || pruebas.length === 0) {
+  if (!nombre || !correo || !puesto || !nivel || pruebas.length === 0) {
     document.getElementById('createError').classList.add('visible');
     return;
   }
@@ -2305,22 +2382,23 @@ function createCandidato() {
   document.getElementById('createError').classList.remove('visible');
 
   var candidatos = getCandidatos();
-  var newCand = { nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, vacID: vacID, pruebas: pruebas, completadas: [], fechaCreacion: new Date().toLocaleDateString('es-MX') };
+  var newCand = { nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, vacID: vacID, vacanteName: vacanteName, pruebas: pruebas, completadas: [], fechaCreacion: new Date().toLocaleDateString('es-MX') };
   candidatos.push(newCand);
   saveCandidatos(candidatos);
 
   // Save to Sheets
   fetch(APPS_SCRIPT_URL, {
     method: 'POST',
-    body: JSON.stringify({ type: 'candidato', nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, vacID: vacID, pruebas: pruebas, fechaCreacion: newCand.fechaCreacion })
+    body: JSON.stringify({ type: 'candidato', nombre: nombre, correo: correo, puesto: puesto, nivel: nivel, vacID: vacID, vacanteName: vacanteName, pruebas: pruebas, fechaCreacion: newCand.fechaCreacion })
   }).catch(function(e) { console.log('Sheets sync error:', e); });
 
   // Reset form
   document.getElementById('newNombre').value = '';
   document.getElementById('newCorreo').value = '';
-  document.getElementById('newPuesto').value = '';
+  document.getElementById('newVacante').value = '';
+  document.getElementById('newCustomPuesto').value = '';
+  document.getElementById('customPuestoRow').style.display = 'none';
   document.getElementById('newNivel').value = '';
-  document.getElementById('newVacID').value = '';
 
   closeModal('modalCreateCand');
   loadAdminData();
@@ -3398,6 +3476,8 @@ function submitPrestaciones() {
     nombre: currentCand.nombre,
     puesto: currentCand.puesto,
     nivel: currentCand.nivel,
+    vacID: currentCand.vacID || '',
+    vacanteName: currentCand.vacanteName || '',
     referencias: JSON.stringify(referencias),
     prestaciones: JSON.stringify(prestaciones)
   };
