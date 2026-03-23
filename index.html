@@ -1635,31 +1635,55 @@ function openFicha(id){
 // ============ RENDER COBROS ============
 function renderCobros(){
   const m=calcMetrics();
-  const allFacs=[];
+  // KPI counts from individual payments
+  let kpiFacEmitidas=0, kpiFacPendientes=0, kpiFacCobradas=0, kpiTotalFacNeto=0;
   vacantes.forEach(v=>{
-    if(v.fac1Monto)allFacs.push({...v,_fac:1,_monto:v.fac1Monto,_estado:v.fac1Estado||'no_emitida',_fecha:v.fac1Fecha,_cobro:v.fac1Cobro});
-    if(v.fac2Monto)allFacs.push({...v,_fac:2,_monto:v.fac2Monto,_estado:v.fac2Estado||'no_emitida',_fecha:v.fac2Fecha,_cobro:v.fac2Cobro});
+    const f1e=v.fac1Estado||'no_emitida', f2e=v.fac2Estado||'no_emitida';
+    const f1m=Number(v.fac1Monto)||0, f2m=Number(v.fac2Monto)||0;
+    if(f1e!=='no_emitida'){kpiFacEmitidas++;kpiTotalFacNeto+=f1m;}
+    if(f2e!=='no_emitida'){kpiFacEmitidas++;kpiTotalFacNeto+=f2m;}
+    if(f1e==='emitida')kpiFacPendientes++;
+    if(f2e==='emitida')kpiFacPendientes++;
+    if(f1e==='cobrada')kpiFacCobradas++;
+    if(f2e==='cobrada')kpiFacCobradas++;
   });
-  const sc={no_emitida:['pago-nofacturado','No emitida'],emitida:['pago-pendiente','Emitida — pendiente'],cobrada:['pago-cobrado','Cobrada']};
-  const rows=allFacs.length?allFacs.sort((a,b)=>(b._fecha||'')>(a._fecha||'')?1:-1).map(f=>{
-    const[cls,lbl]=sc[f._estado]||sc.no_emitida;
-    const fIva=Math.round(Number(f._monto)*0.16);
-    const fTotal=Number(f._monto)+fIva;
-    return`<tr onclick="openFicha('${f.id}')" style="cursor:pointer"><td class="td-primary">${f.puesto}</td><td>${f.cliente}</td><td style="font-size:11px">Pago ${f._fac}</td><td class="td-mono">${fmt(f._monto)}</td><td class="td-mono" style="font-size:11px">${fmt(fIva)}</td><td class="td-mono">${fmt(fTotal)}</td><td>${fmtDate(f._fecha)}</td><td><span class="pago-status-badge ${cls}">${lbl}</span></td><td class="td-mono" style="font-size:11px">${f._cobro?fmtDate(f._cobro):'—'}</td></tr>`;
-  }).join(''):`<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:32px">Sin registros de facturación</td></tr>`;
-  const totalFacNeto=allFacs.filter(f=>f._estado!=='no_emitida').reduce((s,f)=>s+Number(f._monto||0),0);
-  const totalFacIva=Math.round(totalFacNeto*0.16);
+  const kpiTotalFacIva=Math.round(kpiTotalFacNeto*0.16);
+  // Filter vacantes that have any payment data
+  const cobrosVacs=vacantes.filter(v=>v.fac1Monto||v.fac2Monto||v.fac1Estado&&v.fac1Estado!=='no_emitida'||v.fac2Estado&&v.fac2Estado!=='no_emitida');
+  const sc={no_emitida:['pago-nofacturado','—'],emitida:['pago-pendiente','Emitida'],cobrada:['pago-cobrado','Cobrada']};
+  const pagoCel=(monto,estado)=>{
+    const m=Number(monto)||0;
+    const e=estado||'no_emitida';
+    const[cls,lbl]=sc[e]||sc.no_emitida;
+    if(!m&&e==='no_emitida') return'<span style="color:var(--text-muted)">—</span>';
+    return`<div><span class="td-mono" style="font-size:12px">${fmt(m)}</span><br><span class="pago-status-badge ${cls}" style="margin-top:3px;display:inline-flex">${lbl}</span></div>`;
+  };
+  const estadoGeneral=(v)=>{
+    const f1=v.fac1Estado||'no_emitida', f2=v.fac2Estado||'no_emitida';
+    if(f1==='cobrada'&&f2==='cobrada') return'<span class="pago-status-badge pago-cobrado">Cobro completo</span>';
+    if(f1==='cobrada'||f2==='cobrada') return'<span class="pago-status-badge pago-pendiente" style="background:var(--yellow-dim);color:var(--yellow)">Parcial</span>';
+    if(f1==='emitida'||f2==='emitida') return'<span class="pago-status-badge pago-pendiente">Pendiente</span>';
+    return'<span class="pago-status-badge pago-nofacturado">Sin facturar</span>';
+  };
+  const rows=cobrosVacs.length?cobrosVacs.sort((a,b)=>(b.fechaApertura||'')>(a.fechaApertura||'')?1:-1).map(v=>{
+    const f1m=Number(v.fac1Monto)||0, f2m=Number(v.fac2Monto)||0;
+    const f1e=v.fac1Estado||'no_emitida', f2e=v.fac2Estado||'no_emitida';
+    let porCobrar=0;
+    if(f1e==='emitida')porCobrar+=f1m;
+    if(f2e==='emitida')porCobrar+=f2m;
+    return`<tr onclick="openFicha('${v.id}')" style="cursor:pointer"><td class="td-primary">${v.puesto}</td><td>${v.cliente}</td><td class="td-mono">${fmt(v.honorarios)}</td><td style="vertical-align:middle">${pagoCel(v.fac1Monto,f1e)}</td><td style="vertical-align:middle">${pagoCel(v.fac2Monto,f2e)}</td><td class="td-mono" style="color:${porCobrar>0?'var(--yellow)':'var(--text-muted)'}">${porCobrar>0?fmt(porCobrar):'—'}</td><td>${estadoGeneral(v)}</td></tr>`;
+  }).join(''):`<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px">Sin registros de facturación</td></tr>`;
   document.getElementById('cobros-content').innerHTML=`
     <div class="kpi-grid" style="margin-bottom:24px;grid-template-columns:repeat(5,1fr)">
-      <div class="kpi-card"><div class="kpi-label">Facturado (neto)</div><div class="kpi-value accent" style="font-size:22px">${fmt(totalFacNeto)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado!=='no_emitida').length} facturas emitidas</div></div>
-      <div class="kpi-card"><div class="kpi-label">IVA Facturado</div><div class="kpi-value" style="font-size:22px;color:#8b5cf6">${fmt(totalFacIva)}</div><div class="kpi-detail">16% sobre facturado</div></div>
-      <div class="kpi-card"><div class="kpi-label">Por Cobrar (neto)</div><div class="kpi-value warning" style="font-size:22px">${fmt(m.porcobrar)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado==='emitida').length} facturas pendientes</div></div>
-      <div class="kpi-card"><div class="kpi-label">Cobrado (neto)</div><div class="kpi-value success" style="font-size:22px">${fmt(m.cobrado)}</div><div class="kpi-detail">${allFacs.filter(f=>f._estado==='cobrada').length} facturas cobradas</div></div>
+      <div class="kpi-card"><div class="kpi-label">Facturado (neto)</div><div class="kpi-value accent" style="font-size:22px">${fmt(kpiTotalFacNeto)}</div><div class="kpi-detail">${kpiFacEmitidas} facturas emitidas</div></div>
+      <div class="kpi-card"><div class="kpi-label">IVA Facturado</div><div class="kpi-value" style="font-size:22px;color:#8b5cf6">${fmt(kpiTotalFacIva)}</div><div class="kpi-detail">16% sobre facturado</div></div>
+      <div class="kpi-card"><div class="kpi-label">Por Cobrar (neto)</div><div class="kpi-value warning" style="font-size:22px">${fmt(m.porcobrar)}</div><div class="kpi-detail">${kpiFacPendientes} facturas pendientes</div></div>
+      <div class="kpi-card"><div class="kpi-label">Cobrado (neto)</div><div class="kpi-value success" style="font-size:22px">${fmt(m.cobrado)}</div><div class="kpi-detail">${kpiFacCobradas} facturas cobradas</div></div>
       <div class="kpi-card"><div class="kpi-label">Hon. Promedio</div><div class="kpi-value" style="font-size:22px">${vacantes.length>0?fmt(Math.round(vacantes.reduce((s,v)=>s+Number(v.honorarios||0),0)/vacantes.length)):'—'}</div><div class="kpi-detail">neto por vacante</div></div>
     </div>
     <div class="table-wrap">
       <table class="vacantes-table">
-        <thead><tr><th>Puesto</th><th>Cliente</th><th>Tipo</th><th>Neto</th><th>IVA</th><th>Total</th><th>Fecha Factura</th><th>Estado</th><th>Fecha Cobro</th></tr></thead>
+        <thead><tr><th>Puesto</th><th>Cliente</th><th>Hon. Netos</th><th>Pago 1</th><th>Pago 2</th><th>Por Cobrar</th><th>Estado</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>`;
