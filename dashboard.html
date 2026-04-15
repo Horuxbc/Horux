@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HORUX · División Headhunting</title> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -18,7 +19,7 @@
   --success:#1a7a52;--success-dim:rgba(26,122,82,0.09);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
 
 /* LOGIN SCREEN */
 .login-screen{position:fixed;inset:0;background:var(--cream);display:flex;align-items:center;justify-content:center;z-index:300;}
@@ -57,7 +58,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .logo-sub{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.5);letter-spacing:0.2em;text-transform:uppercase;margin-top:3px;display:block;}
 .sidebar-nav{padding:16px 12px;flex:1;display:flex;flex-direction:column;gap:2px;}
 .nav-section-label{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:0.2em;text-transform:uppercase;padding:12px 12px 6px;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;cursor:pointer;color:rgba(255,255,255,0.65);font-size:13px;transition:all 0.15s;border:1px solid transparent;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;cursor:pointer;color:rgba(255,255,255,0.65);font-size:14px;transition:all 0.15s;border:1px solid transparent;}
 .nav-item:hover{background:rgba(255,255,255,0.1);color:#fff;}
 .nav-item.active{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.2);font-weight:500;}
 .nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:0.7;}
@@ -150,13 +151,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 /* TABLES */
 .mini-table{width:100%;border-collapse:collapse;}
 .mini-table th{font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase;text-align:left;padding:0 8px 10px;border-bottom:1px solid var(--border);}
-.mini-table td{padding:10px 8px;font-size:12px;color:var(--text-dim);border-bottom:1px solid var(--border-light);vertical-align:middle;}
+.mini-table td{padding:10px 8px;font-size:13px;color:var(--text-dim);border-bottom:1px solid var(--border-light);vertical-align:middle;}
 .mini-table tr:last-child td{border-bottom:none;}
 .mini-table tr:hover td{background:var(--bg3);cursor:pointer;}
 .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
 .vacantes-table{width:100%;border-collapse:collapse;}
 .vacantes-table th{font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase;text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;}
-.vacantes-table td{padding:12px 14px;font-size:13px;color:var(--text-dim);border-bottom:1px solid var(--border-light);vertical-align:middle;}
+.vacantes-table td{padding:13px 14px;font-size:14px;color:var(--text-dim);border-bottom:1px solid var(--border-light);vertical-align:middle;}
 .vacantes-table tr:hover td{background:var(--bg3);cursor:pointer;}
 .vacantes-table tr:last-child td{border-bottom:none;}
 .td-primary{color:var(--text)!important;font-weight:500;}
@@ -204,6 +205,77 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .forecast-month{background:var(--bg3);border-radius:6px;padding:10px 12px;text-align:center;}
 .forecast-month-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
 .forecast-month-val{font-family:'DM Mono',monospace;font-size:15px;color:var(--cream);font-weight:500;}
+
+
+/* ── META & INSIGHTS ── */
+.meta-bar-wrap{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin:10px 0 6px;}
+.meta-bar-fill{height:100%;border-radius:6px;transition:width 0.6s ease;background:linear-gradient(90deg,var(--green-mid),var(--accent));}
+.meta-bar-fill.warn{background:linear-gradient(90deg,var(--yellow),#c8960a);}
+.meta-bar-fill.over{background:linear-gradient(90deg,var(--success),#15a059);}
+.meta-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.meta-pct{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--green);}
+.meta-pct.warn{color:var(--yellow);}
+.meta-pct.over{color:var(--success);}
+.meta-semaforo{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;}
+.meta-edit-btn{background:none;border:1px solid var(--border);border-radius:5px;padding:3px 9px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.meta-edit-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* insights panel */
+.insights-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:16px;}
+.insights-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.insights-title{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);}
+.insights-refresh{background:none;border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.insights-refresh:hover{border-color:var(--accent);color:var(--accent);}
+.insights-refresh:disabled{opacity:0.4;cursor:default;}
+.insights-body{display:flex;flex-direction:column;gap:0;}
+.insight-item{display:flex;gap:0;align-items:flex-start;padding:0;background:none;border-left:none;}
+.insight-icon{font-size:15px;flex-shrink:0;margin-right:8px;}
+.insight-text{font-size:14px;color:var(--text-dim);line-height:1.6;font-weight:400;}
+.insight-loading{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;padding:4px 0;}
+.insight-dot{width:5px;height:5px;border-radius:50%;background:var(--text-muted);animation:pulse 1.2s ease infinite;}
+.insight-dot:nth-child(2){animation-delay:0.2s;}
+.insight-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8);}50%{opacity:1;transform:scale(1.1);}}
+
+/* chart panel */
+.chart-wrap{position:relative;height:180px;}
+.meta-suggest{background:rgba(0,110,101,0.08);border:1px solid rgba(0,110,101,0.15);border-radius:8px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-dim);}
+.meta-suggest strong{color:var(--accent);}
+.meta-suggest-btn{background:var(--accent);color:#fff;border:none;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;margin-left:auto;white-space:nowrap;}
+
+
+/* ── VISTA INTELIGENCIA ── */
+.intel-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.intel-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.intel-section.full{grid-column:1/-1;}
+.intel-section-header{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:10px;}
+.intel-section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.intel-section-icon.verde{background:var(--accent-dim);}
+.intel-section-icon.amarillo{background:var(--yellow-dim);}
+.intel-section-icon.rojo{background:var(--red-dim);}
+.intel-section-icon.morado{background:rgba(139,92,246,0.1);}
+.intel-section-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-weight:500;}
+.intel-section-body{padding:16px 18px;}
+.intel-insight-list{display:flex;flex-direction:column;gap:8px;}
+.intel-insight-row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;background:var(--bg3);}
+.intel-insight-row.alerta{background:var(--red-dim);border-left:3px solid var(--red);}
+.intel-insight-row.avance{background:var(--success-dim);border-left:3px solid var(--success);}
+.intel-insight-row.sugerencia{background:rgba(139,92,246,0.07);border-left:3px solid #8b5cf6;}
+.intel-insight-row.info{background:var(--bg3);border-left:3px solid var(--border);}
+.intel-insight-row .icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.intel-insight-row .texto{font-size:13px;color:var(--text-dim);line-height:1.5;}
+.intel-kpi-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-light);}
+.intel-kpi-row:last-child{border-bottom:none;}
+.intel-kpi-label{font-size:13px;color:var(--text-dim);}
+.intel-kpi-val{font-family:'DM Mono',monospace;font-size:14px;color:var(--green);font-weight:500;}
+.intel-kpi-val.warn{color:var(--yellow);}
+.intel-kpi-val.alert{color:var(--red);}
+.intel-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;gap:16px;color:var(--text-muted);}
+.intel-loading-dots{display:flex;gap:8px;}
+.intel-loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:0.3;animation:pulse 1.2s ease infinite;}
+.intel-loading-dots span:nth-child(2){animation-delay:0.2s;}
+.intel-loading-dots span:nth-child(3){animation-delay:0.4s;}
+.intel-empty{text-align:center;padding:32px;color:var(--text-muted);font-size:13px;}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;}
@@ -280,6 +352,48 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .empty-icon{font-size:40px;margin-bottom:16px;opacity:0.4;}
 .empty-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text-dim);margin-bottom:8px;}
 .empty-desc{font-size:13px;max-width:300px;margin:0 auto 20px;}
+
+/* ── PIPELINE VISUAL ── */
+.pipeline-visual{display:flex;align-items:center;gap:0;margin:18px 0 10px;overflow-x:auto;padding-bottom:4px;}
+.pipeline-step{display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;position:relative;}
+.pipeline-step:not(:last-child)::after{content:'';position:absolute;top:14px;left:calc(50% + 14px);right:calc(-50% + 14px);height:2px;background:var(--border);z-index:0;}
+.pipeline-step.done:not(:last-child)::after{background:var(--accent);}
+.pipeline-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;z-index:1;position:relative;transition:all 0.2s;}
+.pipeline-step.done .pipeline-dot{background:var(--accent);border-color:var(--accent);}
+.pipeline-step.current .pipeline-dot{background:var(--green);border-color:var(--green);box-shadow:0 0 0 4px rgba(0,110,101,0.15);}
+.pipeline-step.done .pipeline-dot svg,.pipeline-step.current .pipeline-dot svg{stroke:#fff;}
+.pipeline-step-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-top:6px;text-align:center;line-height:1.3;}
+.pipeline-step.done .pipeline-step-label,.pipeline-step.current .pipeline-step-label{color:var(--accent);}
+.pipeline-step.current .pipeline-step-label{color:var(--green);font-weight:500;}
+.pipeline-date{font-size:9px;color:var(--text-muted);margin-top:2px;text-align:center;}
+
+/* ── MODAL COBROS ── */
+.cobros-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.cobros-modal-overlay.open{opacity:1;pointer-events:all;}
+.cobros-modal{background:var(--bg2);border-radius:14px;width:620px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.18);transform:translateY(12px);transition:transform 0.2s;}
+.cobros-modal-overlay.open .cobros-modal{transform:translateY(0);}
+.cobros-modal-header{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 16px;border-bottom:1px solid var(--border);}
+.cobros-modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--green);}
+.cobros-modal-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.cobros-modal-body{padding:22px 24px;}
+.cobros-modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--border);}
+
+/* pago cards */
+.pago-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;}
+.pago-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.pago-card-title{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-weight:500;}
+.pago-card-status{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;}
+.pago-card-status.no_emitida{background:var(--bg4);color:var(--text-muted);}
+.pago-card-status.emitida{background:var(--yellow-dim);color:var(--yellow);}
+.pago-card-status.cobrada{background:var(--success-dim);color:var(--success);}
+.pago-resumen{background:var(--accent-dim);border:1px solid rgba(0,110,101,0.12);border-radius:8px;padding:14px 16px;margin-bottom:18px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.pago-resumen-item .label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.pago-resumen-item .valor{font-family:'DM Mono',monospace;font-size:16px;color:var(--green);font-weight:500;}
+
+/* btn editar vacante en topbar ficha */
+.btn-pago{background:rgba(0,110,101,0.1);color:var(--accent);border:1px solid rgba(0,110,101,0.2);}
+.btn-pago:hover{background:rgba(0,110,101,0.18);}
+
 .notif{position:fixed;bottom:24px;right:24px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;color:var(--text);z-index:200;transform:translateY(80px);opacity:0;transition:all 0.3s ease;box-shadow:0 8px 24px rgba(0,0,0,0.3);}
 .notif.show{transform:translateY(0);opacity:1;}
 .notif.success{border-color:rgba(77,189,142,0.4);}
@@ -404,6 +518,11 @@ select option{background:#ffffff;color:#1a2422;}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         Cobros
       </div>
+      <span class="nav-section-label">Análisis</span>
+      <div class="nav-item" onclick="showView('inteligencia')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6l-.7.5V17H9v-1.5l-.7-.5A7 7 0 015 9a7 7 0 017-7z"/><path d="M9 21h6M10 17v-1M14 17v-1"/></svg>
+        Inteligencia
+      </div>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user" id="sidebar-user">
@@ -437,8 +556,51 @@ select option{background:#ffffff;color:#1a2422;}
         </div>
       </div>
       <div class="content">
+        <!-- INSIGHTS PANEL -->
+        <div class="insights-panel" id="insights-panel">
+          <div class="insights-header">
+            <div class="insights-title">Análisis ejecutivo</div>
+            <button class="insights-refresh" id="insights-refresh-btn" onclick="generarInsights()">↺ actualizar</button>
+          </div>
+          <div class="insights-body" id="insights-body">
+            <div class="insight-loading">
+              <div class="insight-dot"></div><div class="insight-dot"></div><div class="insight-dot"></div>
+              <span style="font-size:12px;color:var(--text-muted)">Analizando...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- META MENSUAL -->
+        <div class="panel" style="margin-bottom:20px;padding:20px 24px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div>
+              <div class="panel-title">Meta Mensual de Facturación</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Cobrado este mes vs objetivo</div>
+            </div>
+            <button class="meta-edit-btn" onclick="editarMeta()">✎ Editar meta</button>
+          </div>
+          <div class="meta-label-row">
+            <div>
+              <span class="meta-semaforo" id="meta-semaforo" style="background:var(--text-muted)"></span>
+              <span style="font-size:13px;color:var(--text-muted)" id="meta-label-text">Cargando...</span>
+            </div>
+            <span class="meta-pct" id="meta-pct">—</span>
+          </div>
+          <div class="meta-bar-wrap"><div class="meta-bar-fill" id="meta-bar" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
+            <span id="meta-cobrado-label">$0 cobrado</span>
+            <span id="meta-objetivo-label">Meta: $349,000</span>
+          </div>
+          <div id="meta-suggest-wrap"></div>
+          <!-- Gráfica mensual -->
+          <div style="margin-top:20px;border-top:1px solid var(--border-light);padding-top:16px">
+            <div style="font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px">Facturación por mes (últimos 6 meses)</div>
+            <div class="chart-wrap"><canvas id="chart-mensual"></canvas></div>
+          </div>
+        </div>
+
         <div class="financial-strip">
-          <div class="fin-card pipeline clickable" onclick="goFilterVacantes('pipeline')"><div class="fin-label">Pipeline Neto</div><div class="fin-amount" id="f-pipeline">$0</div><div class="fin-sub" id="f-pipeline-sub">0 vacantes</div></div>
+          <div class="fin-card pipeline clickable" onclick="goFilterVacantes('pipeline')"><div class="fin-label">Honorarios en Proceso</div><div class="fin-amount" id="f-pipeline">$0</div><div class="fin-sub" id="f-pipeline-sub">0 vacantes</div></div>
           <div class="fin-card propuestas clickable" onclick="goFilterVacantes('Propuesta enviada')"><div class="fin-label">Propuestas Enviadas</div><div class="fin-amount" id="f-propuestas">$0</div><div class="fin-sub" id="f-propuestas-sub">0 propuestas</div></div>
           <div class="fin-card iva"><div class="fin-label">IVA por Trasladar</div><div class="fin-amount" id="f-iva-trasladar">$0</div><div class="fin-sub" id="f-iva-sub">16% sobre pipeline</div></div>
           <div class="fin-card facturado clickable" onclick="showView('cobros')"><div class="fin-label">Por Cobrar (neto)</div><div class="fin-amount" id="f-porcobrar">$0</div><div class="fin-sub">facturas pendientes</div></div>
@@ -450,17 +612,49 @@ select option{background:#ffffff;color:#1a2422;}
           <div class="kpi-card"><div class="kpi-label">Conversión Propuesta</div><div class="kpi-value success" id="k-conv">—</div><div class="kpi-detail">propuesta → activa</div></div>
           <div class="kpi-card"><div class="kpi-label">Retención 90 días</div><div class="kpi-value" id="k-ret">—</div><div class="kpi-detail" id="k-ret-detail">de colocaciones</div></div>
         </div>
-        <div class="dash-grid">
-          <div class="panel">
-            <div class="panel-header"><span class="panel-title">Pipeline por Etapa</span><span class="tag" id="p-ponderado">$0 ponderado</span></div>
-            <div class="panel-body"><div class="pipeline-stages" id="pipeline-stages"></div></div>
-          </div>
-          <div class="panel">
-            <div class="panel-header"><span class="panel-title">Carga por Headhunter</span></div>
-            <div class="panel-body"><div class="hh-cards" id="hh-cards"></div></div>
+        <!-- GRÁFICAS ROW 1 -->
+        <div class="dash-grid" style="margin-bottom:16px">
+          <div class="panel" style="grid-column:1/-1">
+            <div class="panel-header">
+              <span class="panel-title">Facturación cobrada · últimos 6 meses</span>
+              <div style="display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text-muted)">
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--accent);display:inline-block"></span>Cobrado</span>
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:0;border-top:2px dashed var(--yellow);display:inline-block"></span>Meta</span>
+              </div>
+            </div>
+            <div class="panel-body" style="padding-bottom:4px">
+              <div style="position:relative;height:200px"><canvas id="chart-fact" role="img" aria-label="Facturación cobrada vs meta por mes"></canvas></div>
+            </div>
           </div>
         </div>
-        <div class="dash-grid-3">
+
+        <!-- GRÁFICAS ROW 2 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">Vacantes por etapa</span><span class="tag" id="p-ponderado">$0 ponderado</span></div>
+            <div class="panel-body" style="padding-bottom:4px">
+              <div style="position:relative;height:200px"><canvas id="chart-etapas" role="img" aria-label="Vacantes por etapa del pipeline"></canvas></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">Colocaciones por mes</span></div>
+            <div class="panel-body" style="padding-bottom:4px">
+              <div style="position:relative;height:200px"><canvas id="chart-col" role="img" aria-label="Colocaciones mensuales"></canvas></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">Mix de vacantes</span></div>
+            <div class="panel-body">
+              <div style="display:flex;align-items:center;gap:16px">
+                <div style="position:relative;height:160px;width:160px;flex-shrink:0"><canvas id="chart-mix" role="img" aria-label="Mix operativas vs estratégicas"></canvas></div>
+                <div style="display:flex;flex-direction:column;gap:10px" id="mix-legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLA + COBROS -->
+        <div class="dash-grid-3" style="margin-bottom:16px">
           <div class="panel">
             <div class="panel-header"><span class="panel-title">Vacantes Recientes</span><span class="btn btn-ghost" style="padding:4px 10px;font-size:11px;cursor:pointer" onclick="showView('vacantes')">Ver todas →</span></div>
             <div class="panel-body" style="padding:0"><table class="mini-table"><thead><tr><th>Puesto</th><th>Cliente</th><th>Estado</th><th>Honorarios</th></tr></thead><tbody id="recent-tbody"></tbody></table></div>
@@ -470,19 +664,14 @@ select option{background:#ffffff;color:#1a2422;}
             <div class="panel-body" id="cobros-panel"></div>
           </div>
         </div>
-        <div class="dash-grid" style="margin-top:20px">
-          <div class="panel">
-            <div class="panel-header"><span class="panel-title">Velocidad del Pipeline</span><span style="font-size:11px;color:var(--text-muted)">Días promedio por etapa</span></div>
-            <div class="panel-body" id="velocity-panel"></div>
-          </div>
-          <div class="panel">
-            <div class="panel-header"><span class="panel-title">Ticket por Nivel de Puesto</span></div>
-            <div class="panel-body" id="nivel-panel"></div>
-          </div>
-        </div>
-        <div class="panel" style="margin-top:20px">
-          <div class="panel-header"><span class="panel-title">Forecast de Ingresos</span><span style="font-size:11px;color:var(--text-muted)">Basado en probabilidad por etapa</span></div>
-          <div class="panel-body"><div class="forecast-grid" id="forecast-grid"></div></div>
+
+        <!-- PANELES SECUNDARIOS (ocultos para renderDashboard, preservados) -->
+        <div style="display:none">
+          <div id="pipeline-stages"></div>
+          <div id="hh-cards"></div>
+          <div id="velocity-panel"></div>
+          <div id="nivel-panel"></div>
+          <div id="forecast-grid"></div>
         </div>
       </div>
     </div>
@@ -531,6 +720,10 @@ select option{background:#ffffff;color:#1a2422;}
       <div class="topbar">
         <div class="page-title" id="ficha-topbar-title">Ficha de Vacante</div>
         <div class="topbar-actions">
+          <button class="btn btn-pago" onclick="openCobrosModal(currentFichaId)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            Cobros & Pagos
+          </button>
           <button class="btn btn-ghost" onclick="openEditVacante(currentFichaId)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Editar
@@ -542,6 +735,33 @@ select option{background:#ffffff;color:#1a2422;}
         </div>
       </div>
       <div class="content" id="ficha-content"></div>
+    </div>
+
+    <!-- INTELIGENCIA -->
+    <div id="view-inteligencia" class="view">
+      <div class="topbar">
+        <div class="page-title">Inteligencia <span>Operativa</span></div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary" id="intel-refresh-btn" onclick="generarIntelligencia()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Actualizar análisis
+          </button>
+        </div>
+      </div>
+      <div class="content" id="intel-content">
+        <div class="insights-panel" style="margin-bottom:20px">
+          <div class="insights-header">
+            <div class="insights-title">✦ Centro de Inteligencia Horux</div>
+          </div>
+          <div class="insights-body">
+            <div class="insight-item info">
+              <span class="insight-icon">💡</span>
+              <span class="insight-text">Haz clic en "Actualizar análisis" para generar el diagnóstico completo de tu operación con IA.</span>
+            </div>
+          </div>
+        </div>
+        <div id="intel-sections"></div>
+      </div>
     </div>
 
     <!-- COBROS -->
@@ -575,13 +795,7 @@ select option{background:#ffffff;color:#1a2422;}
       <button class="modal-close" onclick="closeModal()">×</button>
     </div>
     <div class="modal-body">
-      <!-- TABS -->
-      <div class="form-tabs">
-        <button class="form-tab active" onclick="switchFormTab('datos')">📋 Datos de la Vacante</button>
-        <button class="form-tab" onclick="switchFormTab('seguimiento')">📊 Seguimiento & Cobros</button>
-      </div>
-
-      <!-- TAB 1: DATOS -->
+      <!-- Solo datos de vacante — los cobros tienen su propio modal -->
       <div class="form-tab-panel active" id="tab-datos">
         <div class="form-section">
           <div class="form-section-title">Datos del Proyecto</div>
@@ -661,96 +875,8 @@ select option{background:#ffffff;color:#1a2422;}
       </div>
 
       <!-- TAB 2: SEGUIMIENTO -->
-      <div class="form-tab-panel" id="tab-seguimiento">
-        <div class="form-section">
-          <div class="form-section-title">Fechas por Etapa</div>
-          <div class="form-grid">
-            <div class="form-group"><label class="form-label">Fecha Vacante Activa</label><input class="form-input" id="f-fecha-activa" type="date"></div>
-            <div class="form-group"><label class="form-label">Fecha Terna Presentada</label><input class="form-input" id="f-fecha-terna" type="date"></div>
-            <div class="form-group"><label class="form-label">Fecha Colocación</label><input class="form-input" id="f-fecha-colocacion-etapa" type="date"></div>
-          </div>
-        </div>
-        <div class="form-section">
-          <div class="form-section-title">Operación del Proceso</div>
-          <div class="form-grid">
-            <div class="form-group"><label class="form-label">Candidatos Contactados</label><input class="form-input" id="f-contactados" type="number" placeholder="0"></div>
-            <div class="form-group"><label class="form-label">Candidatos Entrevistados</label><input class="form-input" id="f-entrevistados" type="number" placeholder="0"></div>
-            <div class="form-group"><label class="form-label">Candidatos en Terna</label><input class="form-input" id="f-enterna" type="number" placeholder="0"></div>
-            <div class="form-group"><label class="form-label">Candidato Colocado</label><input class="form-input" id="f-candidato-colocado" type="text" placeholder="Nombre (si aplica)"></div>
-            <div class="form-group"><label class="form-label">Fecha de Ingreso</label><input class="form-input" id="f-fecha-ingreso" type="date"></div>
-            <div class="form-group"><label class="form-label">Retención 90 días</label>
-              <select class="form-select" id="f-retencion">
-                <option value="pendiente">Pendiente</option>
-                <option value="si">Sí — permaneció</option>
-                <option value="no">No — salió</option>
-              </select>
-            </div>
-            <div class="form-group form-full"><label class="form-label">Razón de cierre sin colocación</label>
-              <select class="form-select" id="f-razon-cierre">
-                <option value="">— No aplica / en proceso —</option>
-                <option value="cliente_cancelo">Cliente canceló la búsqueda</option>
-                <option value="candidato_rechazo">Candidato rechazó la oferta</option>
-                <option value="perdida_competencia">Perdida vs competencia</option>
-                <option value="perfil_imposible">Perfil no encontrado / irrealista</option>
-                <option value="presupuesto">Presupuesto insuficiente del cliente</option>
-                <option value="congelada">Vacante congelada / en pausa</option>
-                <option value="otro">Otro</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="form-section">
-          <div class="form-section-title">Oferta Salarial</div>
-          <div class="form-grid">
-            <div class="form-group"><label class="form-label">Oferta presentada al candidato</label><input class="form-input" id="f-oferta-presentada" type="number" placeholder="Monto MXN"></div>
-            <div class="form-group"><label class="form-label">Contraoferta del candidato</label><input class="form-input" id="f-contraoferta" type="number" placeholder="Monto MXN (si hubo)"></div>
-            <div class="form-group"><label class="form-label">Motivo de rechazo de oferta</label>
-              <select class="form-select" id="f-motivo-rechazo">
-                <option value="">— No aplica —</option>
-                <option value="salario_bajo">Salario por debajo del mercado</option>
-                <option value="otra_oferta">Recibió otra oferta superior</option>
-                <option value="contraoferta_actual">Contraoferta de empresa actual</option>
-                <option value="condiciones">Condiciones / beneficios insuficientes</option>
-                <option value="reubicacion">No aceptó reubicación</option>
-                <option value="proyecto_personal">Proyecto personal / no quiso moverse</option>
-                <option value="otro">Otro</option>
-              </select>
-            </div>
-            <div class="form-group"><label class="form-label">¿El cliente ajustó la oferta?</label>
-              <select class="form-select" id="f-cliente-ajusto">
-                <option value="">— No aplica —</option>
-                <option value="si">Sí — ajustó y se cerró</option>
-                <option value="si_no_cerro">Sí — ajustó pero no se cerró</option>
-                <option value="no">No — no quiso ajustar</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="form-section">
-          <div class="form-section-title">Facturación & Cobros</div>
-          <div class="form-grid">
-            <div class="form-group"><label class="form-label">Factura 1 — Monto Neto</label><input class="form-input" id="f-fac1-monto" type="number" placeholder="50% al inicio" oninput="calcFacIva(1)"></div>
-            <div class="form-group"><label class="form-label">Factura 1 — Estado</label>
-              <select class="form-select" id="f-fac1-estado">
-                <option value="no_emitida">No emitida</option><option value="emitida">Emitida</option><option value="cobrada">Cobrada</option>
-              </select>
-            </div>
-            <div class="form-group"><label class="form-label">Fac 1 — IVA (16%)</label><input class="form-input" id="f-fac1-iva" type="number" readonly style="background:var(--bg4);cursor:default"></div>
-            <div class="form-group"><label class="form-label">Fac 1 — Total con IVA</label><input class="form-input" id="f-fac1-total" type="number" readonly style="background:var(--bg4);cursor:default"></div>
-            <div class="form-group"><label class="form-label">Factura 1 — Fecha</label><input class="form-input" id="f-fac1-fecha" type="date"></div>
-            <div class="form-group"><label class="form-label">Fecha Cobro F1</label><input class="form-input" id="f-fac1-cobro" type="date"></div>
-            <div class="form-group"><label class="form-label">Factura 2 — Monto Neto</label><input class="form-input" id="f-fac2-monto" type="number" placeholder="50% al cierre" oninput="calcFacIva(2)"></div>
-            <div class="form-group"><label class="form-label">Factura 2 — Estado</label>
-              <select class="form-select" id="f-fac2-estado">
-                <option value="no_emitida">No emitida</option><option value="emitida">Emitida</option><option value="cobrada">Cobrada</option>
-              </select>
-            </div>
-            <div class="form-group"><label class="form-label">Fac 2 — IVA (16%)</label><input class="form-input" id="f-fac2-iva" type="number" readonly style="background:var(--bg4);cursor:default"></div>
-            <div class="form-group"><label class="form-label">Fac 2 — Total con IVA</label><input class="form-input" id="f-fac2-total" type="number" readonly style="background:var(--bg4);cursor:default"></div>
-            <div class="form-group"><label class="form-label">Factura 2 — Fecha</label><input class="form-input" id="f-fac2-fecha" type="date"></div>
-            <div class="form-group"><label class="form-label">Fecha Cobro F2</label><input class="form-input" id="f-fac2-cobro" type="date"></div>
-          </div>
-        </div>
+      <div class="form-tab-panel" id="tab-seguimiento" style="display:none">
+        <!-- Movido al modal de Cobros & Pagos -->
       </div>
     </div>
     <div class="modal-footer">
@@ -768,6 +894,25 @@ select option{background:#ffffff;color:#1a2422;}
     <div class="confirm-actions">
       <button class="btn btn-ghost" onclick="closeConfirm()">Cancelar</button>
       <button class="btn btn-danger" onclick="executeDelete()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL COBROS / PAGOS -->
+<div class="cobros-modal-overlay" id="cobros-modal-overlay">
+  <div class="cobros-modal">
+    <div class="cobros-modal-header">
+      <div>
+        <div class="cobros-modal-title" id="cobros-modal-title">Cobros & Pagos</div>
+        <div class="cobros-modal-sub" id="cobros-modal-sub">Vacante</div>
+      </div>
+      <button class="modal-close" onclick="closeCobrosModal()">×</button>
+    </div>
+    <div class="cobros-modal-body" id="cobros-modal-body">
+    </div>
+    <div class="cobros-modal-footer">
+      <button class="btn btn-ghost" onclick="closeCobrosModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCobrosModal()">Guardar Pagos</button>
     </div>
   </div>
 </div>
@@ -1320,6 +1465,368 @@ function calcMetrics(){
 }
 
 // ============ RENDER DASHBOARD ============
+
+// ── GRÁFICAS DASHBOARD ──────────────────────────────────────────────────
+let chartFact=null, chartEtapas=null, chartCol=null, chartMix=null;
+
+function renderChartsGraficas(m, mesesData){
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridCol = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,56,52,0.06)';
+  const tickCol = isDark ? '#8a8a8a' : '#7a8f8c';
+  const accentColor = '#0F6E56';
+  const accentLight = '#5DCAA5';
+  const metaColor = '#BA7517';
+
+  // 1. Facturación vs meta
+  const labels = mesesData.map(d=>d.label);
+  const cobrado = mesesData.map(d=>d.cobrado);
+  const metaLine = mesesData.map(()=>metaMensual);
+  const ctxFact = document.getElementById('chart-fact');
+  if(ctxFact){
+    if(chartFact){ chartFact.destroy(); chartFact=null; }
+    chartFact = new Chart(ctxFact,{
+      type:'bar',
+      data:{labels,datasets:[
+        {label:'Cobrado',data:cobrado,backgroundColor:cobrado.map(v=>v>=metaMensual?'#1D9E75':'#5DCAA5'),borderRadius:4,order:2},
+        {label:'Meta',data:metaLine,type:'line',borderColor:metaColor,borderWidth:2,borderDash:[5,4],pointRadius:0,fill:false,order:1}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
+        scales:{
+          y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'k',font:{size:10},color:tickCol},grid:{color:gridCol},border:{display:false}},
+          x:{ticks:{font:{size:10},color:tickCol,autoSkip:false},grid:{display:false},border:{display:false}}
+        }
+      }
+    });
+  }
+
+  // 2. Vacantes por etapa (horizontal)
+  const etapaNombres = ['Prospección','Propuesta','Activa','Terna','Colocación','Facturado','Cobrado'];
+  const etapaKeys = ['Prospección','Propuesta enviada','Vacante activa','Terna presentada','Colocación','Facturado','Cobro completo'];
+  const etapaColors = ['#888780','#EF9F27','#1D9E75','#378ADD','#5DCAA5','#7F77DD','#0F6E56'];
+  const etapaVals = etapaKeys.map(k=>m.byStage[k]?.count||0);
+  const ctxEtapas = document.getElementById('chart-etapas');
+  if(ctxEtapas){
+    if(chartEtapas){ chartEtapas.destroy(); chartEtapas=null; }
+    chartEtapas = new Chart(ctxEtapas,{
+      type:'bar',
+      data:{labels:etapaNombres,datasets:[{label:'Vacantes',data:etapaVals,backgroundColor:etapaColors,borderRadius:4}]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+' vacantes'}}},
+        scales:{
+          x:{ticks:{font:{size:10},color:tickCol,stepSize:1},grid:{color:gridCol},border:{display:false}},
+          y:{ticks:{font:{size:10},color:tickCol},grid:{display:false},border:{display:false}}
+        }
+      }
+    });
+  }
+
+  // 3. Colocaciones por mes (línea)
+  const colMes = mesesData.map(d=>{
+    const mes = d.label;
+    return vacantes.filter(v=>{
+      if(!['Colocación','Facturado','Cobro completo'].includes(v.estado)) return false;
+      if(!v.fechaIngreso) return false;
+      const fi = new Date(v.fechaIngreso);
+      const label = fi.toLocaleDateString('es-MX',{month:'short',year:'2-digit'});
+      return label===mes;
+    }).length;
+  });
+  const ctxCol = document.getElementById('chart-col');
+  if(ctxCol){
+    if(chartCol){ chartCol.destroy(); chartCol=null; }
+    chartCol = new Chart(ctxCol,{
+      type:'line',
+      data:{labels,datasets:[{
+        label:'Colocaciones',data:colMes,
+        borderColor:accentColor,backgroundColor:'rgba(15,110,86,0.08)',
+        borderWidth:2,pointRadius:4,pointBackgroundColor:accentColor,fill:true,tension:0.3
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{
+          y:{ticks:{font:{size:10},color:tickCol,stepSize:1,precision:0},grid:{color:gridCol},border:{display:false}},
+          x:{ticks:{font:{size:10},color:tickCol,autoSkip:false},grid:{display:false},border:{display:false}}
+        }
+      }
+    });
+  }
+
+  // 4. Mix operativas vs estratégicas (dona)
+  const totalV = vacantes.length;
+  const estrategicas = vacantes.filter(v=>['gerencia','direccion'].includes(v.nivelPuesto)).length;
+  const operativas = totalV - estrategicas;
+  const pctEst = totalV>0?Math.round(estrategicas/totalV*100):0;
+  const pctOp = 100-pctEst;
+  const ctxMix = document.getElementById('chart-mix');
+  if(ctxMix){
+    if(chartMix){ chartMix.destroy(); chartMix=null; }
+    chartMix = new Chart(ctxMix,{
+      type:'doughnut',
+      data:{
+        labels:['Estratégicas','Operativas'],
+        datasets:[{data:[estrategicas||1,operativas||0],backgroundColor:['#0F6E56','#9FE1CB'],borderWidth:0,hoverOffset:4}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.raw}}}
+      }
+    });
+  }
+  // Leyenda mix
+  const mixLeg = document.getElementById('mix-legend');
+  if(mixLeg) mixLeg.innerHTML=`
+    <div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="width:10px;height:10px;border-radius:2px;background:#0F6E56;display:inline-block"></span><span style="font-size:12px;color:var(--text-muted)">Estratégicas</span></div>
+      <div style="font-size:20px;font-weight:500;color:var(--text)">${pctEst}%</div>
+      <div style="font-size:11px;color:var(--text-muted)">${estrategicas} vacantes</div>
+    </div>
+    <div style="margin-top:8px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="width:10px;height:10px;border-radius:2px;background:#9FE1CB;display:inline-block"></span><span style="font-size:12px;color:var(--text-muted)">Operativas</span></div>
+      <div style="font-size:20px;font-weight:500;color:var(--text)">${pctOp}%</div>
+      <div style="font-size:11px;color:var(--text-muted)">${operativas} vacantes</div>
+    </div>`;
+}
+
+// ── META MENSUAL ──────────────────────────────────────────────────────────
+let metaMensual = Number(localStorage.getItem('horux_meta') || 349000);
+let chartMensual = null;
+
+function editarMeta(){
+  const nueva = prompt(`Meta mensual actual: $${metaMensual.toLocaleString('es-MX')}\n\nIngresa la nueva meta mensual (sin signos ni comas):`, metaMensual);
+  if(nueva && !isNaN(Number(nueva)) && Number(nueva) > 0){
+    metaMensual = Number(nueva);
+    localStorage.setItem('horux_meta', metaMensual);
+    renderDashboard();
+    showNotif('Meta actualizada ✓', 'success');
+  }
+}
+
+function getMesesData(){
+  // Agrupa honorarios cobrados por mes (fac1Cobro / fac2Cobro)
+  const meses = {};
+  const now = new Date();
+  for(let i=5; i>=0; i--){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const label = d.toLocaleDateString('es-MX',{month:'short',year:'2-digit'});
+    meses[key] = {label, cobrado:0, facturado:0};
+  }
+  vacantes.forEach(v=>{
+    const hon = Number(v.honorarios)||0;
+    const f1net = Number(v.fac1Monto)||(hon/2)||0;
+    const f2net = Number(v.fac2Monto)||(hon/2)||0;
+    if(v.fac1Cobro && v.fac1Estado==='cobrada'){
+      const k = v.fac1Cobro.substring(0,7);
+      if(meses[k]) meses[k].cobrado += f1net;
+    }
+    if(v.fac2Cobro && v.fac2Estado==='cobrada'){
+      const k = v.fac2Cobro.substring(0,7);
+      if(meses[k]) meses[k].cobrado += f2net;
+    }
+    // facturado = emitida o cobrada con fecha emisión
+    [1,2].forEach(n=>{
+      const fecha = v['fac'+n+'Fecha'];
+      const estado = v['fac'+n+'Estado'];
+      const monto = Number(v['fac'+n+'Monto'])||0;
+      if(fecha && estado && estado!=='no_emitida' && monto>0){
+        const k = fecha.substring(0,7);
+        if(meses[k]) meses[k].facturado += monto;
+      }
+    });
+  });
+  return Object.values(meses);
+}
+
+function renderMetaBar(cobradoMes){
+  const pct = Math.min(Math.round(cobradoMes/metaMensual*100), 150);
+  const bar = document.getElementById('meta-bar');
+  const pctEl = document.getElementById('meta-pct');
+  const sem = document.getElementById('meta-semaforo');
+  const labelEl = document.getElementById('meta-label-text');
+  let cls='', color='', semColor='', labelTxt='';
+  if(pct>=100){
+    cls='over'; color='var(--success)'; semColor='#22c55e';
+    labelTxt=`¡Meta superada! +${fmt(cobradoMes-metaMensual)} sobre objetivo`;
+  } else if(pct>=60){
+    cls=''; color='var(--green)'; semColor='var(--accent)';
+    labelTxt=`En camino · faltan ${fmt(metaMensual-cobradoMes)}`;
+  } else if(pct>=30){
+    cls='warn'; color='var(--yellow)'; semColor='#f59e0b';
+    labelTxt=`Por debajo · faltan ${fmt(metaMensual-cobradoMes)}`;
+  } else {
+    cls='warn'; color='var(--red)'; semColor='var(--red)';
+    labelTxt=`Alerta · solo ${pct}% de la meta`;
+  }
+  bar.style.width = Math.min(pct,100)+'%';
+  bar.className = 'meta-bar-fill'+(cls?' '+cls:'');
+  pctEl.textContent = pct+'%';
+  pctEl.className = 'meta-pct'+(cls?' '+cls:'');
+  sem.style.background = semColor;
+  labelEl.textContent = labelTxt;
+  document.getElementById('meta-cobrado-label').textContent = fmt(cobradoMes)+' cobrado este mes';
+  document.getElementById('meta-objetivo-label').textContent = 'Meta: '+fmt(metaMensual);
+
+  // Sugerencia de subir meta si lleva 3+ meses sobre meta
+  const mesesData = getMesesData();
+  const mesesSobreMeta = mesesData.filter(m=>m.cobrado>=metaMensual).length;
+  const sugWrap = document.getElementById('meta-suggest-wrap');
+  if(mesesSobreMeta>=2 && metaMensual<500000){
+    const sugerida = Math.round(metaMensual*1.15/1000)*1000;
+    sugWrap.innerHTML=`<div class="meta-suggest">
+      <span>📈 Llevas <strong>${mesesSobreMeta} meses</strong> superando la meta. ¿Subir el objetivo a <strong>${fmt(sugerida)}</strong>?</span>
+      <button class="meta-suggest-btn" onclick="aceptarSugerenciaMeta(${sugerida})">Actualizar meta</button>
+    </div>`;
+  } else {
+    sugWrap.innerHTML='';
+  }
+}
+
+function aceptarSugerenciaMeta(nueva){
+  metaMensual = nueva;
+  localStorage.setItem('horux_meta', nueva);
+  renderDashboard();
+  showNotif('Meta actualizada a '+fmt(nueva)+' ✓','success');
+}
+
+function renderChartMensual(){
+  const datos = getMesesData();
+  const labels = datos.map(d=>d.label);
+  const cobrado = datos.map(d=>d.cobrado);
+  const meta = datos.map(()=>metaMensual);
+  const ctx = document.getElementById('chart-mensual');
+  if(!ctx) return;
+  if(chartMensual){ chartMensual.destroy(); chartMensual=null; }
+  chartMensual = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Cobrado',data:cobrado,backgroundColor:cobrado.map(v=>v>=metaMensual?'rgba(34,197,94,0.75)':'rgba(0,110,101,0.65)'),borderRadius:5,order:1},
+        {label:'Meta',data:meta,type:'line',borderColor:'rgba(160,112,0,0.7)',borderWidth:2,borderDash:[5,4],pointRadius:0,fill:false,order:0}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
+      scales:{
+        y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'k',font:{size:10},color:'#7a8f8c'},grid:{color:'rgba(0,56,52,0.06)'},border:{display:false}},
+        x:{ticks:{font:{size:10},color:'#7a8f8c'},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+}
+
+// ── INSIGHTS CON CLAUDE API ───────────────────────────────────────────────
+let insightsGenerados = false;
+
+async function generarInsights(){
+  const btn = document.getElementById('insights-refresh-btn');
+  const body = document.getElementById('insights-body');
+  if(btn){ btn.disabled=true; btn.textContent='↺ Analizando...'; }
+  body.innerHTML=`<div class="insight-loading"><div class="insight-dot"></div><div class="insight-dot"></div><div class="insight-dot"></div><span>Analizando tu operación...</span></div>`;
+
+  const m = calcMetrics();
+  const mesActual = currentMonth();
+  const mesesData = getMesesData();
+  const mesData = mesesData[mesesData.length-1];
+  const cobradoMes = mesData?.cobrado||0;
+  const pctMeta = Math.round(cobradoMes/metaMensual*100);
+  
+  // Vacantes estancadas (sin cambio de estado en >15 días)
+  const hoy = new Date();
+  const estancadas = vacantes.filter(v=>{
+    if(['Cobro completo'].includes(v.estado)) return false;
+    const fecha = v.fechaApertura ? new Date(v.fechaApertura) : null;
+    if(!fecha) return false;
+    const dias = Math.round((hoy-fecha)/(1000*60*60*24));
+    return dias>20 && !['Colocación','Facturado','Cobro completo'].includes(v.estado);
+  });
+
+  const contexto = {
+    mes: new Date().toLocaleDateString('es-MX',{month:'long',year:'numeric'}),
+    meta_mensual: metaMensual,
+    cobrado_mes: cobradoMes,
+    pct_meta: pctMeta,
+    colocaciones_mes: m.colocacionesMes,
+    vacantes_activas: vacantes.filter(v=>v.estado==='Vacante activa').length,
+    vacantes_terna: vacantes.filter(v=>v.estado==='Terna presentada').length,
+    pipeline_total: m.pipeline,
+    por_cobrar: m.porcobrar,
+    tiempo_prom: m.tiempoProm,
+    conversion: m.conversion,
+    retencion: m.retencion,
+    estancadas: estancadas.map(v=>({puesto:v.puesto,cliente:v.cliente,dias:Math.round((hoy-new Date(v.fechaApertura))/(1000*60*60*24))})),
+    headhunters: Object.entries(m.hhMap).map(([n,d])=>({nombre:n,activas:d.activas,colocaciones:d.colocaciones,honorarios:d.honorarios})),
+    meses_historico: mesesData.map(d=>({mes:d.label,cobrado:d.cobrado}))
+  };
+
+  const prompt = `Eres el sistema de análisis ejecutivo de HORUX Business Consulting, una consultoría boutique de headhunting en Monterrey.
+
+Analiza estos datos operativos del mes de ${contexto.mes} y genera exactamente 5 insights en español, concisos y accionables. Usa los datos reales.
+
+DATOS:
+- Meta mensual: $${contexto.meta_mensual.toLocaleString('es-MX')} MXN
+- Cobrado este mes: $${contexto.cobrado_mes.toLocaleString('es-MX')} MXN (${contexto.pct_meta}% de la meta)
+- Colocaciones este mes: ${contexto.colocaciones_mes}
+- Vacantes activas: ${contexto.vacantes_activas}
+- En terna: ${contexto.vacantes_terna}
+- Pipeline total: $${contexto.pipeline_total.toLocaleString('es-MX')} MXN
+- Por cobrar (facturas pendientes): $${contexto.por_cobrar.toLocaleString('es-MX')} MXN
+- Tiempo promedio de cobertura: ${contexto.tiempo_prom||'sin datos'} días
+- Tasa de conversión propuesta→activa: ${contexto.conversion||'sin datos'}%
+- Retención 90 días: ${contexto.retencion||'sin datos'}%
+- Vacantes posiblemente estancadas (>20 días sin cierre): ${JSON.stringify(contexto.estancadas)}
+- Headhunters: ${JSON.stringify(contexto.headhunters)}
+- Histórico mensual: ${JSON.stringify(contexto.meses_historico)}
+
+Responde SOLO con un JSON válido, sin markdown, sin explicaciones. Formato exacto:
+{"insights":[{"tipo":"avance|alerta|sugerencia|info","icono":"emoji","texto":"texto del insight"},...]}
+
+Devuelve SOLO 1 insight: el más relevante y accionable en este momento. Sin emojis. Texto directo, máximo 2 oraciones. Elige el que mayor impacto tiene para tomar una decisión hoy.`;
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await res.json();
+    const txt = data.content?.find(b=>b.type==='text')?.text||'{}';
+    const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    const items = parsed.insights||[];
+    if(items.length===0) throw new Error('Sin insights');
+    const top = items[0];
+    body.innerHTML = top ? `<div class="insight-item ${top.tipo||'info'}"><span class="insight-icon">${top.icono||'•'}</span><span class="insight-text">${top.texto}</span></div>` : '';
+    insightsGenerados=true;
+  } catch(e){
+    // Fallback con reglas fijas si la API falla
+    body.innerHTML = generarInsightsFallback(m, cobradoMes, pctMeta, estancadas);
+  } finally{
+    if(btn){ btn.disabled=false; btn.textContent='↺ Actualizar'; }
+  }
+}
+
+function generarInsightsFallback(m, cobradoMes, pctMeta, estancadas){
+  const items=[];
+  if(pctMeta>=100) items.push({tipo:'avance',icono:'🎯',texto:`Meta superada: llevas ${fmt(cobradoMes)} cobrado este mes (${pctMeta}% del objetivo). Considera subir la meta.`});
+  else if(pctMeta>=60) items.push({tipo:'info',icono:'📊',texto:`Llevas el ${pctMeta}% de la meta mensual (${fmt(cobradoMes)} de ${fmt(metaMensual)}). Faltan ${fmt(metaMensual-cobradoMes)}.`});
+  else items.push({tipo:'alerta',icono:'⚠️',texto:`Solo el ${pctMeta}% de la meta cobrado este mes (${fmt(cobradoMes)}). Faltan ${fmt(metaMensual-cobradoMes)} para el objetivo.`});
+  if(m.vacantes_terna>0||m.byStage['Terna presentada']?.count>0){
+    const n=m.byStage['Terna presentada']?.count||0;
+    if(n>0) items.push({tipo:'avance',icono:'✅',texto:`${n} vacante${n>1?'s':''} en terna — cerca del cierre. Dale seguimiento al cliente para no perder al candidato.`});
+  }
+  if(estancadas.length>0) items.push({tipo:'alerta',icono:'🔴',texto:`${estancadas.length} vacante${estancadas.length>1?'s están':' está'} sin avance por más de 20 días: ${estancadas.slice(0,2).map(e=>e.puesto+' ('+e.cliente+')').join(', ')}.`});
+  if(m.porcobrar>0) items.push({tipo:'sugerencia',icono:'💰',texto:`Tienes ${fmt(m.porcobrar)} en facturas por cobrar. Revisa el módulo de Cobros para dar seguimiento.`});
+  if(m.tiempoProm&&m.tiempoProm>30) items.push({tipo:'alerta',icono:'⏱️',texto:`El tiempo promedio de cobertura es de ${m.tiempoProm} días — por encima del estándar de 30. Revisa cuellos de botella en el pipeline.`});
+  else if(m.tiempoProm) items.push({tipo:'avance',icono:'⚡',texto:`Tiempo de cobertura en ${m.tiempoProm} días promedio — dentro del objetivo.`});
+  const top = items[0];
+  return top ? `<div class="insight-item ${top.tipo}"><span class="insight-icon">${top.icono||'•'}</span><span class="insight-text">${top.texto}</span></div>` : '';
+}
+
 function renderDashboard(){
   const m=calcMetrics();
   document.getElementById('f-pipeline').textContent=fmt(m.pipeline);
@@ -1362,6 +1869,14 @@ function renderDashboard(){
         ${s.val!==null?`<span style="font-family:'DM Mono',monospace;font-size:20px;color:var(--green);font-weight:500">${s.val}</span><span style="font-size:11px;color:var(--text-muted);margin-left:4px">días</span>`:'<span style="font-size:12px;color:var(--text-muted)">Sin datos</span>'}
       </div>
     </div>`).join('')+`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-light);font-size:11px;color:var(--text-muted)">Clientes reactivados (+90 días): <strong style="color:var(--green)">${m.clientesReactivados}</strong></div>`;
+
+  // ── META + GRÁFICAS ──
+  const mesesD = getMesesData();
+  const mesActualD = mesesD[mesesD.length-1];
+  renderMetaBar(mesActualD?.cobrado||0);
+  renderChartMensual();
+  renderChartsGraficas(m, mesesD);
+  if(!insightsGenerados) generarInsights();
 
   // Nivel ticket panel
   const nivelOrder=['direccion','gerencia','jefatura','operativo'];
@@ -1417,10 +1932,26 @@ function openFicha(id){
   document.getElementById('ficha-topbar-title').textContent=v.puesto;
   const stages=STAGES.map(s=>s.key);
   const ci=stages.indexOf(v.estado);
-  const timelineHTML=stages.map((s,i)=>{
-    const cls=i<ci?'done':i===ci?'current':'';
-    return`<div class="timeline-item"><div class="timeline-dot ${cls}"><div class="dot-inner"></div></div><div class="timeline-content"><div class="timeline-label" style="color:${i===ci?'var(--accent)':i<ci?'var(--success)':'var(--text-dim)'}">${s}</div>${i===ci?'<div class="timeline-date">Etapa actual</div>':i<ci?'<div class="timeline-date" style="color:var(--success)">Completado</div>':''}</div></div>`;
-  }).join('');
+  // Pipeline visual horizontal
+  const ETAPAS_INFO=[
+    {key:'Prospección',label:'Prospección',fecha:v.fechaApertura},
+    {key:'Propuesta enviada',label:'Propuesta',fecha:v.fechaPropuesta},
+    {key:'Vacante activa',label:'Activa',fecha:v.fechaActiva},
+    {key:'Terna presentada',label:'Terna',fecha:v.fechaTerna},
+    {key:'Colocación',label:'Colocación',fecha:v.fechaColocacionEtapa},
+    {key:'Facturado',label:'Facturado',fecha:v.fac1Fecha||v.fac2Fecha},
+    {key:'Cobro completo',label:'Cobrado',fecha:v.fac1Cobro||v.fac2Cobro}
+  ];
+  const timelineHTML=`<div class="pipeline-visual">${ETAPAS_INFO.map((e,i)=>{
+    const isDone=i<ci, isCurrent=i===ci;
+    const cls=isDone?'done':isCurrent?'current':'';
+    const icon=isDone
+      ?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20,6 9,17 4,12"/></svg>`
+      :isCurrent
+      ?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`
+      :`<span style="font-size:9px;color:var(--text-muted)">${i+1}</span>`;
+    return`<div class="pipeline-step ${cls}"><div class="pipeline-dot">${icon}</div><div class="pipeline-step-label">${e.label}</div>${e.fecha?`<div class="pipeline-date">${e.fecha}</div>`:''}</div>`;
+  }).join('')}</div>`;
   const progPct=Math.round(((ci+1)/stages.length)*100);
   const cont=Number(v.contactados)||0,entr=Number(v.entrevistados)||0,tern=Number(v.enTerna)||0;
   let retHTML='<span class="retencion-badge ret-pendiente">Pendiente</span>';
@@ -1647,8 +2178,8 @@ function openFicha(id){
           </div>
         </div>
         <div class="info-card">
-          <div class="info-card-header"><span class="info-card-title">Etapas del Pipeline</span></div>
-          <div class="info-card-body"><div class="timeline">${timelineHTML}</div></div>
+          <div class="info-card-header"><span class="info-card-title">Pipeline</span></div>
+          <div class="info-card-body" style="padding:8px 4px">${timelineHTML}</div>
         </div>
       </div>
     </div>`;
@@ -1727,12 +2258,13 @@ function showView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const map={dashboard:0,vacantes:1,clientes:2,cobros:3};
+  const map={dashboard:0,vacantes:1,clientes:2,cobros:3,inteligencia:4};
   if(map[name]!==undefined)document.querySelectorAll('.nav-item')[map[name]]?.classList.add('active');
   if(name==='dashboard')renderDashboard();
   else if(name==='vacantes')renderVacantes();
   else if(name==='clientes')renderClientes();
   else if(name==='cobros')renderCobros();
+  else if(name==='inteligencia'){ if(!intelGenerado) generarIntelligencia(); }
   if(name!=='vacantes') specialFilter=null;
 }
 
@@ -1771,16 +2303,8 @@ function openEditVacante(id){
     'f-cliente':'cliente','f-puesto':'puesto','f-industria':'industria',
     'f-headhunter':'headhunter','f-estado':'estado','f-fecha-apertura':'fechaApertura',
     'f-salario':'salario','f-bono':'bono','f-honorarios':'honorarios','f-iva-honorarios':'ivaHonorarios','f-total-con-iva':'totalConIva',
-    'f-contactados':'contactados','f-entrevistados':'entrevistados','f-enterna':'enTerna',
-    'f-candidato-colocado':'candidatoColocado','f-fecha-ingreso':'fechaIngreso',
     'f-tipo':'tipo','f-dias-convenio':'diasConvenio',
-    'f-nivel':'nivelPuesto','f-origen':'origenVacante','f-razon-cierre':'razonCierre',
-    'f-fecha-propuesta':'fechaPropuesta','f-fecha-activa':'fechaActiva','f-fecha-terna':'fechaTerna','f-fecha-colocacion-etapa':'fechaColocacionEtapa',
-    'f-oferta-presentada':'ofertaPresentada','f-contraoferta':'contraofertaCandidato','f-motivo-rechazo':'motivoRechazoOferta','f-cliente-ajusto':'clienteAjusto',
-    'f-retencion':'retencion','f-fac1-monto':'fac1Monto','f-fac1-estado':'fac1Estado',
-    'f-fac1-fecha':'fac1Fecha','f-fac1-cobro':'fac1Cobro','f-fac1-iva':'fac1Iva','f-fac1-total':'fac1Total',
-    'f-fac2-monto':'fac2Monto','f-fac2-estado':'fac2Estado','f-fac2-fecha':'fac2Fecha','f-fac2-cobro':'fac2Cobro',
-    'f-fac2-iva':'fac2Iva','f-fac2-total':'fac2Total',
+    'f-nivel':'nivelPuesto','f-origen':'origenVacante',
     'f-notas':'notas'
   };
   Object.entries(fields).forEach(([fid,key])=>{
@@ -1790,8 +2314,6 @@ function openEditVacante(id){
   onTipoChange();
   calcularHonorarios();
   calcIvaFromHonorarios();
-  calcFacIva(1);
-  calcFacIva(2);
   document.getElementById('modal-overlay').classList.add('open');
 }
 
@@ -1840,6 +2362,361 @@ async function saveInline(id){
     setSyncStatus('error','Error');
   }finally{
     if(btn){btn.textContent='Guardar cambios';btn.disabled=false;}
+  }
+}
+
+// ── VISTA INTELIGENCIA ──────────────────────────────────────────────────
+let intelGenerado = false;
+
+async function generarIntelligencia(){
+  const btn = document.getElementById('intel-refresh-btn');
+  const sections = document.getElementById('intel-sections');
+  if(btn){ btn.disabled=true; btn.textContent='Analizando...'; }
+
+  sections.innerHTML = `<div class="intel-loading">
+    <div class="intel-loading-dots"><span></span><span></span><span></span></div>
+    <div style="font-size:13px">Generando análisis completo con IA...</div>
+  </div>`;
+
+  const m = calcMetrics();
+  const mesesData = getMesesData();
+  const cobradoMes = mesesData[mesesData.length-1]?.cobrado||0;
+  const pctMeta = Math.round(cobradoMes/metaMensual*100);
+  const hoy = new Date();
+
+  // Vacantes estancadas
+  const estancadas = vacantes.filter(v=>{
+    if(['Cobro completo'].includes(v.estado)) return false;
+    const fecha = v.fechaApertura ? new Date(v.fechaApertura) : null;
+    if(!fecha) return false;
+    return Math.round((hoy-fecha)/(1000*60*60*24))>20 && !['Colocación','Facturado','Cobro completo'].includes(v.estado);
+  }).map(v=>({puesto:v.puesto,cliente:v.cliente,dias:Math.round((hoy-new Date(v.fechaApertura))/(1000*60*60*24)),estado:v.estado}));
+
+  // Análisis por cliente
+  const porCliente = {};
+  vacantes.forEach(v=>{
+    if(!v.cliente) return;
+    if(!porCliente[v.cliente]) porCliente[v.cliente]={vacantes:0,activas:0,colocadas:0,honorarios:0,porCobrar:0};
+    const d = porCliente[v.cliente];
+    d.vacantes++;
+    if(!['Cobro completo'].includes(v.estado)) d.activas++;
+    if(['Colocación','Facturado','Cobro completo'].includes(v.estado)) d.colocadas++;
+    d.honorarios += Number(v.honorarios)||0;
+    const hon = Number(v.honorarios)||0;
+    const f1net = Number(v.fac1Monto)||(hon/2)||0;
+    const f2net = Number(v.fac2Monto)||(hon/2)||0;
+    const cobrado = (v.fac1Estado==='cobrada'?f1net:0)+(v.fac2Estado==='cobrada'?f2net:0);
+    d.porCobrar += Math.max(hon-cobrado,0);
+  });
+
+  const contextoCompleto = {
+    fecha: new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),
+    meta_mensual: metaMensual,
+    cobrado_mes: cobradoMes,
+    pct_meta: pctMeta,
+    colocaciones_mes: m.colocacionesMes,
+    colocaciones_total: m.colocacionesTotal,
+    pipeline_total: m.pipeline,
+    por_cobrar: m.porcobrar,
+    propuestas_activas: m.propuestasCount,
+    tiempo_prom_dias: m.tiempoProm,
+    conversion_pct: m.conversion,
+    retencion_pct: m.retencion,
+    vacantes_por_etapa: Object.fromEntries(Object.entries(m.byStage).map(([k,v])=>[k,{count:v.count,total:v.total}])),
+    estancadas,
+    por_cliente: porCliente,
+    headhunters: Object.entries(m.hhMap).map(([nombre,d])=>({nombre,activas:d.activas,colocaciones:d.colocaciones,honorarios:d.honorarios,tasa_exito:d.total>0?Math.round(d.colocaciones/d.total*100):0})),
+    historico_6m: mesesData.map(d=>({mes:d.label,cobrado:d.cobrado})),
+    velocity: {propuesta_a_activa:m.avgPropActiva,activa_a_terna:m.avgActivaTerna,terna_a_colocacion:m.avgTernaCol}
+  };
+
+  const prompt = `Eres el sistema de inteligencia operativa de HORUX Business Consulting, consultoría boutique de headhunting en Monterrey, NL.
+
+Fecha de análisis: ${contextoCompleto.fecha}
+Meta mensual: $${metaMensual.toLocaleString('es-MX')} MXN
+
+DATOS COMPLETOS:
+${JSON.stringify(contextoCompleto, null, 2)}
+
+Genera un análisis ejecutivo profundo organizado en 4 secciones. Responde SOLO con JSON válido, sin markdown.
+
+Formato exacto:
+{
+  "resumen_ejecutivo": [{"tipo":"avance|alerta|sugerencia|info","icono":"emoji","texto":"..."}],
+  "ventas_pipeline": [{"tipo":"...","icono":"emoji","texto":"..."}],
+  "operacion_equipo": [{"tipo":"...","icono":"emoji","texto":"..."}],
+  "acciones_proxima_semana": [{"icono":"emoji","texto":"acción concreta y específica"}]
+}
+
+Reglas:
+- Cada sección: mínimo 2, máximo 4 items
+- Usa los números reales en MXN formateados
+- Sé directo, sin rodeos, como un consultor experimentado hablándole a la dueña del negocio
+- "acciones_proxima_semana": acciones concretas priorizadas por impacto (¿qué hacer HOY/esta semana?)
+- Si hay vacantes estancadas, mencionarlas por nombre
+- Si hay clientes con porCobrar alto, mencionarlos
+- Identifica si algún headhunter tiene carga desbalanceada
+- Si la meta va bien, sugiere en qué enfocarse para crecer; si va mal, qué accionar primero`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:2000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await res.json();
+    const txt = data.content?.find(b=>b.type==='text')?.text||'{}';
+    const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    renderIntelSections(parsed, contextoCompleto);
+    intelGenerado = true;
+  } catch(e) {
+    renderIntelFallback(m, cobradoMes, pctMeta, estancadas, contextoCompleto);
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='↺ Actualizar análisis'; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Actualizar análisis'; }
+  }
+}
+
+function renderIntelSections(data, ctx){
+  const sections = document.getElementById('intel-sections');
+  const renderItems = (items)=>(items||[]).map(i=>`
+    <div class="intel-insight-row ${i.tipo||'info'}">
+      <span class="icon">${i.icono||'•'}</span>
+      <span class="texto">${i.texto}</span>
+    </div>`).join('');
+
+  const kpiColor = (val,good,warn)=> val===null||val===undefined?'':''+( val>=good?'':''+( val>=warn?'warn':'alert'));
+
+  sections.innerHTML = `
+    <div class="intel-grid">
+      <div class="intel-section full">
+        <div class="intel-section-header">
+          <div class="intel-section-icon verde">📋</div>
+          <div class="intel-section-title">Resumen Ejecutivo</div>
+        </div>
+        <div class="intel-section-body">
+          <div class="intel-insight-list">${renderItems(data.resumen_ejecutivo)}</div>
+        </div>
+      </div>
+
+      <div class="intel-section">
+        <div class="intel-section-header">
+          <div class="intel-section-icon amarillo">💰</div>
+          <div class="intel-section-title">Ventas & Pipeline</div>
+        </div>
+        <div class="intel-section-body">
+          <div class="intel-kpi-row"><span class="intel-kpi-label">Cobrado este mes</span><span class="intel-kpi-val ${ctx.pct_meta>=100?'':'warn'}">${fmt(ctx.cobrado_mes)}</span></div>
+          <div class="intel-kpi-row"><span class="intel-kpi-label">% de meta</span><span class="intel-kpi-val ${ctx.pct_meta>=100?'':ctx.pct_meta>=60?'warn':'alert'}">${ctx.pct_meta}%</span></div>
+          <div class="intel-kpi-row"><span class="intel-kpi-label">Pipeline total</span><span class="intel-kpi-val">${fmt(ctx.pipeline_total)}</span></div>
+          <div class="intel-kpi-row"><span class="intel-kpi-label">Por cobrar</span><span class="intel-kpi-val ${ctx.por_cobrar>0?'warn':''}">${fmt(ctx.por_cobrar)}</span></div>
+          <div style="margin-top:14px" class="intel-insight-list">${renderItems(data.ventas_pipeline)}</div>
+        </div>
+      </div>
+
+      <div class="intel-section">
+        <div class="intel-section-header">
+          <div class="intel-section-icon verde">⚙️</div>
+          <div class="intel-section-title">Operación & Equipo</div>
+        </div>
+        <div class="intel-section-body">
+          <div class="intel-kpi-row"><span class="intel-kpi-label">Colocaciones mes</span><span class="intel-kpi-val">${ctx.colocaciones_mes}</span></div>
+          <div class="intel-kpi-row"><span class="intel-kpi-label">Tiempo cobertura</span><span class="intel-kpi-val ${ctx.tiempo_prom_dias>30?'warn':''}">${ctx.tiempo_prom_dias||'—'} días</span></div>
+          <div class="intel-kpi-row"><span class="intel-kpi-label">Conversión</span><span class="intel-kpi-val">${ctx.conversion_pct||'—'}%</span></div>
+          <div class="intel-kpi-row"><span class="intel-kpi-label">Retención 90d</span><span class="intel-kpi-val ${ctx.retencion_pct<80?'warn':''}">${ctx.retencion_pct||'—'}%</span></div>
+          <div style="margin-top:14px" class="intel-insight-list">${renderItems(data.operacion_equipo)}</div>
+        </div>
+      </div>
+
+      <div class="intel-section full">
+        <div class="intel-section-header">
+          <div class="intel-section-icon morado">🎯</div>
+          <div class="intel-section-title">Acciones — Esta Semana</div>
+        </div>
+        <div class="intel-section-body">
+          <div class="intel-insight-list">${(data.acciones_proxima_semana||[]).map((a,i)=>`
+            <div class="intel-insight-row sugerencia">
+              <span class="icon">${a.icono||String(i+1)+'.'}</span>
+              <span class="texto">${a.texto}</span>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:8px;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
+      Análisis generado por IA · ${new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}
+    </div>`;
+}
+
+function renderIntelFallback(m, cobradoMes, pctMeta, estancadas, ctx){
+  const data = {
+    resumen_ejecutivo:[
+      pctMeta>=100
+        ?{tipo:'avance',icono:'🎯',texto:`Meta mensual superada: ${fmt(cobradoMes)} cobrado (${pctMeta}% del objetivo de ${fmt(metaMensual)}).`}
+        :{tipo:pctMeta>=60?'info':'alerta',icono:pctMeta>=60?'📊':'⚠️',texto:`${pctMeta}% de la meta mensual cobrado. Faltan ${fmt(metaMensual-cobradoMes)} para llegar al objetivo.`},
+      {tipo:'info',icono:'📌',texto:`Pipeline activo de ${fmt(m.pipeline)} en ${vacantes.filter(v=>v.estado!=='Cobro completo').length} vacantes en proceso.`}
+    ],
+    ventas_pipeline:[
+      m.propuestasCount>0?{tipo:'sugerencia',icono:'📤',texto:`${m.propuestasCount} propuesta${m.propuestasCount>1?'s':''} activa${m.propuestasCount>1?'s':''} sin convertir. Dar seguimiento directo al cliente.`}:{tipo:'info',icono:'📭',texto:'Sin propuestas activas pendientes de conversión.'},
+      m.porcobrar>0?{tipo:'alerta',icono:'💸',texto:`${fmt(m.porcobrar)} en facturas pendientes de cobro. Revisar fechas de vencimiento.`}:{tipo:'avance',icono:'✅',texto:'Sin facturas pendientes de cobro.'}
+    ],
+    operacion_equipo:[
+      estancadas.length>0?{tipo:'alerta',icono:'🔴',texto:`${estancadas.length} vacante${estancadas.length>1?'s':''} sin avance: ${estancadas.slice(0,2).map(e=>e.puesto).join(', ')}.`}:{tipo:'avance',icono:'✅',texto:'No hay vacantes estancadas. Pipeline activo y en movimiento.'},
+      m.tiempoProm?{tipo:m.tiempoProm>30?'alerta':'avance',icono:m.tiempoProm>30?'⏱️':'⚡',texto:`Tiempo promedio de cobertura: ${m.tiempoProm} días. ${m.tiempoProm>30?'Por encima del estándar de 30 días.':'Dentro del objetivo.'}`}:{tipo:'info',icono:'⏱️',texto:'Sin datos suficientes de tiempo de cobertura aún.'}
+    ],
+    acciones_proxima_semana:[
+      {icono:'1️⃣',texto:pctMeta<100?`Priorizar el cierre de vacantes en terna (${m.byStage['Terna presentada']?.count||0} en proceso) para acercar la meta mensual.`:'Revisar pipeline de propuestas y convertir al menos una cuenta nueva este mes.'},
+      {icono:'2️⃣',texto:m.porcobrar>0?`Dar seguimiento a cobranza: ${fmt(m.porcobrar)} pendientes. Contactar al cliente con las fechas acordadas.`:'Enfocarse en presentar ternas pendientes y acelerar cierres.'},
+      {icono:'3️⃣',texto:estancadas.length>0?`Revisar ${estancadas.length} vacante${estancadas.length>1?'s':''} sin movimiento y definir si pausar o replantear el perfil.`:'Actualizar estados del pipeline para tener visibilidad precisa del forecast.'}
+    ]
+  };
+  renderIntelSections(data, ctx);
+}
+
+// ── MODAL COBROS / PAGOS ──────────────────────────────────────────────────
+let cobrosModalId = null;
+
+function openCobrosModal(id){
+  const v = vacantes.find(x => x.id === id);
+  if(!v) return;
+  cobrosModalId = id;
+  document.getElementById('cobros-modal-title').textContent = 'Cobros & Pagos';
+  document.getElementById('cobros-modal-sub').textContent = v.puesto + ' · ' + v.cliente;
+
+  const hon = Number(v.honorarios) || 0;
+  const f1net = Number(v.fac1Monto) || 0;
+  const f2net = Number(v.fac2Monto) || 0;
+  const f1iva = Math.round(f1net * 0.16);
+  const f2iva = Math.round(f2net * 0.16);
+  const f1total = f1net + f1iva;
+  const f2total = f2net + f2iva;
+  const cobrado = (v.fac1Estado==='cobrada'?f1net:0) + (v.fac2Estado==='cobrada'?f2net:0);
+  const porCobrar = Math.max(hon - cobrado, 0);
+
+  // Pipeline
+  const ETAPAS = [
+    {key:'Prospección',label:'Prospección',fecha:v.fechaApertura},
+    {key:'Propuesta enviada',label:'Propuesta',fecha:v.fechaPropuesta},
+    {key:'Vacante activa',label:'Activa',fecha:v.fechaActiva},
+    {key:'Terna presentada',label:'Terna',fecha:v.fechaTerna},
+    {key:'Colocación',label:'Colocación',fecha:v.fechaColocacionEtapa},
+    {key:'Facturado',label:'Facturado',fecha:v.fac1Fecha||v.fac2Fecha},
+    {key:'Cobro completo',label:'Cobrado',fecha:v.fac1Cobro||v.fac2Cobro}
+  ];
+  const ORDEN = ETAPAS.map(e=>e.key);
+  const currentIdx = ORDEN.indexOf(v.estado);
+
+  const pipelineHTML = `<div class="pipeline-visual">${ETAPAS.map((e,i)=>{
+    const isDone = i < currentIdx;
+    const isCurrent = i === currentIdx;
+    const cls = isDone?'done':isCurrent?'current':'';
+    const checkIcon = isDone?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20,6 9,17 4,12"/></svg>`
+      : isCurrent?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`
+      : `<span style="font-size:9px;color:var(--text-muted)">${i+1}</span>`;
+    return `<div class="pipeline-step ${cls}">
+      <div class="pipeline-dot">${checkIcon}</div>
+      <div class="pipeline-step-label">${e.label}</div>
+      ${e.fecha?`<div class="pipeline-date">${e.fecha}</div>`:''}
+    </div>`;
+  }).join('')}</div>`;
+
+  const stLabel = {no_emitida:'No emitida',emitida:'Emitida',cobrada:'Cobrada'};
+
+  document.getElementById('cobros-modal-body').innerHTML = `
+    ${pipelineHTML}
+    <div class="pago-resumen">
+      <div class="pago-resumen-item"><div class="label">Honorarios netos</div><div class="valor">${fmt(hon)}</div></div>
+      <div class="pago-resumen-item"><div class="label">Cobrado</div><div class="valor" style="color:var(--success)">${fmt(cobrado)}</div></div>
+      <div class="pago-resumen-item"><div class="label">Por cobrar</div><div class="valor" style="color:${porCobrar>0?'var(--yellow)':'var(--text-muted)'}">${fmt(porCobrar)}</div></div>
+    </div>
+    <div class="pago-card">
+      <div class="pago-card-header">
+        <div class="pago-card-title">Pago 1</div>
+        <select id="cm-fac1-estado" class="form-select" style="width:auto;font-size:12px;padding:5px 10px">
+          <option value="no_emitida" ${(v.fac1Estado||'no_emitida')==='no_emitida'?'selected':''}>No emitida</option>
+          <option value="emitida" ${v.fac1Estado==='emitida'?'selected':''}>Emitida</option>
+          <option value="cobrada" ${v.fac1Estado==='cobrada'?'selected':''}>Cobrada</option>
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Monto Neto</label><input class="form-input" id="cm-fac1-monto" type="number" value="${v.fac1Monto||''}" placeholder="Ej. ${Math.round(hon/2)}" oninput="calcCMIva(1)"></div>
+        <div class="form-group"><label class="form-label">IVA (16%)</label><input class="form-input" id="cm-fac1-iva" type="number" value="${f1iva||''}" readonly style="background:var(--bg4)"></div>
+        <div class="form-group"><label class="form-label">Total con IVA</label><input class="form-input" id="cm-fac1-total" type="number" value="${f1total||''}" readonly style="background:var(--bg4)"></div>
+        <div class="form-group"><label class="form-label">Fecha Emisión</label><input class="form-input" id="cm-fac1-fecha" type="date" value="${v.fac1Fecha||''}"></div>
+        <div class="form-group"><label class="form-label">Fecha Cobro</label><input class="form-input" id="cm-fac1-cobro" type="date" value="${v.fac1Cobro||''}"></div>
+      </div>
+    </div>
+    <div class="pago-card">
+      <div class="pago-card-header">
+        <div class="pago-card-title">Pago 2</div>
+        <select id="cm-fac2-estado" class="form-select" style="width:auto;font-size:12px;padding:5px 10px">
+          <option value="no_emitida" ${(v.fac2Estado||'no_emitida')==='no_emitida'?'selected':''}>No emitida</option>
+          <option value="emitida" ${v.fac2Estado==='emitida'?'selected':''}>Emitida</option>
+          <option value="cobrada" ${v.fac2Estado==='cobrada'?'selected':''}>Cobrada</option>
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Monto Neto</label><input class="form-input" id="cm-fac2-monto" type="number" value="${v.fac2Monto||''}" placeholder="Ej. ${Math.round(hon/2)}" oninput="calcCMIva(2)"></div>
+        <div class="form-group"><label class="form-label">IVA (16%)</label><input class="form-input" id="cm-fac2-iva" type="number" value="${f2iva||''}" readonly style="background:var(--bg4)"></div>
+        <div class="form-group"><label class="form-label">Total con IVA</label><input class="form-input" id="cm-fac2-total" type="number" value="${f2total||''}" readonly style="background:var(--bg4)"></div>
+        <div class="form-group"><label class="form-label">Fecha Emisión</label><input class="form-input" id="cm-fac2-fecha" type="date" value="${v.fac2Fecha||''}"></div>
+        <div class="form-group"><label class="form-label">Fecha Cobro</label><input class="form-input" id="cm-fac2-cobro" type="date" value="${v.fac2Cobro||''}"></div>
+      </div>
+    </div>`;
+
+  document.getElementById('cobros-modal-overlay').classList.add('open');
+}
+
+function calcCMIva(n){
+  const monto = Number(document.getElementById('cm-fac'+n+'-monto').value)||0;
+  const iva = Math.round(monto*0.16);
+  document.getElementById('cm-fac'+n+'-iva').value = iva||'';
+  document.getElementById('cm-fac'+n+'-total').value = (monto+iva)||'';
+}
+
+function closeCobrosModal(){
+  document.getElementById('cobros-modal-overlay').classList.remove('open');
+  cobrosModalId = null;
+}
+
+async function saveCobrosModal(){
+  if(!cobrosModalId) return;
+  const v = vacantes.find(x => x.id === cobrosModalId);
+  if(!v) return;
+  const btn = document.querySelector('#cobros-modal-overlay .cobros-modal-footer .btn-primary');
+  btn.textContent = 'Guardando...'; btn.disabled = true;
+  setSyncStatus('syncing','Guardando...');
+  const updated = {...v,
+    fac1Estado: document.getElementById('cm-fac1-estado').value,
+    fac1Monto:  document.getElementById('cm-fac1-monto').value,
+    fac1Iva:    document.getElementById('cm-fac1-iva').value,
+    fac1Total:  document.getElementById('cm-fac1-total').value,
+    fac1Fecha:  document.getElementById('cm-fac1-fecha').value,
+    fac1Cobro:  document.getElementById('cm-fac1-cobro').value,
+    fac2Estado: document.getElementById('cm-fac2-estado').value,
+    fac2Monto:  document.getElementById('cm-fac2-monto').value,
+    fac2Iva:    document.getElementById('cm-fac2-iva').value,
+    fac2Total:  document.getElementById('cm-fac2-total').value,
+    fac2Fecha:  document.getElementById('cm-fac2-fecha').value,
+    fac2Cobro:  document.getElementById('cm-fac2-cobro').value,
+  };
+  // auto-update estado si ambas cobradas
+  if(updated.fac1Estado==='cobrada' && updated.fac2Estado==='cobrada') updated.estado='Cobro completo';
+  else if((updated.fac1Estado==='cobrada'||updated.fac2Estado==='cobrada') && v.estado!=='Cobro completo') updated.estado='Facturado';
+  try{
+    const rowData = COLS.map(c => updated[c]||'');
+    await sheetsUpdateRow(SHEET_NAME, cobrosModalId, rowData);
+    showNotif('Pagos guardados ✓','success');
+    closeCobrosModal();
+    await loadData();
+    openFicha(cobrosModalId);
+  }catch(e){
+    showNotif('Error: '+e.message,'error');
+    setSyncStatus('error','Error');
+  }finally{
+    btn.textContent='Guardar Pagos'; btn.disabled=false;
   }
 }
 
@@ -1967,32 +2844,17 @@ function closeModal(){document.getElementById('modal-overlay').classList.remove(
 
 function clearForm(){
   ['f-cliente','f-puesto','f-headhunter','f-salario','f-bono','f-honorarios',
-   'f-iva-honorarios','f-total-con-iva',
-   'f-contactados','f-entrevistados','f-enterna','f-candidato-colocado',
-   'f-fecha-ingreso','f-fac1-monto','f-fac1-fecha','f-fac1-cobro','f-fac1-iva','f-fac1-total',
-   'f-fac2-monto','f-fac2-fecha','f-fac2-cobro','f-fac2-iva','f-fac2-total','f-notas'].forEach(id=>{
+   'f-iva-honorarios','f-total-con-iva','f-notas'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   document.getElementById('f-industria').value='';
   document.getElementById('f-nivel').value='';
   document.getElementById('f-origen').value='';
-  document.getElementById('f-fecha-propuesta').value='';
-  document.getElementById('f-fecha-activa').value='';
-  document.getElementById('f-fecha-terna').value='';
-  document.getElementById('f-fecha-colocacion-etapa').value='';
-  document.getElementById('f-razon-cierre').value='';
-  document.getElementById('f-oferta-presentada').value='';
-  document.getElementById('f-contraoferta').value='';
-  document.getElementById('f-motivo-rechazo').value='';
-  document.getElementById('f-cliente-ajusto').value='';
   document.getElementById('f-tipo').value='ejecutiva';
   document.getElementById('f-dias-convenio').value='';
   document.getElementById('grupo-dias-convenio').style.display='none';
   document.getElementById('honorarios-formula').textContent='Selecciona tipo de búsqueda para calcular';
   document.getElementById('f-estado').value='Prospección';
-  document.getElementById('f-retencion').value='pendiente';
-  document.getElementById('f-fac1-estado').value='no_emitida';
-  document.getElementById('f-fac2-estado').value='no_emitida';
   document.getElementById('honorarios-formula').textContent='Ingresa salario para calcular automáticamente (45 días SDI)';
 }
 
@@ -2070,6 +2932,7 @@ document.addEventListener('keydown',e=>{
 document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 document.getElementById('confirm-overlay').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
 document.getElementById('modal-cliente-overlay').addEventListener('click',function(e){if(e.target===this)closeClienteModal();});
+document.getElementById('cobros-modal-overlay').addEventListener('click',function(e){if(e.target===this)closeCobrosModal();});
 
 // ============ INIT ============
 async function init(){
