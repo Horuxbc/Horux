@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuestionario CV — Uriel Escobosa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --h-dark: #003834;
+    --h-brown: #9e8075;
+    --h-green: #108277;
+    --h-light: #f0f5f4;
+    --h-cream: #faf8f5;
+    --h-gray: #6b7570;
+    --h-border: #d8dcd9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--h-cream);
+    color: var(--h-dark);
+    line-height: 1.6;
+    padding: 0;
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 28px 80px;
+  }
+  header {
+    border-bottom: 1px solid var(--h-border);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--h-green);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 34px;
+    color: var(--h-dark);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .subtitle {
+    color: var(--h-gray);
+    font-size: 15px;
+    max-width: 600px;
+  }
+  .progress-bar {
+    height: 3px;
+    background: var(--h-border);
+    margin: 28px 0 0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--h-green);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .progress-text {
+    font-size: 12px;
+    color: var(--h-gray);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+  .block {
+    margin-bottom: 48px;
+  }
+  .block-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--h-border);
+  }
+  .block-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--h-brown);
+    font-weight: 500;
+  }
+  .block-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--h-dark);
+    font-weight: 500;
+  }
+  .block-desc {
+    font-size: 14px;
+    color: var(--h-gray);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .question {
+    margin-bottom: 28px;
+  }
+  .question label {
+    display: block;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--h-dark);
+    margin-bottom: 8px;
+  }
+  .question .hint {
+    font-size: 13px;
+    color: var(--h-gray);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--h-border);
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--h-dark);
+    background: white;
+    transition: border-color 0.2s;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--h-green);
+  }
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--h-border);
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 14px;
+  }
+  .checkbox-item:hover {
+    border-color: var(--h-green);
+  }
+  .checkbox-item input[type="checkbox"] {
+    accent-color: var(--h-green);
+    cursor: pointer;
+  }
+  .job-block {
+    background: white;
+    border: 1px solid var(--h-border);
+    border-left: 3px solid var(--h-green);
+    border-radius: 4px;
+    padding: 22px;
+    margin-bottom: 18px;
+  }
+  .job-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    color: var(--h-dark);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .job-period {
+    font-size: 13px;
+    color: var(--h-brown);
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+  }
+  .submit-section {
+    margin-top: 56px;
+    padding-top: 36px;
+    border-top: 2px solid var(--h-dark);
+    text-align: center;
+  }
+  button.submit {
+    background: var(--h-dark);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button.submit:hover {
+    background: var(--h-green);
+  }
+  .footer-note {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--h-gray);
+    line-height: 1.6;
+  }
+  .footer-brand {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--h-border);
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--h-brown);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .success-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 56, 52, 0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .success-modal.active { display: flex; }
+  .success-content {
+    background: white;
+    padding: 44px 36px;
+    border-radius: 6px;
+    max-width: 480px;
+    text-align: center;
+  }
+  .success-content h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--h-dark);
+    margin-bottom: 14px;
+  }
+  .success-content p {
+    color: var(--h-gray);
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+  .success-content button {
+    background: var(--h-green);
+    color: white;
+    border: none;
+    padding: 11px 28px;
+    font-size: 13px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 4px;
+  }
+  @media (max-width: 600px) {
+    .container { padding: 32px 18px 60px; }
+    h1 { font-size: 26px; }
+    .checkbox-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="brand">Horux Business Consulting</div>
+  <h1>Cuestionario para tu Currículum Vitae</h1>
+  <p class="subtitle">Hola Uriel. Este formulario me ayudará a armarte un CV competitivo en español e inglés. Tómate tu tiempo, responde con honestidad y con números cuando sea posible. Mientras más concreto, mejor saldrá tu CV.</p>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div class="progress-text" id="progressText">0% completado</div>
+</header>
+
+<form id="cvForm">
+
+<!-- BLOQUE 1 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-number">01</div>
+    <div class="block-title">Tu posicionamiento</div>
+  </div>
+  <div class="block-desc">Esto define el "norte" de tu CV. ¿Cómo te quieres vender?</div>
+
+  <div class="question">
+    <label>1.1 — En una frase, ¿qué te hace diferente de otros comerciales con 6 años en logística?</label>
+    <div class="hint">Ejemplo: "Soy bueno construyendo relaciones a largo plazo" / "Tengo experiencia tanto en operación como en venta" / "Manejo cuentas grandes con cierres complejos". Sé honesto, no exageres.</div>
+    <textarea name="diferenciador" placeholder="Escribe tu respuesta..."></textarea>
+  </div>
+
+  <div class="question">
+    <label>1.2 — ¿Qué tipo de cliente has manejado a lo largo de tu carrera? Marca todos los que apliquen:</label>
+    <div class="checkbox-grid">
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Industrial / Manufactura"> Industrial / Manufactura</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Retail / Comercio"> Retail / Comercio</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="E-commerce"> E-commerce</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Automotriz"> Automotriz</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Consumo / FMCG"> Consumo / FMCG</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Farmacéutico"> Farmacéutico</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Importadores / Exportadores"> Importadores / Exportadores</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Pyme"> Pyme</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Mediana empresa"> Mediana empresa</label>
+      <label class="checkbox-item"><input type="checkbox" name="clientes" value="Corporativo / Cuenta grande"> Corporativo / Cuenta grande</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <label>1.3 — ¿Cuál ha sido tu modalidad logística principal?</label>
+    <div class="checkbox-grid">
+      <label class="checkbox-item"><input type="checkbox" name="modalidad" value="Terrestre nacional"> Terrestre nacional</label>
+      <label class="checkbox-item"><input type="checkbox" name="modalidad" value="Terrestre frontera/cross-border"> Terrestre frontera / cross-border</label>
+      <label class="checkbox-item"><input type="checkbox" name="modalidad" value="Marítimo"> Marítimo</label>
+      <label class="checkbox-item"><input type="checkbox" name="modalidad" value="Aéreo"> Aéreo</label>
+      <label class="checkbox-item"><input type="checkbox" name="modalidad" value="Multimodal"> Multimodal</label>
+      <label class="checkbox-item"><input type="checkbox" name="modalidad" value="Última milla"> Última milla</label>
+      <label class="checkbox-item"><input type="checkbox" name="modalidad" value="3PL / Almacenaje"> 3PL / Almacenaje</label>
+    </div>
+  </div>
+</div>
+
+<!-- BLOQUE 2 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-number">02</div>
+    <div class="block-title">Logros por empleo</div>
+  </div>
+  <div class="block-desc">Aquí es donde se gana o se pierde el CV. Pon números reales, aunque sean aproximados. Si no recuerdas exacto, escribe "aprox" antes del número. NO inventes — los reclutadores serios verifican.</div>
+
+  <!-- NEXTRACK -->
+  <div class="job-block">
+    <div class="job-title">Nextrack Logistics</div>
+    <div class="job-period">Especialista Comercial Logístico · Agosto 2024 – Actual</div>
+
+    <div class="question">
+      <label>2.1 — ¿Cuántos clientes nuevos has cerrado / prospectado en este puesto?</label>
+      <input type="text" name="nextrack_clientes" placeholder="Ej: 12 cuentas nuevas, 40 prospectos calificados">
+    </div>
+    <div class="question">
+      <label>2.2 — ¿Cuál es tu ticket promedio o el monto más alto que has cerrado aquí?</label>
+      <input type="text" name="nextrack_ticket" placeholder="Ej: ticket promedio $80,000 MXN/mes; cuenta más grande $1.5M anual">
+    </div>
+    <div class="question">
+      <label>2.3 — ¿Alguna cuenta clave que tú trajiste? ¿Qué cliente y qué volumen?</label>
+      <input type="text" name="nextrack_cuenta" placeholder="Ej: traje a [Cliente X], facturación mensual aprox $250K">
+    </div>
+    <div class="question">
+      <label>2.4 — ¿Cumples cuota? ¿En qué % la has cumplido o superado?</label>
+      <input type="text" name="nextrack_cuota" placeholder="Ej: 110% promedio en últimos 6 meses / no manejo cuota fija">
+    </div>
+    <div class="question">
+      <label>2.5 — ¿Algún proyecto o iniciativa que tú lideraste y dio resultado medible?</label>
+      <textarea name="nextrack_proyecto" placeholder="Ej: implementé seguimiento por CRM que redujo el ciclo de venta en X días"></textarea>
+    </div>
+  </div>
+
+  <!-- SKYWHALE -->
+  <div class="job-block">
+    <div class="job-title">Skywhale Logistics</div>
+    <div class="job-period">Ejecutivo Comercial Sr · Enero 2023 – Agosto 2024</div>
+
+    <div class="question">
+      <label>2.6 — ¿Cuántos clientes nuevos cerraste en Skywhale?</label>
+      <input type="text" name="skywhale_clientes" placeholder="Ej: 25 cuentas nuevas en 18 meses">
+    </div>
+    <div class="question">
+      <label>2.7 — ¿Cuál fue tu cierre más grande o tu mejor mes/trimestre?</label>
+      <input type="text" name="skywhale_cierre" placeholder="Ej: mejor trimestre $4M MXN; cierre más grande $800K">
+    </div>
+    <div class="question">
+      <label>2.8 — ¿Tipo de cuentas que manejabas? (Industrial, retail, etc.) — sé específico si recuerdas nombres del sector</label>
+      <input type="text" name="skywhale_cuentas" placeholder="Ej: cuentas industriales del sector automotriz y manufactura">
+    </div>
+    <div class="question">
+      <label>2.9 — ¿Algún logro destacado? (premio, promoción, % cumplimiento, retención de clientes, etc.)</label>
+      <textarea name="skywhale_logro" placeholder="Ej: top 3 vendedores del año / retención de cartera al 95%"></textarea>
+    </div>
+  </div>
+
+  <!-- PAK2GO -->
+  <div class="job-block">
+    <div class="job-title">Pak2Go Logistics</div>
+    <div class="job-period">Ejecutivo Comercial · Enero 2021 – Enero 2023</div>
+
+    <div class="question">
+      <label>2.10 — ¿Cuánto creció tu cartera de clientes en estos 2 años? (en número de clientes o en facturación)</label>
+      <input type="text" name="pak2go_crecimiento" placeholder="Ej: pasé de 0 a 18 clientes activos / crecí cartera 40% en facturación">
+    </div>
+    <div class="question">
+      <label>2.11 — ¿Algún proyecto a largo plazo que cerraste y aún esté activo?</label>
+      <input type="text" name="pak2go_proyecto" placeholder="Ej: contrato anual con [cliente] por aprox $X anuales">
+    </div>
+    <div class="question">
+      <label>2.12 — Manejabas cierre de seguros — ¿qué volumen o %?</label>
+      <input type="text" name="pak2go_seguros" placeholder="Ej: 70% de mis clientes contrataban seguro adicional">
+    </div>
+  </div>
+
+  <!-- TRANSPORTES ORTA -->
+  <div class="job-block">
+    <div class="job-title">Transportes Orta</div>
+    <div class="job-period">Supervisor de Tráfico y Logística · Enero 2020 – Enero 2021</div>
+
+    <div class="question">
+      <label>2.13 — Manejabas flota de 50 operadores. ¿Tenías personas reportándote directamente o era coordinación operativa?</label>
+      <input type="text" name="orta_equipo" placeholder="Ej: 50 operadores en coordinación / 3 auxiliares directos + 50 operadores indirectos">
+    </div>
+    <div class="question">
+      <label>2.14 — Lograste promedio de 8 viajes mínimo-semanales por operador. ¿Cuánto era antes de tu llegada? ¿Hubo mejora?</label>
+      <input type="text" name="orta_mejora" placeholder="Ej: pasé de 5 a 8 viajes/semana por operador (+60% productividad)">
+    </div>
+  </div>
+
+  <!-- JAGUAR -->
+  <div class="job-block">
+    <div class="job-title">Servicios de Transportación Jaguar</div>
+    <div class="job-period">Logística y Atención al Cliente · Enero 2018 – Diciembre 2019</div>
+
+    <div class="question">
+      <label>2.15 — ¿Algún logro concreto en Jaguar? (Es tu primer empleo, así que dejarlo breve está bien)</label>
+      <textarea name="jaguar_logro" placeholder="Ej: creé herramientas en Excel que automatizaron actualización de rutas / manejé X cuentas clave"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BLOQUE 3 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-number">03</div>
+    <div class="block-title">Herramientas y competencias</div>
+  </div>
+
+  <div class="question">
+    <label>3.1 — ¿Manejas algún CRM? Marca todos los que hayas usado:</label>
+    <div class="checkbox-grid">
+      <label class="checkbox-item"><input type="checkbox" name="crm" value="Salesforce"> Salesforce</label>
+      <label class="checkbox-item"><input type="checkbox" name="crm" value="HubSpot"> HubSpot</label>
+      <label class="checkbox-item"><input type="checkbox" name="crm" value="Zoho"> Zoho</label>
+      <label class="checkbox-item"><input type="checkbox" name="crm" value="Pipedrive"> Pipedrive</label>
+      <label class="checkbox-item"><input type="checkbox" name="crm" value="Microsoft Dynamics"> Microsoft Dynamics</label>
+      <label class="checkbox-item"><input type="checkbox" name="crm" value="CRM propio de la empresa"> CRM propio de la empresa</label>
+      <label class="checkbox-item"><input type="checkbox" name="crm" value="Ninguno"> Ninguno</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <label>3.2 — ¿Otras herramientas / sistemas que manejas?</label>
+    <div class="checkbox-grid">
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="Excel avanzado"> Excel avanzado (tablas dinámicas, fórmulas)</label>
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="Power BI"> Power BI</label>
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="SAP"> SAP</label>
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="AS400"> AS400</label>
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="TMS (Transport Management System)"> TMS</label>
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="WMS (Warehouse Management System)"> WMS</label>
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="Google Workspace"> Google Workspace</label>
+      <label class="checkbox-item"><input type="checkbox" name="herramientas" value="Microsoft 365"> Microsoft 365</label>
+    </div>
+  </div>
+
+  <div class="question">
+    <label>3.3 — ¿Tienes algún sistema favorito o que no esté en la lista? Escríbelo:</label>
+    <input type="text" name="otras_herramientas" placeholder="Otros sistemas / portales que manejas">
+  </div>
+
+  <div class="question">
+    <label>3.4 — Inglés B2: ¿lo tienes certificado oficialmente?</label>
+    <select name="ingles_certificacion">
+      <option value="">Selecciona una opción</option>
+      <option value="Sí, certificado oficial (TOEFL, EF SET, Cambridge, etc.)">Sí, con certificado oficial</option>
+      <option value="No, autoevaluación basada en uso real">No, es autoevaluación basada en uso real</option>
+      <option value="Lo certificaron en la universidad">Lo certificaron en la universidad</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>3.5 — Si tienes certificación oficial, ¿cuál y de qué año?</label>
+    <input type="text" name="ingles_detalle" placeholder="Ej: EF SET 2022 / TOEFL 2020">
+  </div>
+</div>
+
+<!-- BLOQUE 4 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-number">04</div>
+    <div class="block-title">Formación y limpieza del CV</div>
+  </div>
+
+  <div class="question">
+    <label>4.1 — Las "certificaciones" del Tec Milenio (logística, compras, mercadotecnia, psicología positiva, etc.) — ¿son cursos extracurriculares con constancia aparte, o son materias del plan de estudios?</label>
+    <select name="cert_tec">
+      <option value="">Selecciona una opción</option>
+      <option value="Son materias del plan de estudios">Son materias del plan de estudios</option>
+      <option value="Son cursos extracurriculares con constancia aparte">Son cursos extracurriculares con constancia</option>
+      <option value="Mezcla — algunas son materias y otras cursos">Mezcla — algunas son materias y otras cursos</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>4.2 — ¿Has tomado cursos POSTERIORES a 2020? (ventas, negociación, logística, idiomas, etc.) — Lista los más relevantes</label>
+    <textarea name="cursos_recientes" placeholder="Ej: Curso de ventas consultivas 2023 / Diplomado en logística internacional 2024"></textarea>
+  </div>
+
+  <div class="question">
+    <label>4.3 — ¿Tienes LinkedIn? Pega tu URL completa:</label>
+    <input type="text" name="linkedin" placeholder="Ej: linkedin.com/in/uriel-escobosa">
+  </div>
+
+  <div class="question">
+    <label>4.4 — ¿Tu LinkedIn está actualizado al 2025?</label>
+    <select name="linkedin_actualizado">
+      <option value="">Selecciona una opción</option>
+      <option value="Sí, está actualizado">Sí, está actualizado</option>
+      <option value="Más o menos, le falta el último empleo">Más o menos, le falta el último empleo</option>
+      <option value="No, está muy desactualizado">No, está muy desactualizado</option>
+      <option value="No tengo">No tengo</option>
+    </select>
+  </div>
+</div>
+
+<!-- BLOQUE 5 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-number">05</div>
+    <div class="block-title">Datos finales</div>
+  </div>
+
+  <div class="question">
+    <label>5.1 — ¿Hay algún logro, premio, reconocimiento o promoción interna que NO esté en tu CV actual y que valga la pena mencionar?</label>
+    <textarea name="logros_extra" placeholder="Ej: vendedor del mes en X período / promoción de ejecutivo a sr en X tiempo"></textarea>
+  </div>
+
+  <div class="question">
+    <label>5.2 — ¿Hay algo que sí está en tu CV pero que NO te gusta cómo se ve o que prefieres quitar?</label>
+    <textarea name="quitar" placeholder="Cualquier cosa que sientas que no te suma o que ya no aplica"></textarea>
+  </div>
+
+  <div class="question">
+    <label>5.3 — Algo que quieras agregar o que sientas que el CV actual no captura sobre ti</label>
+    <textarea name="extra" placeholder="Cualquier comentario adicional"></textarea>
+  </div>
+</div>
+
+<div class="submit-section">
+  <button type="button" class="submit" onclick="generarRespuestas()">Descargar mis respuestas</button>
+  <p class="footer-note">Al hacer clic, se descargará un archivo de texto con tus respuestas. Mándaselo al equipo de headhunting de Horux.</p>
+</div>
+
+</form>
+
+<div class="footer-brand">Horux Business Consulting · División de Headhunting</div>
+
+</div>
+
+<div class="success-modal" id="successModal">
+  <div class="success-content">
+    <h2>¡Listo, Uriel!</h2>
+    <p>Se descargó tu archivo <strong>respuestas-cv-uriel.txt</strong>. Mándaselo al equipo de headhunting de Horux.</p>
+    <button onclick="cerrarModal()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+  // Progress bar
+  const form = document.getElementById('cvForm');
+  const progressFill = document.getElementById('progress');
+  const progressText = document.getElementById('progressText');
+
+  function updateProgress() {
+    const inputs = form.querySelectorAll('input[type="text"], input[type="number"], textarea, select');
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+    const totalText = inputs.length;
+    let filledText = 0;
+    inputs.forEach(i => { if (i.value.trim() !== '') filledText++; });
+    let anyCheck = 0;
+    const checkGroups = {};
+    checkboxes.forEach(c => {
+      checkGroups[c.name] = checkGroups[c.name] || false;
+      if (c.checked) checkGroups[c.name] = true;
+    });
+    Object.values(checkGroups).forEach(v => { if (v) anyCheck++; });
+    const totalCheck = Object.keys(checkGroups).length;
+    const total = totalText + totalCheck;
+    const filled = filledText + anyCheck;
+    const pct = Math.round((filled / total) * 100);
+    progressFill.style.width = pct + '%';
+    progressText.textContent = pct + '% completado';
+  }
+
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('change', updateProgress);
+
+  function generarRespuestas() {
+    const data = new FormData(form);
+    let texto = '═══════════════════════════════════════════════\n';
+    texto += '  CUESTIONARIO CV — URIEL ESCOBOSA OLVERA\n';
+    texto += '  Horux Business Consulting\n';
+    texto += '  Fecha: ' + new Date().toLocaleString('es-MX') + '\n';
+    texto += '═══════════════════════════════════════════════\n\n';
+
+    const secciones = [
+      {
+        titulo: '01. POSICIONAMIENTO',
+        campos: [
+          ['1.1 Diferenciador', 'diferenciador'],
+          ['1.2 Tipos de cliente', 'clientes'],
+          ['1.3 Modalidad logística', 'modalidad']
+        ]
+      },
+      {
+        titulo: '02. LOGROS POR EMPLEO',
+        campos: [
+          ['── NEXTRACK LOGISTICS ──', null],
+          ['2.1 Clientes nuevos', 'nextrack_clientes'],
+          ['2.2 Ticket / monto más alto', 'nextrack_ticket'],
+          ['2.3 Cuenta clave', 'nextrack_cuenta'],
+          ['2.4 Cuota / cumplimiento', 'nextrack_cuota'],
+          ['2.5 Proyecto liderado', 'nextrack_proyecto'],
+          ['── SKYWHALE LOGISTICS ──', null],
+          ['2.6 Clientes nuevos', 'skywhale_clientes'],
+          ['2.7 Cierre más grande / mejor mes', 'skywhale_cierre'],
+          ['2.8 Tipo de cuentas', 'skywhale_cuentas'],
+          ['2.9 Logro destacado', 'skywhale_logro'],
+          ['── PAK2GO LOGISTICS ──', null],
+          ['2.10 Crecimiento de cartera', 'pak2go_crecimiento'],
+          ['2.11 Proyecto largo plazo', 'pak2go_proyecto'],
+          ['2.12 Cierre de seguros', 'pak2go_seguros'],
+          ['── TRANSPORTES ORTA ──', null],
+          ['2.13 Estructura de equipo', 'orta_equipo'],
+          ['2.14 Mejora en productividad', 'orta_mejora'],
+          ['── SERVICIOS JAGUAR ──', null],
+          ['2.15 Logro', 'jaguar_logro']
+        ]
+      },
+      {
+        titulo: '03. HERRAMIENTAS Y COMPETENCIAS',
+        campos: [
+          ['3.1 CRM', 'crm'],
+          ['3.2 Otras herramientas', 'herramientas'],
+          ['3.3 Otros sistemas', 'otras_herramientas'],
+          ['3.4 Certificación de inglés', 'ingles_certificacion'],
+          ['3.5 Detalle certificación', 'ingles_detalle']
+        ]
+      },
+      {
+        titulo: '04. FORMACIÓN Y LIMPIEZA',
+        campos: [
+          ['4.1 Certificaciones Tec Milenio', 'cert_tec'],
+          ['4.2 Cursos posteriores a 2020', 'cursos_recientes'],
+          ['4.3 LinkedIn URL', 'linkedin'],
+          ['4.4 LinkedIn actualizado', 'linkedin_actualizado']
+        ]
+      },
+      {
+        titulo: '05. DATOS FINALES',
+        campos: [
+          ['5.1 Logros extra', 'logros_extra'],
+          ['5.2 Qué quitar del CV', 'quitar'],
+          ['5.3 Comentarios adicionales', 'extra']
+        ]
+      }
+    ];
+
+    secciones.forEach(sec => {
+      texto += '─────────────────────────────────────\n';
+      texto += sec.titulo + '\n';
+      texto += '─────────────────────────────────────\n\n';
+      sec.campos.forEach(([label, campo]) => {
+        if (campo === null) {
+          texto += '\n' + label + '\n';
+        } else {
+          const valores = data.getAll(campo);
+          const respuesta = valores.length > 0 ? valores.join(', ') : '(sin respuesta)';
+          texto += '• ' + label + ':\n  ' + respuesta + '\n\n';
+        }
+      });
+      texto += '\n';
+    });
+
+    texto += '═══════════════════════════════════════════════\n';
+    texto += '  Fin del cuestionario\n';
+    texto += '═══════════════════════════════════════════════\n';
+
+    const blob = new Blob([texto], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'respuestas-cv-uriel.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    document.getElementById('successModal').classList.add('active');
+  }
+
+  function cerrarModal() {
+    document.getElementById('successModal').classList.remove('active');
+  }
+
+  updateProgress();
+</script>
+
+</body>
+</html>
