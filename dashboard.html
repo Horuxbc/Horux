@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HORUX · División Headhunting</title> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
   --green:#003834;--green-mid:#00524c;--green-light:#006e65;
@@ -19,7 +18,8 @@
   --success:#1a7a52;--success-dim:rgba(26,122,82,0.09);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
+*,*::before,*::after{font-family:Arial,sans-serif !important;}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
 
 /* LOGIN SCREEN */
 .login-screen{position:fixed;inset:0;background:var(--cream);display:flex;align-items:center;justify-content:center;z-index:300;}
@@ -556,49 +556,6 @@ select option{background:#ffffff;color:#1a2422;}
         </div>
       </div>
       <div class="content">
-        <!-- INSIGHTS PANEL -->
-        <div class="insights-panel" id="insights-panel">
-          <div class="insights-header">
-            <div class="insights-title">Análisis ejecutivo</div>
-            <button class="insights-refresh" id="insights-refresh-btn" onclick="generarInsights()">↺ actualizar</button>
-          </div>
-          <div class="insights-body" id="insights-body">
-            <div class="insight-loading">
-              <div class="insight-dot"></div><div class="insight-dot"></div><div class="insight-dot"></div>
-              <span style="font-size:12px;color:var(--text-muted)">Analizando...</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- META MENSUAL -->
-        <div class="panel" style="margin-bottom:20px;padding:20px 24px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-            <div>
-              <div class="panel-title">Meta Mensual de Facturación</div>
-              <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Cobrado este mes vs objetivo</div>
-            </div>
-            <button class="meta-edit-btn" onclick="editarMeta()">✎ Editar meta</button>
-          </div>
-          <div class="meta-label-row">
-            <div>
-              <span class="meta-semaforo" id="meta-semaforo" style="background:var(--text-muted)"></span>
-              <span style="font-size:13px;color:var(--text-muted)" id="meta-label-text">Cargando...</span>
-            </div>
-            <span class="meta-pct" id="meta-pct">—</span>
-          </div>
-          <div class="meta-bar-wrap"><div class="meta-bar-fill" id="meta-bar" style="width:0%"></div></div>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
-            <span id="meta-cobrado-label">$0 cobrado</span>
-            <span id="meta-objetivo-label">Meta: $349,000</span>
-          </div>
-          <div id="meta-suggest-wrap"></div>
-          <!-- Gráfica mensual -->
-          <div style="margin-top:20px;border-top:1px solid var(--border-light);padding-top:16px">
-            <div style="font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px">Facturación por mes (últimos 6 meses)</div>
-            <div class="chart-wrap"><canvas id="chart-mensual"></canvas></div>
-          </div>
-        </div>
-
         <div class="financial-strip">
           <div class="fin-card pipeline clickable" onclick="goFilterVacantes('pipeline')"><div class="fin-label">Honorarios en Proceso</div><div class="fin-amount" id="f-pipeline">$0</div><div class="fin-sub" id="f-pipeline-sub">0 vacantes</div></div>
           <div class="fin-card propuestas clickable" onclick="goFilterVacantes('Propuesta enviada')"><div class="fin-label">Propuestas Enviadas</div><div class="fin-amount" id="f-propuestas">$0</div><div class="fin-sub" id="f-propuestas-sub">0 propuestas</div></div>
@@ -612,18 +569,17 @@ select option{background:#ffffff;color:#1a2422;}
           <div class="kpi-card"><div class="kpi-label">Conversión Propuesta</div><div class="kpi-value success" id="k-conv">—</div><div class="kpi-detail">propuesta → activa</div></div>
           <div class="kpi-card"><div class="kpi-label">Retención 90 días</div><div class="kpi-value" id="k-ret">—</div><div class="kpi-detail" id="k-ret-detail">de colocaciones</div></div>
         </div>
-        <!-- GRÁFICAS ROW 1 -->
-        <div class="dash-grid" style="margin-bottom:16px">
-          <div class="panel" style="grid-column:1/-1">
-            <div class="panel-header">
-              <span class="panel-title">Facturación cobrada · últimos 6 meses</span>
-              <div style="display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text-muted)">
-                <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--accent);display:inline-block"></span>Cobrado</span>
-                <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:0;border-top:2px dashed var(--yellow);display:inline-block"></span>Meta</span>
-              </div>
-            </div>
-            <div class="panel-body" style="padding-bottom:4px">
-              <div style="position:relative;height:200px"><canvas id="chart-fact" role="img" aria-label="Facturación cobrada vs meta por mes"></canvas></div>
+
+        <!-- INSIGHTS PANEL -->
+        <div class="insights-panel" id="insights-panel">
+          <div class="insights-header">
+            <div class="insights-title">Análisis ejecutivo</div>
+            <button class="insights-refresh" id="insights-refresh-btn" onclick="generarInsights()">↺ actualizar</button>
+          </div>
+          <div class="insights-body" id="insights-body">
+            <div class="insight-loading">
+              <div class="insight-dot"></div><div class="insight-dot"></div><div class="insight-dot"></div>
+              <span style="font-size:12px;color:var(--text-muted)">Analizando...</span>
             </div>
           </div>
         </div>
@@ -662,6 +618,51 @@ select option{background:#ffffff;color:#1a2422;}
           <div class="panel">
             <div class="panel-header"><span class="panel-title">Cobros Pendientes</span></div>
             <div class="panel-body" id="cobros-panel"></div>
+          </div>
+        </div>
+
+        <!-- META MENSUAL -->
+        <div class="panel" style="margin-bottom:20px;padding:20px 24px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div>
+              <div class="panel-title">Meta Mensual de Facturación</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Cobrado este mes vs objetivo</div>
+            </div>
+            <button class="meta-edit-btn" onclick="editarMeta()">✎ Editar meta</button>
+          </div>
+          <div class="meta-label-row">
+            <div>
+              <span class="meta-semaforo" id="meta-semaforo" style="background:var(--text-muted)"></span>
+              <span style="font-size:13px;color:var(--text-muted)" id="meta-label-text">Cargando...</span>
+            </div>
+            <span class="meta-pct" id="meta-pct">—</span>
+          </div>
+          <div class="meta-bar-wrap"><div class="meta-bar-fill" id="meta-bar" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
+            <span id="meta-cobrado-label">$0 cobrado</span>
+            <span id="meta-objetivo-label">Meta: $349,000</span>
+          </div>
+          <div id="meta-suggest-wrap"></div>
+          <!-- Gráfica mensual -->
+          <div style="margin-top:20px;border-top:1px solid var(--border-light);padding-top:16px">
+            <div style="font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px">Facturación por mes (últimos 6 meses)</div>
+            <div class="chart-wrap"><canvas id="chart-mensual"></canvas></div>
+          </div>
+        </div>
+
+        <!-- GRÁFICAS ROW 1 -->
+        <div class="dash-grid" style="margin-bottom:16px">
+          <div class="panel" style="grid-column:1/-1">
+            <div class="panel-header">
+              <span class="panel-title">Facturación cobrada · últimos 6 meses</span>
+              <div style="display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text-muted)">
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--accent);display:inline-block"></span>Cobrado</span>
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:0;border-top:2px dashed var(--yellow);display:inline-block"></span>Meta</span>
+              </div>
+            </div>
+            <div class="panel-body" style="padding-bottom:4px">
+              <div style="position:relative;height:200px"><canvas id="chart-fact" role="img" aria-label="Facturación cobrada vs meta por mes"></canvas></div>
+            </div>
           </div>
         </div>
 
@@ -993,6 +994,9 @@ select option{background:#ffffff;color:#1a2422;}
 </div>
 
 <script>
+// ============ CHART.JS FONT ============
+if(window.Chart){ Chart.defaults.font.family = 'Arial, sans-serif'; }
+
 // ============ AUTH ============
 const USERS = [
   { email: 'carla@horux.mx', password: 'Talento2026', name: 'Carla' },
@@ -1080,7 +1084,7 @@ const COLS = ['id','cliente','puesto','industria','headhunter','estado','fechaAp
   'fac2Monto','fac2Estado','fac2Fecha','fac2Cobro',
   'clasificacion','costoOCC','costoIndeed','costoEstudio',
   'notas','createdAt',
-  'ivaHonorarios','totalConIva','fac1Iva','fac1Total','fac2Iva','fac2Total'];
+  'contacto','empresaDestino','razonSocialDestino','paisFacturacion','paisOperacionCandidato'];
 
 const HEADER_ROW = ['ID','Cliente','Puesto','Industria','Headhunter','Estado','Fecha Apertura',
   'Tipo','Dias Convenio','Salario','Bono','Honorarios',
@@ -1092,7 +1096,7 @@ const HEADER_ROW = ['ID','Cliente','Puesto','Industria','Headhunter','Estado','F
   'Fac2 Monto','Fac2 Estado','Fac2 Fecha','Fac2 Cobro',
   'Clasificacion','Costo OCC','Costo Indeed','Costo Estudio',
   'Notas','Created At',
-  'IVA_Honorarios','Total_Con_IVA','Fac1_IVA','Fac1_Total','Fac2_IVA','Fac2_Total'];
+  'Contacto','Empresa_Destino','Razon_Social_Destino','Pais_Facturacion','Pais_Operacion_Candidato'];
 
 // ============ STATE ============
 let vacantes = [];
@@ -2941,8 +2945,8 @@ async function init(){
   document.getElementById('sidebar-date').textContent=`${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
   document.getElementById('loading-text').textContent='VERIFICANDO ESTRUCTURA...';
   try{
-    await ensureHeader();
-    await ensureClientesHeader();
+    // await ensureHeader();
+    // await ensureClientesHeader();
     document.getElementById('loading-text').textContent='CARGANDO DATOS...';
     await loadData();
     document.getElementById('loading-overlay').style.display='none';
