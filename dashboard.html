@@ -453,6 +453,106 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-hei
 .search-input::placeholder{color:var(--text-muted);}
 .filter-select{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text-dim);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
 select option{background:#ffffff;color:#1a2422;}
+
+/* ===== SECCIONES PORTADAS (Garantías/Onboarding · Finanzas · Composición) ===== */
+.resumen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.resumen-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;}
+.resumen-num{font-family:'DM Mono',monospace;font-size:26px;font-weight:600;color:var(--green);line-height:1;}
+.resumen-num.alert{color:var(--red);}
+.resumen-num.ok{color:var(--success);}
+.resumen-lbl{font-size:11px;color:var(--text-muted);margin-top:6px;text-transform:uppercase;letter-spacing:0.04em;}
+
+/* Garantías */
+.gar-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:14px;}
+.gar-card.formal{border-left:3px solid var(--accent);}
+.gar-card.urgente{border-left:3px solid var(--red);}
+.gar-card.cubierta{opacity:0.72;}
+.gar-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;}
+.id-g{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.06em;}
+.puesto-g{font-size:15px;font-weight:600;color:var(--text);margin-top:2px;}
+.candidato-g{font-size:12px;color:var(--text-dim);margin-top:3px;}
+.gar-head-right{text-align:right;flex-shrink:0;}
+.tag-formal{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);background:var(--accent-dim);padding:3px 8px;border-radius:4px;margin-bottom:6px;}
+.tag-cubierta{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;color:var(--success);background:var(--success-dim);padding:3px 8px;border-radius:4px;}
+.dia-actual{font-size:12px;color:var(--text-muted);}
+.dia-actual strong{color:var(--green);font-family:'DM Mono',monospace;font-size:14px;}
+.tempo-bar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:16px;}
+.tempo-fill{height:100%;background:var(--accent);border-radius:3px;}
+.checkins{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.checkin{background:var(--bg3);border-radius:6px;padding:10px 12px;border:1px solid var(--border-light);}
+.checkin.done{background:var(--success-dim);border-color:rgba(26,122,82,0.2);}
+.checkin.urgente{background:var(--red-dim);border-color:rgba(192,57,43,0.25);}
+.checkin .marca{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.checkin .check-icon{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;flex-shrink:0;}
+.checkin.done .check-icon{background:var(--success);border-color:var(--success);}
+.checkin.urgente .check-icon{background:var(--red);border-color:var(--red);}
+.checkin .dia-label{font-size:11px;font-weight:600;color:var(--text-dim);}
+.checkin .fecha{font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;}
+.checkin .nota{font-size:10px;color:var(--text-dim);margin-top:4px;font-style:italic;}
+.checkin .alerta{font-size:10px;color:var(--red);font-weight:600;margin-top:4px;}
+.onboarding-block{margin-top:16px;padding-top:14px;border-top:1px solid var(--border-light);}
+.onboarding-label{font-size:11px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;}
+.sesiones{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.sesion{background:var(--bg3);border:1px solid var(--border-light);border-radius:6px;padding:9px 11px;}
+.sesion.done{background:var(--success-dim);}
+.sesion.next{border-color:var(--accent);}
+.sesion .num{font-size:11px;font-weight:600;color:var(--text-dim);}
+.sesion .fecha-s{font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:2px;}
+
+/* Composición */
+.composicion{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px 22px;}
+.comp-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;}
+.comp-total{font-family:'DM Mono',monospace;font-size:30px;font-weight:600;color:var(--green);line-height:1;}
+.comp-total-lbl{font-size:11px;color:var(--text-muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.04em;}
+.toggle-group{display:flex;gap:4px;background:var(--bg3);border-radius:6px;padding:3px;}
+.toggle-btn{border:none;background:none;padding:6px 12px;border-radius:4px;font-size:11px;color:var(--text-muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.toggle-btn.active{background:var(--bg2);color:var(--green);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,0.06);}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.bar-lbl-block{display:flex;align-items:center;gap:7px;width:120px;flex-shrink:0;}
+.legend-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.bar-lbl{font-size:12px;color:var(--text-dim);}
+.bar-track{flex:1;height:22px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace;min-width:2px;transition:width 0.3s;}
+.bar-num{width:78px;text-align:right;flex-shrink:0;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);}
+.bar-num .pct{color:var(--text-muted);font-size:10px;margin-left:5px;}
+
+/* Finanzas / Estado de Resultados */
+.er-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.btn-period{border:1px solid var(--border);background:var(--bg2);color:var(--text-dim);padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.btn-period:hover{border-color:var(--accent);}
+.btn-period.active{background:var(--green);color:#fff;border-color:var(--green);}
+.er-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:24px 26px;max-width:720px;}
+.er-title-block h2{font-size:18px;font-weight:600;color:var(--text);margin:0;}
+.er-title-block .sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.er-title-block .periodo{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);margin-top:6px;margin-bottom:14px;}
+.er-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;font-size:13px;}
+.er-row .lbl{color:var(--text-dim);}
+.er-row .val{font-family:'DM Mono',monospace;color:var(--text);}
+.er-row .meta-e{display:block;font-size:10px;color:var(--text-muted);margin-top:2px;}
+.er-row.heading{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-top:12px;}
+.er-row.heading .val{color:var(--text-muted);}
+.er-row.subtotal{font-weight:600;border-top:1px solid var(--border-light);}
+.er-row.subtotal .lbl,.er-row.subtotal .val{color:var(--text);font-weight:600;}
+.er-row.total{border-top:2px solid var(--green);margin-top:10px;padding-top:12px;font-size:15px;}
+.er-row.total .lbl{font-weight:700;color:var(--green);}
+.er-row.total .val{font-weight:700;font-size:17px;}
+.er-row.total.neg .lbl,.er-row.total.neg .val{color:var(--red);}
+.er-row.total.pos .lbl,.er-row.total.pos .val{color:var(--success);}
+.comparativo{margin-top:18px;padding-top:16px;border-top:1px dashed var(--border);}
+.comp-title-fin{font-size:11px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;}
+.comp-row-fin{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;}
+.comp-row-fin .lbl{color:var(--text-dim);}
+.comp-row-fin .val{font-family:'DM Mono',monospace;color:var(--text);}
+.er-config-note{font-size:11px;color:var(--text-muted);margin-top:14px;padding:10px 12px;background:var(--yellow-dim);border-radius:6px;border:1px solid rgba(160,112,0,0.18);}
+.cob-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin-bottom:12px;}
+.cob-card.vencida{border-left:3px solid var(--red);}
+.cob-card.por-facturar{border-left:3px solid var(--yellow);}
+.cob-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.cob-titulo{font-size:14px;font-weight:600;color:var(--text);}
+.cob-meta{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.cob-monto{font-family:'DM Mono',monospace;font-size:16px;font-weight:600;color:var(--text);}
+.cob-monto.alert{color:var(--red);}
+.cob-detalle{font-size:12px;color:var(--text-dim);margin-top:10px;line-height:1.7;}
 </style>
 </head>
 <body>
@@ -501,25 +601,33 @@ select option{background:#ffffff;color:#1a2422;}
     </div>
     <nav class="sidebar-nav">
       <span class="nav-section-label">Operación</span>
-      <div class="nav-item active" onclick="showView('dashboard')">
+      <div class="nav-item active" data-view="dashboard" onclick="showView('dashboard')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         Dashboard
       </div>
-      <div class="nav-item" onclick="showView('vacantes')">
+      <div class="nav-item" data-view="vacantes" onclick="showView('vacantes')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
         Vacantes
       </div>
-      <div class="nav-item" onclick="showView('clientes')">
+      <div class="nav-item" data-view="garantias" onclick="showView('garantias')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        Garantías y Onboarding
+      </div>
+      <div class="nav-item" data-view="clientes" onclick="showView('clientes')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Clientes
       </div>
       <span class="nav-section-label">Finanzas</span>
-      <div class="nav-item" onclick="showView('cobros')">
+      <div class="nav-item" data-view="finanzas" onclick="showView('finanzas')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Finanzas
+      </div>
+      <div class="nav-item" data-view="cobros" onclick="showView('cobros')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         Cobros
       </div>
       <span class="nav-section-label">Análisis</span>
-      <div class="nav-item" onclick="showView('inteligencia')">
+      <div class="nav-item" data-view="inteligencia" onclick="showView('inteligencia')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6l-.7.5V17H9v-1.5l-.7-.5A7 7 0 015 9a7 7 0 017-7z"/><path d="M9 21h6M10 17v-1M14 17v-1"/></svg>
         Inteligencia
       </div>
@@ -582,6 +690,24 @@ select option{background:#ffffff;color:#1a2422;}
               <span style="font-size:12px;color:var(--text-muted)">Analizando...</span>
             </div>
           </div>
+        </div>
+
+        <!-- COMPOSICIÓN DE CARTERA -->
+        <div class="composicion" style="margin-bottom:16px">
+          <div class="comp-head">
+            <div>
+              <div class="comp-total" id="compTotal">0</div>
+              <div class="comp-total-lbl" id="compTotalLbl">vacantes activas</div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">Composición de cartera</div>
+              <div class="toggle-group">
+                <button class="toggle-btn active" id="tgNumero" onclick="toggleComp('numero')">Por número</button>
+                <button class="toggle-btn" id="tgMonto" onclick="toggleComp('monto')">Por monto</button>
+              </div>
+            </div>
+          </div>
+          <div id="compBars"></div>
         </div>
 
         <!-- GRÁFICAS ROW 2 -->
@@ -769,6 +895,35 @@ select option{background:#ffffff;color:#1a2422;}
     <div id="view-cobros" class="view">
       <div class="topbar"><div class="page-title">Cobros <span>& Facturación</span></div></div>
       <div class="content" id="cobros-content"></div>
+    </div>
+
+    <!-- GARANTÍAS Y ONBOARDING -->
+    <div id="view-garantias" class="view">
+      <div class="topbar">
+        <div class="page-title">Garantías y <span>Onboarding</span></div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="loadData()" title="Actualizar datos">↺ Actualizar</button>
+        </div>
+      </div>
+      <div class="content">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">Seguimiento de candidatos en garantía · checkins 30/60/90/95 días desde Fecha de Ingreso</div>
+        <div class="resumen-grid" id="gar-resumen"></div>
+        <div id="gar-cards"></div>
+      </div>
+    </div>
+
+    <!-- FINANZAS -->
+    <div id="view-finanzas" class="view">
+      <div class="topbar">
+        <div class="page-title">Finanzas <span>· Estado de Resultados</span></div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="loadData()" title="Actualizar datos">↺ Actualizar</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="er-controls" id="fin-periods"></div>
+        <div id="fin-er"></div>
+      </div>
     </div>
 
     <!-- CLIENTES -->
@@ -1098,6 +1253,20 @@ const HEADER_ROW = ['ID','Cliente','Puesto','Industria','Headhunter','Estado','F
   'Notas','Created At',
   'Contacto','Empresa_Destino','Razon_Social_Destino','Pais_Facturacion','Pais_Operacion_Candidato'];
 
+// Clasificaciones excluidas de todos los KPIs (servicio no es búsqueda HH)
+const KPI_EXCLUDE = ['servicio_incluido','servicio_continuo'];
+
+// ⚙️ ÚNICO bloque de números manuales del dashboard: egresos fijos mensuales.
+// No existen en el Google Sheet (es opex de operación), así que se configuran
+// aquí. Todo lo demás (ingresos, egresos variables) se deriva del JSON.
+const COSTOS_FIJOS = [
+  {concepto:'Carla Berrón (RESICO)', monto:35443},
+  {concepto:'Anayelli Portilla (RESICO)', monto:18228},
+  {concepto:'Oficina coworking', monto:20000},
+  {concepto:'Claude Max 5x', monto:1950},
+];
+const DIAS_CONVENIO_DEFAULT = 30; // cuando la vacante no trae Dias Convenio
+
 // ============ STATE ============
 let vacantes = [];
 let clientes = [];
@@ -1148,6 +1317,28 @@ const monthLabel = offset=>{
   const d=new Date();d.setMonth(d.getMonth()+offset);
   const m=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   return m[d.getMonth()]+' '+d.getFullYear();
+};
+
+// Normaliza cualquier fecha (ISO datetime o YYYY-MM-DD) a 'YYYY-MM-DD'
+const isoDate = d => {
+  if(!d) return '';
+  const s=String(d).trim();
+  const m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m) return `${m[1]}-${m[2]}-${m[3]}`;
+  const dt=new Date(s);
+  return isNaN(dt)?'':dt.toISOString().split('T')[0];
+};
+// Suma n días a una fecha 'YYYY-MM-DD' y devuelve 'YYYY-MM-DD'
+const addDays = (dateStr,n) => {
+  const base=isoDate(dateStr); if(!base) return '';
+  const dt=new Date(base+'T00:00:00'); dt.setDate(dt.getDate()+n);
+  return dt.toISOString().split('T')[0];
+};
+const monthName = ym => {
+  if(!ym) return '—';
+  const [y,m]=ym.split('-');
+  const names=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  return `${names[parseInt(m)-1]} ${y}`;
 };
 
 // ============ NET PORTION HELPER ============
@@ -1377,12 +1568,16 @@ function renderAll(){
   if(activeView==='dashboard')renderDashboard();
   else if(activeView==='vacantes')renderVacantes();
   else if(activeView==='cobros')renderCobros();
+  else if(activeView==='garantias')renderGarantias();
+  else if(activeView==='finanzas')renderFinanzas();
   else if(activeView==='ficha'&&currentFichaId)openFicha(currentFichaId);
 }
 
 // ============ METRICS ============
 function calcMetrics(){
-  const v=vacantes;
+  // Regla de negocio: excluir servicio_incluido y servicio_continuo de TODOS
+  // los indicadores (pipeline, días promedio, carga por HH, conversión, etc.)
+  const v=vacantes.filter(x=>!KPI_EXCLUDE.includes((x.clasificacion||'').trim()));
   const cm=currentMonth();
   const pipeline=v.filter(x=>x.estado!=='Cobro completo').reduce((s,x)=>s+(Number(x.honorarios)||0),0);
   const ivaPorTrasladar=Math.round(pipeline*0.16);
@@ -1894,7 +2089,205 @@ function renderDashboard(){
       <div style="text-align:right"><div style="font-family:'DM Mono',monospace;font-size:14px;color:var(--green);font-weight:500">${fmt(avg)}</div><div style="font-size:10px;color:var(--text-muted)">ticket prom.</div></div>
     </div>`;
   }).join('');
+
+  renderComposicion();
 }
+
+// ============ COMPOSICIÓN DE CARTERA ============
+let modoComp='numero';
+const NIVEL_ORDER=['direccion','gerencia','jefatura','mando medio','operativo'];
+const NIVEL_LABELS={direccion:'Dirección',gerencia:'Gerencia',jefatura:'Jefatura','mando medio':'Mando medio',operativo:'Operativo'};
+const NIVEL_COLORS={direccion:'#003834',gerencia:'#006e65',jefatura:'#4dd9cc',['mando medio']:'#a07000',operativo:'#9e8075'};
+
+function toggleComp(modo){
+  modoComp=modo;
+  document.getElementById('tgNumero').classList.toggle('active',modo==='numero');
+  document.getElementById('tgMonto').classList.toggle('active',modo==='monto');
+  renderComposicion();
+}
+function renderComposicion(){
+  const cont=document.getElementById('compBars'); if(!cont)return;
+  // Cartera activa = vacantes en proceso, excluyendo servicio_*
+  const activas=vacantes.filter(x=>!KPI_EXCLUDE.includes((x.clasificacion||'').trim())
+    && ['Vacante activa','Propuesta enviada'].includes(x.estado));
+  const data={};
+  NIVEL_ORDER.forEach(n=>{
+    const lista=activas.filter(v=>(v.nivelPuesto||'').trim()===n);
+    data[n]={num:lista.length, monto:lista.reduce((s,v)=>s+(Number(v.honorarios)||0),0)};
+  });
+  const total = modoComp==='numero'
+    ? activas.length
+    : activas.reduce((s,v)=>s+(Number(v.honorarios)||0),0);
+  document.getElementById('compTotal').textContent = modoComp==='numero' ? total : fmt(total);
+  document.getElementById('compTotalLbl').textContent = modoComp==='numero' ? 'vacantes activas' : 'en honorarios';
+  const order=[...NIVEL_ORDER].sort((a,b)=> modoComp==='numero' ? data[b].num-data[a].num : data[b].monto-data[a].monto);
+  const max=Math.max(...order.map(n=>modoComp==='numero'?data[n].num:data[n].monto),1);
+  cont.innerHTML=order.map(n=>{
+    const val=modoComp==='numero'?data[n].num:data[n].monto;
+    const pct=total>0?Math.round(val/total*100):0;
+    const w=max>0?(val/max*100):0;
+    const disp=modoComp==='numero'?val:fmt(val);
+    const txtColor=(n==='jefatura')?'var(--text)':'#fff';
+    return`<div class="bar-row"><div class="bar-lbl-block"><div class="legend-dot" style="background:${NIVEL_COLORS[n]}"></div><span class="bar-lbl">${NIVEL_LABELS[n]}</span></div><div class="bar-track"><div class="bar-fill" style="background:${NIVEL_COLORS[n]};width:${w}%;color:${txtColor}">${val>0?disp:''}</div></div><div class="bar-num">${disp}<span class="pct">${pct}%</span></div></div>`;
+  }).join('');
+}
+
+// ============ GARANTÍAS Y ONBOARDING ============
+const GAR_CHECKPOINTS=[30,60,90,95];
+function renderGarantias(){
+  const gars=vacantes.filter(x=>(x.clasificacion||'').trim()==='garantia');
+  const td=today();
+  // Resumen
+  const activasN=gars.filter(g=>g.estado==='Garantía activa').length;
+  const cubiertasN=gars.filter(g=>g.estado==='Garantía cubierta').length;
+  let checkinsSemana=0;
+  gars.filter(g=>g.estado==='Garantía activa').forEach(g=>{
+    const ing=isoDate(g.fechaIngreso); if(!ing)return;
+    GAR_CHECKPOINTS.forEach(cp=>{
+      const f=addDays(ing,cp);
+      const diff=Math.round((new Date(f)-new Date(td))/86400000);
+      if(diff>=0&&diff<=7)checkinsSemana++;
+    });
+  });
+  document.getElementById('gar-resumen').innerHTML=`
+    <div class="resumen-card"><div class="resumen-num">${activasN}</div><div class="resumen-lbl">En garantía activa</div></div>
+    <div class="resumen-card"><div class="resumen-num ${checkinsSemana>0?'alert':''}">${checkinsSemana}</div><div class="resumen-lbl">Checkins esta semana</div></div>
+    <div class="resumen-card"><div class="resumen-num ok">${cubiertasN}</div><div class="resumen-lbl">Garantías cubiertas</div></div>
+    <div class="resumen-card"><div class="resumen-num">${gars.length}</div><div class="resumen-lbl">Total candidatos</div></div>`;
+
+  // Orden: activas primero, luego por día (mayor a menor avance), cubiertas al final
+  const sorted=[...gars].sort((a,b)=>{
+    const ra=a.estado==='Garantía cubierta'?1:0, rb=b.estado==='Garantía cubierta'?1:0;
+    if(ra!==rb)return ra-rb;
+    return (isoDate(a.fechaIngreso)<isoDate(b.fechaIngreso)?1:-1);
+  });
+  const cont=document.getElementById('gar-cards');
+  if(gars.length===0){ cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:24px;text-align:center">Sin candidatos en garantía</div>'; return; }
+  cont.innerHTML=sorted.map(g=>{
+    const ing=isoDate(g.fechaIngreso);
+    const cubierta=g.estado==='Garantía cubierta';
+    const candidato=g.candidatoColocado||'—';
+    const headRight = !ing ? '<div class="dia-actual">Sin fecha de ingreso</div>'
+      : `<div class="dia-actual">Día <strong>${daysBetween(ing,td)}</strong> de 95</div>`;
+    const tagCubierta = cubierta ? '<span class="tag-cubierta">Cubierta</span>' : '';
+    // checkins
+    let urgente=false, checkinsHtml='';
+    if(ing){
+      checkinsHtml='<div class="checkins">'+GAR_CHECKPOINTS.map(cp=>{
+        const f=addDays(ing,cp);
+        const passed=f<td;
+        const diff=Math.round((new Date(f)-new Date(td))/86400000);
+        let cls='',icon='',extra='';
+        if(cubierta||passed){cls='done';icon='✓';}
+        else if(diff>=0&&diff<=7){cls='urgente';icon='!';urgente=true;extra=`<div class="alerta">${diff===0?'Hoy':diff===1?'Mañana':'En '+diff+' días'}</div>`;}
+        return`<div class="checkin ${cls}"><div class="marca"><span class="check-icon">${icon}</span><span class="dia-label">${cp} días</span></div><div class="fecha">${fmtDate(f)}</div>${extra}</div>`;
+      }).join('')+'</div>';
+    } else {
+      checkinsHtml='<div style="font-size:12px;color:var(--text-muted)">Captura la Fecha de Ingreso en el Sheet para calcular los checkins.</div>';
+    }
+    const cardCls=cubierta?'cubierta':(urgente?'urgente':'');
+    const dia=ing?daysBetween(ing,td):0;
+    const w=Math.max(0,Math.min(100,Math.round(dia/95*100)));
+    return`<div class="gar-card ${cardCls}">
+      <div class="gar-head">
+        <div class="gar-head-left">
+          <div class="id-g">${g.id}</div>
+          <div class="puesto-g">${g.puesto||'—'}</div>
+          <div class="candidato-g"><strong>${g.cliente||'—'}</strong> · ${candidato}${ing?' · ingresó '+fmtDate(ing):''}</div>
+        </div>
+        <div class="gar-head-right">${tagCubierta}${headRight}</div>
+      </div>
+      ${ing?`<div class="tempo-bar"><div class="tempo-fill" style="width:${w}%"></div></div>`:''}
+      ${checkinsHtml}
+    </div>`;
+  }).join('');
+}
+
+// ============ FINANZAS · ESTADO DE RESULTADOS ============
+let finPeriod=null;
+function finCobros(){
+  // Devuelve lista de cobros {ym, fecha, monto, label} desde el JSON
+  const out=[];
+  vacantes.forEach(x=>{
+    const hon=Number(x.honorarios)||0;
+    [['fac1Estado','fac1Cobro','fac1Monto','anticipo'],['fac2Estado','fac2Cobro','fac2Monto','liquidación']].forEach(([est,cob,mon,lbl])=>{
+      if(x[est]==='cobrada'&&x[cob]){
+        const f=isoDate(x[cob]); if(!f)return;
+        out.push({ym:f.slice(0,7),fecha:f,monto:facMontoNet(x[mon],hon),cliente:x.cliente,candidato:x.candidatoColocado||x.puesto,id:x.id,lbl});
+      }
+    });
+  });
+  return out;
+}
+function renderFinanzas(){
+  const cobros=finCobros();
+  const periods=[...new Set(cobros.map(c=>c.ym))].sort().reverse();
+  const pcont=document.getElementById('fin-periods');
+  if(periods.length===0){
+    pcont.innerHTML='';
+    document.getElementById('fin-er').innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:24px;text-align:center">Sin cobros registrados en el Sheet todavía.</div>';
+    return;
+  }
+  if(!finPeriod||!periods.includes(finPeriod)) finPeriod=periods.includes(currentMonth())?currentMonth():periods[0];
+  pcont.innerHTML=periods.map(p=>`<button class="btn-period ${p===finPeriod?'active':''}" onclick="setFinPeriod('${p}')">${monthName(p)}</button>`).join('');
+
+  const ingresosList=cobros.filter(c=>c.ym===finPeriod).sort((a,b)=>a.fecha>b.fecha?1:-1);
+  const totalIngresos=ingresosList.reduce((s,c)=>s+c.monto,0);
+  // Egresos variables: costos de reclutamiento de vacantes abiertas en el periodo
+  let varOCC=0,varIndeed=0,varEstudio=0;
+  vacantes.forEach(x=>{
+    if(isoDate(x.fechaApertura).slice(0,7)===finPeriod){
+      varOCC+=Number(x.costoOCC)||0; varIndeed+=Number(x.costoIndeed)||0; varEstudio+=Number(x.costoEstudio)||0;
+    }
+  });
+  const totalVar=varOCC+varIndeed+varEstudio;
+  const totalFijos=COSTOS_FIJOS.reduce((s,c)=>s+c.monto,0);
+  const totalEgresos=totalFijos+totalVar;
+  const utilidad=totalIngresos-totalEgresos;
+  const pctPE=totalEgresos>0?Math.round(totalIngresos/totalEgresos*100):0;
+  const margenPct=totalIngresos>0?Math.round(utilidad/totalIngresos*100):0;
+
+  const rowsIng = ingresosList.length
+    ? ingresosList.map(c=>`<div class="er-row sub"><span class="lbl">${c.cliente} · ${c.candidato} (${c.lbl})<span class="meta-e">${fmtDate(c.fecha)}</span></span><span class="val">${fmt(c.monto)}</span></div>`).join('')
+    : '<div class="er-row sub"><span class="lbl">Sin cobros en el periodo</span><span class="val">$0</span></div>';
+  const rowsVar = totalVar>0
+    ? `${varOCC?`<div class="er-row sub"><span class="lbl">OCC</span><span class="val">${fmt(varOCC)}</span></div>`:''}${varIndeed?`<div class="er-row sub"><span class="lbl">Indeed</span><span class="val">${fmt(varIndeed)}</span></div>`:''}${varEstudio?`<div class="er-row sub"><span class="lbl">Estudios socioeconómicos</span><span class="val">${fmt(varEstudio)}</span></div>`:''}`
+    : '<div class="er-row sub"><span class="lbl">Sin costos de reclutamiento capturados</span><span class="val">$0</span></div>';
+
+  document.getElementById('fin-er').innerHTML=`
+    <div class="er-card">
+      <div class="er-title-block">
+        <h2>Estado de Resultados</h2>
+        <div class="sub">División Headhunting · Horux Business Consulting</div>
+        <div class="periodo">${monthName(finPeriod)}</div>
+      </div>
+      <div class="er-row heading"><span class="lbl">Ingresos cobrados</span><span class="val">Monto</span></div>
+      ${rowsIng}
+      <div class="er-row subtotal"><span class="lbl">Total ingresos del periodo</span><span class="val">${fmt(totalIngresos)}</span></div>
+
+      <div class="er-row heading"><span class="lbl">Egresos fijos (config)</span><span class="val">Mensual</span></div>
+      ${COSTOS_FIJOS.map(c=>`<div class="er-row sub"><span class="lbl">${c.concepto}</span><span class="val">${fmt(c.monto)}</span></div>`).join('')}
+      <div class="er-row subtotal"><span class="lbl">Subtotal egresos fijos</span><span class="val">${fmt(totalFijos)}</span></div>
+
+      <div class="er-row heading"><span class="lbl">Egresos variables (del Sheet)</span><span class="val">Periodo</span></div>
+      ${rowsVar}
+      <div class="er-row subtotal"><span class="lbl">Subtotal egresos variables</span><span class="val">${fmt(totalVar)}</span></div>
+
+      <div class="er-row subtotal" style="border-top:2px solid var(--green)"><span class="lbl">Total egresos</span><span class="val">${fmt(totalEgresos)}</span></div>
+
+      <div class="er-row total ${utilidad<0?'neg':'pos'}"><span class="lbl">Utilidad / (Pérdida) del mes</span><span class="val">${utilidad<0?'−':''}${fmt(Math.abs(utilidad))}</span></div>
+
+      <div class="comparativo">
+        <div class="comp-title-fin">Análisis del periodo</div>
+        <div class="comp-row-fin"><span class="lbl">Punto de equilibrio</span><span class="val">${fmt(totalEgresos)}</span></div>
+        <div class="comp-row-fin"><span class="lbl">Ingresos cobrados</span><span class="val">${fmt(totalIngresos)}</span></div>
+        <div class="comp-row-fin"><span class="lbl">% logro del PE</span><span class="val">${pctPE}%</span></div>
+        <div class="comp-row-fin"><span class="lbl">Margen del mes</span><span class="val" style="color:${utilidad<0?'var(--red)':'var(--success)'};font-weight:600">${margenPct}%</span></div>
+      </div>
+      <div class="er-config-note">⚙️ Los egresos fijos no están en el Google Sheet (es opex de operación) y se configuran en <strong>COSTOS_FIJOS</strong> dentro del archivo. Ingresos y egresos variables se derivan 100% del endpoint.</div>
+    </div>`;
+}
+function setFinPeriod(p){ finPeriod=p; renderFinanzas(); }
 
 // ============ RENDER VACANTES ============
 function renderVacantes(){
@@ -2261,13 +2654,13 @@ function renderCobros(){
 function showView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const map={dashboard:0,vacantes:1,clientes:2,cobros:3,inteligencia:4};
-  if(map[name]!==undefined)document.querySelectorAll('.nav-item')[map[name]]?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===name));
   if(name==='dashboard')renderDashboard();
   else if(name==='vacantes')renderVacantes();
   else if(name==='clientes')renderClientes();
   else if(name==='cobros')renderCobros();
+  else if(name==='garantias')renderGarantias();
+  else if(name==='finanzas')renderFinanzas();
   else if(name==='inteligencia'){ if(!intelGenerado) generarIntelligencia(); }
   if(name!=='vacantes') specialFilter=null;
 }
