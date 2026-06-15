@@ -1426,6 +1426,15 @@ async function ensureHeader(){
 // ============ LOAD DATA ============
 async function loadData(){
   setSyncStatus('syncing','Cargando...');
+  // El navegador bloquea fetch a URLs remotas cuando la página se abre como file://
+  // (origen opaco). El endpoint y la llamada GET son correctos; hay que servir por http.
+  if(location.protocol==='file:'){
+    setSyncStatus('error','Ábrelo por http');
+    showNotif('Abre el dashboard por http (servidor local o GitHub Pages), no como archivo local: el navegador bloquea la lectura del Sheet desde file://.','error');
+    console.error('[loadData] Página abierta como file:// — fetch al Apps Script bloqueado por el navegador. Sírvela por http.');
+    return;
+  }
+  let loaded=false;
   try{
     const [vData, cData] = await Promise.all([
       sheetsRead(SHEET_NAME),
@@ -1466,10 +1475,16 @@ async function loadData(){
     });
     // ── END DEBUG ──
     setSyncStatus('synced','Sincronizado');
-    renderAll();
+    loaded=true;
   }catch(e){
     setSyncStatus('error','Error de conexión');
-    showNotif('Error: '+e.message,'error');
+    showNotif('No se pudo leer del Sheet: '+e.message,'error');
+    console.error('[loadData] fallo de lectura del endpoint:', e);
+  }
+  // Render fuera del try de la lectura: un error de dibujo ya no se disfraza de "Error de conexión".
+  if(loaded){
+    try{ renderAll(); }
+    catch(e){ console.error('[loadData] datos cargados pero el render falló:', e); showNotif('Datos cargados; error al dibujar: '+e.message,'error'); }
   }
 }
 
