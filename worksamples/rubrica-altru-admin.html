@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condux 360 · Rúbrica — Work Sample Admin Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#003834; --teal:#108277; --taupe:#9E8075; --crema:#F0F5F4;
+    --ink:#10201d; --line:#d8e2e0; --white:#fff; --warn:#b5541c; --rojo:#a3272c;
+    --font-display:"Fraunces",Georgia,serif;
+    --font-body:"Quicksand",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font-body);background:var(--crema);color:var(--ink);line-height:1.55;}
+  .accent-line{height:3px;background:var(--verde);}
+  .topbar{background:var(--white);border-bottom:3px solid var(--taupe);padding:18px 28px;}
+  .topbar-inner{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .brand-block{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .wordmark{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--verde);line-height:1;}
+  .wordmark em{font-style:italic;font-family:var(--font-display);font-size:1.02rem;font-weight:600;letter-spacing:.08em;color:var(--taupe);margin-left:7px;}
+  .sub{font-family:Helvetica,Arial,sans-serif;font-size:.76rem;color:var(--verde);letter-spacing:.08em;text-transform:uppercase;}
+  .internal-chip{
+    font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+    border:1.5px solid var(--taupe);color:var(--taupe);
+    padding:7px 16px;border-radius:999px;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:32px 24px 90px;}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:30px 34px;margin-bottom:18px;}
+  h1{font-family:var(--font-display);font-size:1.8rem;color:var(--verde);margin-bottom:8px;line-height:1.15;}
+  h2{font-family:var(--font-display);font-size:1.15rem;color:var(--verde);margin-bottom:4px;}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--taupe);margin-bottom:10px;font-weight:700;}
+  .muted{color:#5b6f6b;font-size:.9rem;}
+  p{margin-bottom:10px;}
+  label{font-weight:700;font-size:.85rem;color:var(--verde);display:block;margin-bottom:6px;}
+  select,textarea{
+    width:100%;border:1px solid var(--line);border-radius:6px;padding:11px 13px;
+    font-family:var(--font-body);font-size:.93rem;background:#fbfdfc;color:var(--ink);
+  }
+  select:focus,textarea:focus{outline:2px solid var(--teal);border-color:var(--teal);}
+  textarea{resize:vertical;line-height:1.5;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+  .dim-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:2px;}
+  .peso{font-size:.78rem;font-weight:700;color:var(--teal);letter-spacing:.06em;white-space:nowrap;}
+  .donde{font-size:.82rem;color:var(--taupe);font-weight:600;margin-bottom:14px;}
+  .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+  @media(max-width:760px){.levels{grid-template-columns:1fr 1fr;}}
+  .lvl{position:relative;}
+  .lvl input{position:absolute;opacity:0;}
+  .lvl label{
+    display:block;height:100%;cursor:pointer;font-weight:500;
+    border:1.5px solid var(--line);border-radius:8px;padding:12px 12px 14px;
+    font-size:.8rem;color:#41544f;transition:all .15s;line-height:1.45;
+  }
+  .lvl label b{
+    display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--taupe);margin-bottom:6px;font-weight:700;
+  }
+  .lvl input:checked + label{border-color:var(--teal);background:#eef7f5;box-shadow:0 0 0 1px var(--teal);}
+  .lvl input:checked + label b{color:var(--teal);}
+  .lvl.l1 input:checked + label{border-color:var(--rojo);background:#faf0f0;box-shadow:0 0 0 1px var(--rojo);}
+  .lvl.l1 input:checked + label b{color:var(--rojo);}
+  .ev label{margin-top:4px;}
+  .scorebar{
+    position:sticky;bottom:0;z-index:5;
+    background:var(--verde);color:var(--white);
+    border-radius:10px;padding:16px 24px;margin-top:6px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    box-shadow:0 -6px 24px rgba(0,56,52,.18);
+  }
+  .scorebar .num{font-family:var(--font-display);font-size:1.7rem;font-weight:700;}
+  .scorebar .lbl{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.8;}
+  .elim{
+    display:none;background:var(--rojo);color:#fff;border-radius:6px;
+    padding:8px 14px;font-size:.8rem;font-weight:700;letter-spacing:.03em;
+  }
+  .elim.on{display:inline-block;}
+  .btn{
+    background:var(--white);color:var(--verde);border:none;border-radius:8px;
+    padding:12px 28px;font-family:var(--font-body);font-size:.95rem;font-weight:700;cursor:pointer;
+  }
+  .btn:hover{background:var(--crema);}
+  .btn:disabled{opacity:.5;cursor:default;}
+  .final{text-align:center;padding:70px 30px;display:none;}
+  .final.on{display:block;}
+  .final .mark{width:64px;height:64px;border-radius:50%;background:var(--verde);color:#fff;font-size:1.8rem;line-height:64px;margin:0 auto 22px;}
+  #form.off{display:none;}
+  footer{text-align:center;font-size:.72rem;color:#8ba09c;letter-spacing:.08em;padding:20px;}
+  .req{color:var(--rojo);}
+</style>
+</head>
+<body>
+
+<div class="accent-line"></div>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-block">
+      <div class="wordmark">Condux<em>360</em></div>
+      <div class="sub">Rúbrica de Evaluación · Horux Business Consulting</div>
+    </div>
+    <div class="internal-chip">Uso interno</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div id="form">
+
+  <div class="card">
+    <div class="eyebrow">Work Sample · Administrative Assistant — Altru Roofing</div>
+    <h1>Rúbrica de evaluación</h1>
+    <p class="muted">Llenar de forma <strong>individual e independiente</strong>, máximo 24 horas después de la sesión, <strong>antes</strong> de comentar impresiones con la otra evaluadora. Cita conducta observada, no impresiones generales.</p>
+    <div class="grid2" style="margin-top:18px;">
+      <div>
+        <label>Evaluadora <span class="req">*</span></label>
+        <select id="evaluadora">
+          <option value="">Selecciona…</option>
+          <option value="CARLA">Carla</option>
+          <option value="OLIMPIA">Olimpia</option>
+        </select>
+      </div>
+      <div>
+        <label>Candidata <span class="req">*</span></label>
+        <select id="candidata">
+          <option value="">Selecciona…</option>
+          <option value="DA">DA — Daniela Aguero</option>
+          <option value="GD">GD — Gabriela Decarle</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div id="dims"></div>
+
+  <div class="card">
+    <h2>Recomendación</h2>
+    <p class="muted" style="margin-bottom:14px;">Tu lectura individual, previa a la calibración.</p>
+    <div class="grid2">
+      <div>
+        <label>Recomendación <span class="req">*</span></label>
+        <select id="reco">
+          <option value="">Selecciona…</option>
+          <option>Avanza — recomendada</option>
+          <option>Avanza con reservas</option>
+          <option>No avanza</option>
+        </select>
+      </div>
+      <div>
+        <label>Comentario general (opcional)</label>
+        <textarea id="comentario" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorebar">
+    <div>
+      <div class="lbl">Score ponderado</div>
+      <div class="num" id="scoreNum">—</div>
+    </div>
+    <span class="elim" id="elimFlag">⚠ Dimensión en 1 — eliminatoria: no avanza aunque el promedio sea alto</span>
+    <button class="btn" id="btnSubmit">Enviar evaluación</button>
+  </div>
+
+</div>
+
+<div class="final" id="final">
+  <div class="card final on">
+    <div class="mark">✓</div>
+    <h1>Evaluación registrada</h1>
+    <p>Quedó guardada en la pestaña WorkSamples con tu clave de evaluadora.</p>
+    <p class="muted">Recuerda: la calibración se hace hasta que existan las 4 evaluaciones (2 evaluadoras × 2 candidatas).</p>
+  </div>
+</div>
+
+</div>
+
+<footer>Condux 360 · Evaluation Platform · Horux Business Consulting</footer>
+
+<script>
+/* ============================================================
+   CONFIG — mismo endpoint del work sample. Sin cambios de backend:
+   cada dimensión se guarda como una fila en la pestaña WorkSamples:
+   fase = "rubrica_" + evaluadora · item = dimensión ·
+   segundos = score (1-4) · contenido = evidencia.
+   ============================================================ */
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbzwsHhSchhHddQe5EiYkrtmSPSBdinjiCbbJFsvVzkyppI7GKfQ5doAFYJ8Fop2A9ow/exec";
+const EJERCICIO = "RUBRICA-ALTRU-ADMIN";
+
+const DIMS = [
+  {
+    id:"d1_priorizacion", nombre:"1 · Priorización bajo presión", peso:25,
+    donde:"Se observa en: Q1 del caso (primera hora) + orden de ataque en la bandeja (timestamps del Sheet).",
+    niveles:[
+      "Atiende en el orden en que llegaron las cosas, se paraliza, o pide instrucciones para decidir.",
+      "Prioriza parcialmente; el orden tiene lógica pero deja pasar lo que detiene la operación, o solo lo corrige tras follow-up.",
+      "Distingue urgente de importante; atiende primero lo que detiene la operación y justifica el orden.",
+      "Todo lo del nivel 3 y además anticipa: detecta impactos de segundo orden (la dirección del supplier, el claim del viernes) sin que se le señale."
+    ]
+  },
+  {
+    id:"d2_comunicacion", nombre:"2 · Comunicación escrita en inglés bajo presión", peso:25,
+    donde:"Se observa en: mensajes reales de la bandeja + método de uso de IA (contexto en el prompt, edición del output, tono humano).",
+    niveles:[
+      "Mensajes confusos, tono robótico o copiado crudo de la IA, error de audiencia (habla igual al crew que al adjuster).",
+      "Mensajes correctos pero genéricos; usa IA sin darle contexto o edita poco; tono aceptable pero plano.",
+      "Mensajes claros, accionables, tono correcto por audiencia; si usa IA, le da contexto y edita el resultado con criterio.",
+      "Todo lo del nivel 3 y además suena a Altru: humano, específico, calma al molesto, informa a Noah en dos líneas útiles."
+    ]
+  },
+  {
+    id:"d3_proceso", nombre:"3 · Pensamiento de proceso y ownership", peso:20,
+    donde:"Se observa en: Q2 (prevención) + setup en pantalla compartida (¿su sistema es real o discurso?).",
+    niveles:[
+      "Culpa a personas, no propone sistema, o describe soluciones puramente manuales/mentales.",
+      "Propone proceso pero utópico (software/gente que Altru no tiene) o no puede aterrizarlo en pantalla.",
+      "Propone algo simple e implementable, lo arma en vivo con estructura concreta y asume responsabilidad del sistema.",
+      "Todo lo del nivel 3 y además incluye cómo verificar en 30 días que funciona, con herramienta proporcional al problema y dominio real."
+    ]
+  },
+  {
+    id:"d4_founder", nombre:"4 · Manejo del founder (Noah)", peso:20,
+    donde:"Se observa en: Q3 del caso + su mensaje a Noah en la bandeja. Causa #1 de fracaso del placement.",
+    niveles:[
+      "\u201CLe pediría que confíe en mí\u201D o estrategias que agregan carga a Noah (más juntas, más reportes).",
+      "Entiende el reto pero sus estrategias son vagas; no tiene respuesta para el momento exacto en que Noah le brinca una tarea.",
+      "Estrategias concretas de visibilidad sin fricción (updates cortos proactivos, \u201Cyo lo tomo\u201D explícito); entiende que la confianza se construye con consistencia.",
+      "Todo lo del nivel 3 y además diseña el sistema de trabajo con Noah (cadencia, canal, formato) y sabe recuperar tareas sin confrontar."
+    ]
+  },
+  {
+    id:"d5_autonomia", nombre:"5 · Autonomía y tolerancia a la ambigüedad", peso:10,
+    donde:"Transversal: fase de notas, supuestos declarados, reacción ante información incompleta, parálisis o avance.",
+    niveles:[
+      "Pide clarificación de todo antes de moverse; se traba ante información incompleta.",
+      "Avanza pero con inseguridad visible; los supuestos los toma sin declararlos.",
+      "Toma supuestos razonables y los declara (\u201Casumo que la crew ya está en sitio, entonces…\u201D); avanza con lo que hay.",
+      "Todo lo del nivel 3 con total naturalidad: administra su tiempo, decide, y señala qué verificaría después sin frenarse."
+    ]
+  }
+];
+
+const $ = id => document.getElementById(id);
+
+/* ---------- render dimensiones ---------- */
+const dimsEl = $("dims");
+DIMS.forEach(d=>{
+  const card = document.createElement("div");
+  card.className = "card";
+  let lv = "";
+  d.niveles.forEach((txt,i)=>{
+    const n = i+1;
+    lv += '<div class="lvl l'+n+'">'+
+      '<input type="radio" name="'+d.id+'" id="'+d.id+'_'+n+'" value="'+n+'">'+
+      '<label for="'+d.id+'_'+n+'"><b>Nivel '+n+(n===1?' · bandera':'')+'</b>'+txt+'</label></div>';
+  });
+  card.innerHTML =
+    '<div class="dim-head"><h2>'+d.nombre+'</h2><span class="peso">Peso '+d.peso+'%</span></div>'+
+    '<div class="donde">'+d.donde+'</div>'+
+    '<div class="levels">'+lv+'</div>'+
+    '<div class="ev"><label>Evidencia observada <span class="req">*</span></label>'+
+    '<textarea id="ev_'+d.id+'" rows="3" placeholder="Conducta concreta que sustenta el nivel — qué dijo, qué escribió, qué hizo."></textarea></div>';
+  dimsEl.appendChild(card);
+});
+
+/* ---------- score en vivo ---------- */
+function calc(){
+  let total = 0, sum = 0, elim = false, complete = true;
+  DIMS.forEach(d=>{
+    const sel = document.querySelector('input[name="'+d.id+'"]:checked');
+    if(!sel){ complete = false; return; }
+    const v = +sel.value;
+    if(v === 1) elim = true;
+    total += v * d.peso;
+    sum += d.peso;
+  });
+  $("elimFlag").classList.toggle("on", elim);
+  $("scoreNum").textContent = complete && sum ? (total/sum).toFixed(2) + " / 4" : "—";
+  return {score: complete && sum ? (total/sum).toFixed(2) : "", elim, complete};
+}
+document.addEventListener("change", calc);
+
+/* ---------- envío ---------- */
+function log(candidata, fase, item, contenido, segundos){
+  const payload = JSON.stringify({
+    candidata, ejercicio: EJERCICIO, fase, item,
+    contenido: contenido || "", segundos: segundos === "" ? "" : segundos
+  });
+  return fetch(ENDPOINT,{method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"text/plain"},body:payload,keepalive:true});
+}
+
+$("btnSubmit").addEventListener("click", async ()=>{
+  const ev = $("evaluadora").value, ca = $("candidata").value, reco = $("reco").value;
+  if(!ev || !ca){ alert("Selecciona evaluadora y candidata."); return; }
+  if(!reco){ alert("Falta tu recomendación."); return; }
+  const r = calc();
+  if(!r.complete){ alert("Faltan dimensiones por calificar."); return; }
+  for(const d of DIMS){
+    if(!$("ev_"+d.id).value.trim()){
+      alert("Falta evidencia en: "+d.nombre); $("ev_"+d.id).focus(); return;
+    }
+  }
+  $("btnSubmit").disabled = true;
+  $("btnSubmit").textContent = "Enviando…";
+  const fase = "rubrica_" + ev;
+  for(const d of DIMS){
+    const v = document.querySelector('input[name="'+d.id+'"]:checked').value;
+    await log(ca, fase, d.id, $("ev_"+d.id).value.trim(), v);
+  }
+  await log(ca, fase, "TOTAL",
+    "reco: " + reco + (r.elim ? " | ELIMINATORIA activada" : "") +
+    ($("comentario").value.trim() ? " | " + $("comentario").value.trim() : ""),
+    r.score);
+  $("form").classList.add("off");
+  $("final").classList.add("on");
+  window.scrollTo({top:0});
+});
+</script>
+</body>
+</html>
