@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condux 360 · Work Sample — Administrative Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#003834;
+    --teal:#108277;
+    --taupe:#9E8075;
+    --crema:#F0F5F4;
+    --ink:#10201d;
+    --line:#d8e2e0;
+    --white:#ffffff;
+    --warn:#b5541c;
+    --font-display:"Fraunces",Georgia,serif;
+    --font-body:"Quicksand",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:16px;}
+  body{
+    font-family:var(--font-body);
+    background:var(--crema);
+    color:var(--ink);
+    min-height:100vh;
+    line-height:1.55;
+  }
+  /* ---------- Header (estilo plataforma Condux) ---------- */
+  .accent-line{height:3px;background:var(--verde);}
+  .topbar{
+    background:var(--white);
+    border-bottom:3px solid var(--taupe);
+    padding:18px 28px;
+  }
+  .topbar-inner{
+    max-width:860px;margin:0 auto;
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+  }
+  .brand-block{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .brand-block .wordmark{
+    font-family:var(--font-display);
+    font-size:1.5rem;font-weight:700;letter-spacing:.01em;
+    color:var(--verde);line-height:1;
+  }
+  .brand-block .wordmark em{
+    font-style:italic;font-family:var(--font-display);
+    font-size:1.02rem;font-weight:600;letter-spacing:.08em;
+    color:var(--taupe);vertical-align:baseline;margin-left:7px;
+  }
+  .brand-block .sub{
+    font-family:Helvetica,Arial,sans-serif;
+    font-size:.76rem;color:var(--verde);letter-spacing:.08em;font-weight:400;
+    text-transform:uppercase;
+  }
+  .cand-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+    background:var(--white);
+    border:1.5px solid var(--verde);
+    color:var(--verde);
+    padding:7px 16px;border-radius:999px;
+  }
+  .cand-chip::before{
+    content:"";width:7px;height:7px;border-radius:50%;
+    background:var(--teal);box-shadow:0 0 0 3px rgba(16,130,119,.18);
+  }
+  /* ---------- Phase rail (tarjeta flotante) ---------- */
+  .rail-shell{max-width:860px;margin:24px auto 0;padding:0 24px;position:relative;z-index:2;}
+  .rail{
+    display:flex;background:var(--white);
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 10px 28px rgba(0,56,52,.12);
+    padding:14px 10px 18px;overflow-x:auto;
+    position:relative;
+  }
+  .rail::after{
+    content:"";position:absolute;left:0;bottom:0;height:4px;width:100%;
+    background:var(--line);border-radius:0 0 12px 12px;
+  }
+  .rail-progress{
+    position:absolute;left:0;bottom:0;height:4px;width:0%;
+    background:linear-gradient(90deg,var(--verde),var(--teal));
+    border-radius:0 0 0 12px;z-index:1;
+    transition:width .6s ease;
+  }
+  .rail-step{
+    flex:1;min-width:118px;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:4px 8px;
+    font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;
+    color:#7d918d;white-space:nowrap;text-align:center;
+    position:relative;
+    transition:color .3s;
+  }
+  .rail-step + .rail-step::before{
+    content:"";position:absolute;left:0;top:14px;
+    width:1px;height:26px;background:var(--line);
+  }
+  .rail-step .n{
+    width:26px;height:26px;border-radius:50%;
+    border:1.5px solid #c3d0cd;color:#9aa8a5;
+    font-size:.72rem;font-weight:700;letter-spacing:0;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .3s;
+  }
+  .rail-step.done{color:var(--taupe);}
+  .rail-step.done .n{border-color:var(--taupe);background:var(--taupe);color:var(--white);font-size:0;}
+  .rail-step.done .n::after{content:"✓";font-size:.78rem;}
+  .rail-step.active{color:var(--verde);font-weight:700;}
+  .rail-step.active .n{border-color:var(--teal);background:var(--teal);color:var(--white);box-shadow:0 0 0 4px rgba(16,130,119,.14);}
+  .rail-step .t{
+    font-size:1rem;letter-spacing:.03em;
+    font-variant-numeric:tabular-nums;
+    color:var(--teal);font-weight:700;min-height:1.25em;
+  }
+  .rail-step:not(.active) .t{visibility:hidden;}
+  .rail-step.active .t.low{color:var(--warn);}
+  /* ---------- Layout ---------- */
+  .wrap{max-width:860px;margin:0 auto;padding:36px 24px 80px;}
+  .card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:34px 38px;
+    margin-bottom:20px;
+  }
+  h1{font-family:var(--font-display);font-size:1.9rem;letter-spacing:-.01em;color:var(--verde);margin-bottom:8px;line-height:1.15;}
+  h2{font-family:var(--font-display);font-size:1.3rem;color:var(--verde);margin-bottom:14px;letter-spacing:0;}
+  h3{font-size:.95rem;font-weight:700;color:var(--verde);margin:18px 0 6px;}
+  p{margin-bottom:12px;}
+  ul{margin:0 0 14px 22px;}
+  li{margin-bottom:6px;}
+  .eyebrow{
+    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--taupe);margin-bottom:10px;font-weight:700;
+  }
+  .muted{color:#5b6f6b;font-size:.92rem;}
+  .btn{
+    display:inline-block;background:var(--verde);color:var(--white);
+    border:none;border-radius:8px;padding:13px 30px;
+    font-size:.95rem;font-family:var(--font-body);font-weight:700;letter-spacing:.02em;
+    cursor:pointer;transition:background .2s;
+  }
+  .btn:hover{background:var(--teal);}
+  .btn:disabled{background:#b9c6c3;cursor:default;}
+  .btn.secondary{background:transparent;color:var(--verde);border:1.5px solid var(--verde);}
+  .btn.secondary:hover{color:var(--teal);border-color:var(--teal);background:transparent;}
+  textarea{
+    width:100%;border:1px solid var(--line);border-radius:6px;
+    padding:12px 14px;font-family:inherit;font-size:.95rem;line-height:1.5;
+    resize:vertical;background:#fbfdfc;color:var(--ink);
+  }
+  textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
+  input[type=text]{
+    border:1px solid var(--line);border-radius:6px;padding:11px 14px;
+    font-family:inherit;font-size:1rem;letter-spacing:.12em;text-transform:uppercase;
+    width:180px;text-align:center;
+  }
+  input[type=text]:focus{outline:2px solid var(--teal);border-color:var(--teal);}
+  .screen{display:none;}
+  .screen.on{display:block;animation:fade .35s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){.screen.on{animation:none;}}
+  /* ---------- Scenario box ---------- */
+  .scenario{
+    background:var(--crema);border-left:4px solid var(--teal);
+    border-radius:0 8px 8px 0;padding:20px 24px;margin:16px 0;
+  }
+  .qnum{
+    display:inline-block;background:var(--verde);color:var(--white);
+    border-radius:4px;font-size:.75rem;font-weight:700;
+    padding:2px 8px;margin-right:8px;vertical-align:middle;letter-spacing:.05em;
+  }
+  .question{margin-bottom:16px;}
+  /* ---------- Inbox ---------- */
+  .inbox-intro{
+    background:var(--verde);color:var(--white);
+    border-radius:8px;padding:18px 24px;margin-bottom:18px;font-size:.95rem;
+  }
+  .item{
+    border:1px solid var(--line);border-radius:8px;background:var(--white);
+    margin-bottom:12px;overflow:hidden;
+  }
+  .item-head{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:15px 20px;cursor:pointer;user-select:none;
+  }
+  .item-head:hover{background:#f6faf9;}
+  .item-head .src{
+    font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--taupe);font-weight:700;display:block;margin-bottom:2px;
+  }
+  .item-head .subj{font-weight:700;color:var(--verde);font-size:.98rem;}
+  .item-state{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#9aa8a5;white-space:nowrap;}
+  .item-state.sent{color:var(--teal);font-weight:700;}
+  .item-body{display:none;padding:0 20px 20px;border-top:1px solid var(--line);}
+  .item.open .item-body{display:block;}
+  .item-msg{
+    background:var(--crema);border-radius:6px;padding:14px 18px;
+    margin:16px 0 14px;font-size:.93rem;white-space:pre-line;
+  }
+  .item-actions{display:flex;justify-content:flex-end;margin-top:10px;gap:10px;align-items:center;}
+  .sent-note{font-size:.8rem;color:var(--teal);font-weight:700;}
+  /* ---------- Final ---------- */
+  .final{text-align:center;padding:70px 30px;}
+  .final .mark{
+    width:64px;height:64px;border-radius:50%;background:var(--verde);
+    color:var(--white);font-size:1.8rem;line-height:64px;margin:0 auto 22px;
+  }
+  footer{
+    text-align:center;font-size:.72rem;color:#8ba09c;
+    letter-spacing:.08em;padding:20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="accent-line"></div>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-block">
+      <div class="wordmark">Condux<em>360</em></div>
+      <div class="sub">Work Sample Assessment · Horux Business Consulting</div>
+    </div>
+    <div class="cand-chip" id="chipCand">—</div>
+  </div>
+</div>
+
+<div class="rail-shell">
+  <div class="rail" id="rail">
+    <div class="rail-progress" id="railProgress"></div>
+    <div class="rail-step" data-ph="1"><span class="n">1</span>Case reading<span class="t" id="t1"></span></div>
+    <div class="rail-step" data-ph="2"><span class="n">2</span>Notes<span class="t" id="t2"></span></div>
+    <div class="rail-step" data-ph="3"><span class="n">3</span>Walkthrough<span class="t" id="t3"></span></div>
+    <div class="rail-step" data-ph="4"><span class="n">4</span>Live inbox<span class="t" id="t4"></span></div>
+    <div class="rail-step" data-ph="5"><span class="n">5</span>Complete<span class="t"></span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ SCREEN 0 · WELCOME ============ -->
+  <div class="screen on" id="s0">
+    <div class="card">
+      <div class="eyebrow">Administrative Assistant · Altru Roofing</div>
+      <h1>Work Sample Session</h1>
+      <p>Welcome. This session has two parts and lasts about 60 minutes:</p>
+      <ul>
+        <li><strong>Part 1 — Case study.</strong> You will read a real business scenario, take notes, and walk your facilitator through your thinking.</li>
+        <li><strong>Part 2 — Live inbox.</strong> You will work through a realistic morning at Altru Roofing and write the actual messages you would send.</li>
+      </ul>
+      <p class="muted">Timers on screen will guide each phase. There is no single right answer — we are interested in how you think and how you work. Your facilitator will tell you when to begin.</p>
+      <div id="candBox" style="margin:22px 0 8px;">
+        <p style="margin-bottom:8px;"><strong>Enter your candidate code:</strong></p>
+        <input type="text" id="candInput" maxlength="6" placeholder="CODE">
+      </div>
+      <div style="margin-top:22px;">
+        <button class="btn" id="btnStart">Start session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 1 · READING ============ -->
+  <div class="screen" id="s1">
+    <div class="card">
+      <div class="eyebrow">Part 1 · Case study — silent reading</div>
+      <h2>The Missing Work Order</h2>
+      <div class="scenario">
+        <p>You are the <strong>Administrative Assistant at Altru Roofing</strong>, a roofing company in Oklahoma. Your role is to coordinate and support the scheduling and execution of roofing projects once the Sales Representative confirms a start date with the homeowner.</p>
+        <p>The owner of the company, <strong>Noah</strong>, is highly involved in day-to-day operations. He is action-oriented, often jumps in to solve problems himself, and occasionally forgets to communicate or delegate tasks because it feels faster to handle them personally.</p>
+        <p>One Tuesday morning at <strong>6:00 AM</strong>, Noah realizes that a roofing project scheduled for that day is missing materials. Upon investigating, he finds that the <strong>Work Order was never sent to the supplier</strong>. As a result:</p>
+        <ul>
+          <li>Materials will not arrive on time.</li>
+          <li>Noah decides to pick up the materials himself and personally delivers them to the crew.</li>
+          <li>To help the team recover lost time, he also purchases water and lunch for the roofers.</li>
+          <li>The project starts later than expected, creating stress for both the crew and the homeowner.</li>
+        </ul>
+      </div>
+      <h3>You will discuss these three questions:</h3>
+      <div class="question"><span class="qnum">Q1</span><strong>First hour.</strong> If you discovered this at 6:00 AM, what would you do during the first hour to minimize the impact on the project, crew, homeowner, and owner — and why in that order?</div>
+      <div class="question"><span class="qnum">Q2</span><strong>Prevention.</strong> Design a simple process that would keep this from happening again. Be ready to show how you would actually set it up.</div>
+      <div class="question"><span class="qnum">Q3</span><strong>Working with Noah.</strong> Knowing Noah often handles tasks himself and sometimes forgets to delegate, what would you do to keep him informed while taking real ownership of operations?</div>
+      <p class="muted">Read carefully. The notes phase will begin automatically when the timer ends.</p>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 2 · NOTES ============ -->
+  <div class="screen" id="s2">
+    <div class="card">
+      <div class="eyebrow">Part 1 · Case study — your notes</div>
+      <h2>Organize your answers</h2>
+      <p class="muted" style="margin-bottom:16px;">Use this space to structure your thinking for the three questions. These notes are your support for the conversation — you will present your answers out loud.</p>
+      <textarea id="notes" rows="14" placeholder="Q1 — First hour:&#10;&#10;Q2 — Prevention:&#10;&#10;Q3 — Working with Noah:"></textarea>
+      <p class="muted" style="margin-top:10px;">The walkthrough will begin automatically when the timer ends. Your notes stay visible.</p>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 3 · WALKTHROUGH ============ -->
+  <div class="screen" id="s3">
+    <div class="card">
+      <div class="eyebrow">Part 1 · Case study — walkthrough</div>
+      <h2>Walk your facilitator through your answers</h2>
+      <div class="question"><span class="qnum">Q1</span><strong>First hour</strong> — actions and order of priority.</div>
+      <div class="question"><span class="qnum">Q2</span><strong>Prevention</strong> — your process, and how you would set it up.</div>
+      <div class="question"><span class="qnum">Q3</span><strong>Working with Noah</strong> — visibility and ownership.</div>
+      <h3 style="margin-top:22px;">Your notes</h3>
+      <textarea id="notesRO" rows="10" readonly style="background:#f4f7f6;"></textarea>
+      <div style="margin-top:26px;border-top:1px solid var(--line);padding-top:20px;">
+        <p class="muted" style="margin-bottom:12px;">When your facilitator tells you Part 1 is complete, start Part 2.</p>
+        <button class="btn" id="btnPart2">Start Part 2 — Live inbox</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 4 · INBOX ============ -->
+  <div class="screen" id="s4">
+    <div class="inbox-intro">
+      <strong>It's Thursday, 7:45 AM.</strong> You open your laptop and find these 5 items waiting. You have 20 minutes. Decide your order, resolve what you can, and <strong>write the actual messages you would send</strong> in each response box. Think out loud as you prioritize. You may use any tool you normally work with, including AI — keep your screen shared.
+    </div>
+    <div id="inboxList"></div>
+    <div style="margin-top:18px;text-align:right;">
+      <button class="btn" id="btnFinish">Finish exercise</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 5 · COMPLETE ============ -->
+  <div class="screen" id="s5">
+    <div class="card final">
+      <div class="mark">✓</div>
+      <h1>Exercise complete</h1>
+      <p>Thank you, <span id="finalName">candidate</span>. Your responses have been recorded.</p>
+      <p class="muted">Your facilitator will walk you through the next steps of the process.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>Condux 360 · Evaluation Platform · Horux Business Consulting</footer>
+
+<script>
+/* =====================================================================
+   CONFIG — edita esta sección para reutilizar la plantilla en otro
+   ejercicio: endpoint, tiempos, y los items de la bandeja.
+   ===================================================================== */
+const CONFIG = {
+  endpoint: "https://script.google.com/macros/s/AKfycbzwsHhSchhHddQe5EiYkrtmSPSBdinjiCbbJFsvVzkyppI7GKfQ5doAFYJ8Fop2A9ow/exec",
+  ejercicio: "ALTRU-ADMIN",
+  minutos: { lectura: 5, notas: 8, bandeja: 20 },
+  items: [
+    {
+      id: "adjuster",
+      src: "Email · received yesterday 6:02 PM",
+      subj: "Claim #2241 — documents required",
+      body: "From: M. Reyes — Insurance Adjuster\n\nHi, to keep claim #2241 moving I need three documents by Friday end of day: the signed scope of work, the itemized estimate, and photos of the storm damage. If we don't receive them by then, the claim resets and goes back into the review queue.\n\nThanks,\nM. Reyes"
+    },
+    {
+      id: "crew",
+      src: "WhatsApp · 7:38 AM",
+      subj: "Crew lead — problem at the Henderson job",
+      body: "Hey, we're at the Hendersons ready to start but the homeowner says nobody told her we were coming today. She's pretty upset and doesn't want to let us set up. What do I do? We're all standing here."
+    },
+    {
+      id: "supplier",
+      src: "Email · 6:55 AM",
+      subj: "Delivery confirmation — Miller project",
+      body: "From: OK Roofing Supply\n\nGood morning, this confirms your order #8841 (34 sq. architectural shingles + accessories) scheduled for delivery tomorrow, Friday, 8:00 AM.\n\nDelivery address on file: 2205 NE 23rd St, Oklahoma City, OK.\n\nReply to confirm or modify. Orders lock at 2:00 PM today."
+    },
+    {
+      id: "noah",
+      src: "Voice note · 7:15 AM",
+      subj: "Noah — calendar",
+      body: "\u201cHey, morning — remind me what I have on today? And push my 10 AM with the Owens Corning rep to sometime next week, something came up. Thanks.\u201d"
+    },
+    {
+      id: "homeowner",
+      src: "Email · received yesterday 8:47 PM",
+      subj: "Any update on my roof?",
+      body: "From: T. Caldwell\n\nHi, just checking in — any update on my roof project? Haven't heard anything in a few days and want to make sure everything is still on track.\n\nThanks,\nTom Caldwell"
+    }
+  ]
+};
+/* ===================================================================== */
+
+let CAND = "";
+let phase = 0;
+let notesSent = false;
+const itemState = {};      // id -> {openedAt, seconds, sent, firstOpenLogged}
+let phaseTimer = null;
+
+/* ---------- logging ---------- */
+function log(fase, item, contenido, segundos){
+  const payload = JSON.stringify({
+    candidata: CAND,
+    ejercicio: CONFIG.ejercicio,
+    fase: fase,
+    item: item || "",
+    contenido: contenido || "",
+    segundos: (segundos === undefined || segundos === null) ? "" : Math.round(segundos)
+  });
+  try{
+    fetch(CONFIG.endpoint, {method:"POST", mode:"no-cors",
+      headers:{"Content-Type":"text/plain"}, body:payload, keepalive:true});
+  }catch(e){ /* fire and forget */ }
+}
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+function show(n){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  $("s"+n).classList.add("on");
+  document.querySelectorAll(".rail-step").forEach(st=>{
+    const p = +st.dataset.ph;
+    st.classList.toggle("active", p===n);
+    st.classList.toggle("done", p<n);
+  });
+  const pct = n<=1 ? 10 : (n>=5 ? 100 : (n-1)*25);
+  $("railProgress").style.width = pct + "%";
+  window.scrollTo({top:0});
+}
+function fmt(s){
+  const m = Math.floor(s/60), r = s%60;
+  return m+":"+String(r).padStart(2,"0");
+}
+function countdown(seconds, elId, onEnd){
+  clearInterval(phaseTimer);
+  let left = seconds;
+  const el = $(elId);
+  el.textContent = fmt(left);
+  phaseTimer = setInterval(()=>{
+    left--;
+    el.textContent = fmt(left);
+    el.classList.toggle("low", left <= 120);
+    if(left<=0){ clearInterval(phaseTimer); el.textContent="0:00"; onEnd(); }
+  },1000);
+}
+
+/* ---------- phase flow ---------- */
+$("btnStart").addEventListener("click", ()=>{
+  const inp = $("candInput").value.trim().toUpperCase();
+  if(!CAND && !inp){ $("candInput").focus(); return; }
+  if(!CAND) CAND = inp;
+  $("chipCand").textContent = "Candidate · " + CAND;
+  log("inicio_sesion");
+  startReading();
+});
+
+function startReading(){
+  phase = 1; show(1);
+  log("lectura_inicio");
+  countdown(CONFIG.minutos.lectura*60, "t1", startNotes);
+}
+
+function startNotes(){
+  phase = 2; show(2);
+  log("notas_inicio");
+  $("notes").focus();
+  countdown(CONFIG.minutos.notas*60, "t2", startWalkthrough);
+}
+
+function saveNotes(){
+  if(notesSent) return;
+  notesSent = true;
+  log("notas_final", "notas", $("notes").value, "");
+}
+
+function startWalkthrough(){
+  saveNotes();
+  phase = 3; show(3);
+  $("notesRO").value = $("notes").value;
+  log("walkthrough_inicio");
+  // count-up discreto para referencia del facilitador
+  clearInterval(phaseTimer);
+  let el = $("t3"), sec = 0;
+  el.textContent = "0:00";
+  phaseTimer = setInterval(()=>{ sec++; el.textContent = fmt(sec); },1000);
+}
+
+$("btnPart2").addEventListener("click", startInbox);
+
+function startInbox(){
+  phase = 4; show(4);
+  buildInbox();
+  log("bandeja_inicio");
+  countdown(CONFIG.minutos.bandeja*60, "t4", finishExercise);
+}
+
+/* ---------- inbox ---------- */
+function buildInbox(){
+  const list = $("inboxList");
+  list.innerHTML = "";
+  CONFIG.items.forEach(it=>{
+    itemState[it.id] = {openedAt:null, seconds:0, sent:false, firstOpenLogged:false};
+    const div = document.createElement("div");
+    div.className = "item";
+    div.id = "item-"+it.id;
+    div.innerHTML =
+      '<div class="item-head" data-id="'+it.id+'">'+
+        '<div><span class="src">'+it.src+'</span><span class="subj">'+it.subj+'</span></div>'+
+        '<div class="item-state" id="state-'+it.id+'">Unread</div>'+
+      '</div>'+
+      '<div class="item-body">'+
+        '<div class="item-msg">'+it.body.replace(/</g,"&lt;")+'</div>'+
+        '<p class="muted" style="margin-bottom:6px;"><strong>Your response / action:</strong> write the actual message you would send, or describe the action you would take.</p>'+
+        '<textarea id="resp-'+it.id+'" rows="6"></textarea>'+
+        '<div class="item-actions">'+
+          '<span class="sent-note" id="note-'+it.id+'" style="display:none;">Sent ✓ — you can still edit and resend</span>'+
+          '<button class="btn secondary" data-send="'+it.id+'">Send response</button>'+
+        '</div>'+
+      '</div>';
+    list.appendChild(div);
+  });
+
+  list.querySelectorAll(".item-head").forEach(h=>{
+    h.addEventListener("click", ()=>toggleItem(h.dataset.id));
+  });
+  list.querySelectorAll("[data-send]").forEach(b=>{
+    b.addEventListener("click", ()=>sendItem(b.dataset.send));
+  });
+}
+
+function toggleItem(id){
+  const div = $("item-"+id), st = itemState[id];
+  const isOpen = div.classList.contains("open");
+  // cerrar los demás y acumular su tiempo
+  document.querySelectorAll(".item.open").forEach(o=>{
+    const oid = o.id.replace("item-","");
+    accumulate(oid);
+    o.classList.remove("open");
+  });
+  if(!isOpen){
+    div.classList.add("open");
+    st.openedAt = Date.now();
+    if(!st.firstOpenLogged){
+      st.firstOpenLogged = true;
+      $("state-"+id).textContent = "Opened";
+      log("item_abierto", id, "", "");
+    }
+  }
+}
+
+function accumulate(id){
+  const st = itemState[id];
+  if(st.openedAt){
+    st.seconds += (Date.now() - st.openedAt)/1000;
+    st.openedAt = null;
+  }
+}
+
+function sendItem(id){
+  const txt = $("resp-"+id).value.trim();
+  if(!txt) { $("resp-"+id).focus(); return; }
+  accumulate(id);
+  const st = itemState[id];
+  st.sent = true;
+  st.openedAt = Date.now(); // sigue abierto, sigue contando si continúa editando
+  log("item_enviado", id, txt, st.seconds);
+  $("state-"+id).textContent = "Sent";
+  $("state-"+id).classList.add("sent");
+  $("note-"+id).style.display = "inline";
+}
+
+$("btnFinish").addEventListener("click", ()=>{
+  if(!confirm("Finish the exercise? Unsent drafts will be submitted as they are.")) return;
+  finishExercise();
+});
+
+function finishExercise(){
+  if(phase === 5) return;
+  clearInterval(phaseTimer);
+  // enviar borradores no enviados
+  CONFIG.items.forEach(it=>{
+    const st = itemState[it.id];
+    if(!st) return;
+    accumulate(it.id);
+    const txt = $("resp-"+it.id) ? $("resp-"+it.id).value.trim() : "";
+    if(!st.sent && txt) log("item_auto_enviado", it.id, txt, st.seconds);
+  });
+  phase = 5; show(5);
+  $("finalName").textContent = CAND;
+  log("sesion_completa");
+}
+
+/* ---------- init ---------- */
+(function init(){
+  const p = new URLSearchParams(location.search).get("c");
+  if(p){
+    CAND = p.trim().toUpperCase();
+    $("chipCand").textContent = "Candidate · " + CAND;
+    $("candBox").style.display = "none";
+  }
+  // proteger contra cierre accidental durante la sesión
+  window.addEventListener("beforeunload", e=>{
+    if(phase>0 && phase<5){ e.preventDefault(); e.returnValue=""; }
+  });
+})();
+</script>
+</body>
+</html>
